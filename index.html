@@ -12,8 +12,12 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background: url('imagenes/fondo.png') no-repeat center center fixed;
+            background-size: cover;
             color: #333;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
         nav.social-nav {
@@ -43,45 +47,6 @@
             color: white !important;
         }
 
-        main {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        section {
-            margin-bottom: 40px;
-        }
-
-        h2 {
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid #dee2e6;
-        }
-
-        th,
-        td {
-            padding: 15px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-
         footer {
             background-color: #343a40;
             color: white;
@@ -98,14 +63,11 @@
     <nav class="social-nav">
         <div class="container-fluid d-flex justify-content-between">
             <div>
-                <span>Tel: 123-456-7890 - </span>
+                <span>Tel: 3521 53-4882- </span>
                 <span>Email: contacto@ligadelnorte.com</span>
             </div>
             <div class="social-icons">
-                <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-                <!-- Agrega más redes sociales aquí -->
+                <a href="https://www.instagram.com/liga_del_norte2024?igsh=MWVhM2g5Z2FsYjQybg%3D%3D" target="_blank"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
     </nav>
@@ -113,7 +75,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark main-nav">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <img src="imagenes/LIGA DEL NORTE.png" alt="Logo" width="90" height="90" class="d-inline-block align-text-top">
+                <img src="imagenes/logoliga.png" alt="Logo" width="90" height="90" class="d-inline-block align-text-top">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,82 +84,20 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="equipos.html">Equipos</a>
+                        <a class="nav-link" href="#">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="calendario.html">Calendario</a>
+                        <a class="nav-link" href="#">Sobre Nosotros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="resultados.html">Resultados</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="tablaposiciones.html">Tabla de Posiciones</a>
+                        <a class="nav-link" href="#">Contacto</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <main>
-        <section id="equipos">
-            <h2>Equipos</h2>
-            <ul>
-                <li>Equipo 1</li>
-                <li>Equipo 2</li>
-                <li>Equipo 3</li>
-                <!-- Agrega más equipos aquí -->
-            </ul>
-        </section>
-        <section id="calendario">
-            <h2>Calendario</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Equipo Local</th>
-                        <th>Equipo Visitante</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>10/09/2024</td>
-                        <td>Equipo 1</td>
-                        <td>Equipo 2</td>
-                    </tr>
-                    <!-- Agrega más partidos aquí -->
-                </tbody>
-            </table>
-        </section>
-        <section id="resultados">
-            <h2>Resultados</h2>
-            <ul>
-                <li>Equipo 1 vs. Equipo 2: 3-2</li>
-                <li>Equipo 3 vs. Equipo 4: 2-3</li>
-                <!-- Agrega más resultados aquí -->
-            </ul>
-        </section>
-        <section id="tabla-posiciones">
-            <h2>Tabla de Posiciones</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Posición</th>
-                        <th>Equipo</th>
-                        <th>Puntos</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Equipo 1</td>
-                        <td>10</td>
-                    </tr>
-                    <!-- Agrega más equipos aquí -->
-                </tbody>
-            </table>
-        </section>
-    </main>
-
+    <!-- Footer opcional -->
     <footer>
         <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
     </footer>
