@@ -11,7 +11,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             background: url('imagenes/fondo.png') no-repeat center center fixed;
             background-size: cover;
             color: #333;
@@ -21,19 +21,41 @@
             position: relative;
         }
 
-        /* Texto sobre la imagen de fondo */
         .overlay-text {
-            background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+            background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 20px;
-            margin: 20px;
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 800px;
+            padding: 30px;
+            margin: 20px auto;
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            max-width: 900px;
             text-align: justify;
             border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .overlay-text h2 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .overlay-text p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .overlay-text::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: #ffeb3b;
         }
 
         nav.social-nav {
@@ -57,10 +79,20 @@
 
         nav.main-nav {
             background-color: #343a40;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         nav.main-nav .navbar-nav .nav-link {
             color: white !important;
+            font-weight: 500;
+        }
+
+        nav.main-nav .navbar-brand img {
+            transition: transform 0.3s ease;
+        }
+
+        nav.main-nav .navbar-brand img:hover {
+            transform: scale(1.1);
         }
 
         footer {
@@ -71,15 +103,53 @@
             position: fixed;
             bottom: 0;
             width: 100%;
+            font-size: 0.9rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Animaciones sutiles */
+        .overlay-text h2 {
+            animation: fadeInDown 1s;
+        }
+
+        .overlay-text p {
+            animation: fadeInUp 1.5s;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 
 <body>
+    <!-- Barra de información de contacto -->
     <nav class="social-nav">
         <div class="container-fluid d-flex justify-content-between">
             <div>
-                <span>Tel: 3521 53-4882- </span>
+                <span>Tel: 3521 53-4882 - </span>
                 <span>Email: contacto@ligadelnorte.com</span>
             </div>
             <div class="social-icons">
@@ -88,6 +158,7 @@
         </div>
     </nav>
 
+    <!-- Navbar principal -->
     <nav class="navbar navbar-expand-lg navbar-dark main-nav">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
@@ -100,10 +171,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Inicio</a>
+                        <a class="nav-link" href="index.html">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Contacto</a>
+                        <a class="nav-link" href="contacto.html">Contacto</a>
                     </li>
                 </ul>
             </div>
@@ -113,16 +184,18 @@
     <!-- Texto sobre la imagen de fondo -->
     <div class="overlay-text">
         <h2>La Liga del Norte de Voleibol</h2>
-        <p></p>
         <p>
-            La liga del norte de voleibol surge como una iniciativa para fomentar la práctica y el desarrollo del voleibol en el norte de córdoba. 
-            Esta competencia busca no solo promover el deporte entre los jóvenes y adultos de la comunidad, sino también fortalecer los lazos de integración y convivencia a través del espíritu competitivo y la deportividad.
-Conscientes de la importancia del deporte como herramienta de formación integral, la Liga del Norte tiene como objetivo ofrecer un espacio organizado y accesible para todos los aficionados al voleibol, permitiendo que tanto jugadores novatos como experimentados encuentren un ámbito propicio para mejorar sus habilidades y disfrutar de la actividad física en un entorno saludable y motivador.
-Este proyecto está diseñado para crear una plataforma donde los valores del esfuerzo, el respeto, y la colaboración se vivencien en cada encuentro, consolidando así una cultura deportiva sólida entre los pueblos vecinos. A través de la organización, esperamos también fortalecer el sentido de pertenencia y orgullo regional, destacando el potencial deportivo y proyectandolo a futuras competencias.
+            La liga del norte de voleibol surge como una iniciativa para fomentar la práctica y el desarrollo del voleibol en el norte de Córdoba. Esta competencia busca no solo promover el deporte entre los jóvenes y adultos de la comunidad, sino también fortalecer los lazos de integración y convivencia a través del espíritu competitivo y la deportividad.
         </p>
-        
+        <p>
+            Conscientes de la importancia del deporte como herramienta de formación integral, la Liga del Norte tiene como objetivo ofrecer un espacio organizado y accesible para todos los aficionados al voleibol, permitiendo que tanto jugadores novatos como experimentados encuentren un ámbito propicio para mejorar sus habilidades y disfrutar de la actividad física en un entorno saludable y motivador.
+        </p>
+        <p>
+            Este proyecto está diseñado para crear una plataforma donde los valores del esfuerzo, el respeto y la colaboración se vivencien en cada encuentro, consolidando así una cultura deportiva sólida entre los pueblos vecinos. A través de la organización, esperamos también fortalecer el sentido de pertenencia y orgullo regional, destacando el potencial deportivo y proyectándolo a futuras competencias.
+        </p>
     </div>
-    <!-- Footer opcional -->
+
+    <!-- Footer -->
     <footer>
         <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
     </footer>

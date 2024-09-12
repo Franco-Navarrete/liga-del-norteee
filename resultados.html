@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,19 +12,24 @@
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
         }
+
         header {
             background-color: #343a40;
             color: white;
             padding: 20px 0;
             text-align: center;
         }
-        h1, h2 {
+
+        h1,
+        h2 {
             margin: 20px 0;
         }
+
         ul {
             list-style: none;
             padding: 0;
         }
+
         ul li {
             display: flex;
             justify-content: space-between;
@@ -35,58 +41,146 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
+
         ul li img {
             width: 50px;
             height: 50px;
         }
+
         footer {
             background-color: #343a40;
             color: white;
             text-align: center;
             padding: 10px 0;
-            margin-top: 20px;
+            margin-top: auto;
         }
+
         .score {
             font-weight: bold;
             font-size: 1.2em;
         }
+
+        /* Estilo centrado para las pestañas */
+        .nav-tabs {
+            justify-content: center;
+        }
+           /* Asegura que el main ocupe el espacio necesario */
+           main {
+            flex-grow: 1;
+        }
     </style>
 </head>
+
 <body>
 
-    <header>
-        <h1>Resultados de los Partidos</h1>
+    <header class="bg-warning text-white text-center py-4">
+        <img src="imagenes/logoliga.png" width="100px" alt="Logo de la Liga">
+        <h1 style="color:black" id="categoriaTitulo">Resultados</h1>
     </header>
 
     <main class="container my-5">
-        <section>
-            <h2 class="text-center">Resultados Recientes</h2>
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal1">
-                    <div class="d-flex align-items-center">
-                        <img src="imagenes/chañar.jpg" alt="Logo Equipo 1">
-                        <span class="ms-3">Equipo 1</span>
-                    </div>
-                    <div class="score">3 - 2</div>
-                    <div class="d-flex align-items-center">
-                        <span class="me-3">Equipo 2</span>
-                        <img src="imagenes/cuervos rs y ld.jpg" alt="Logo Equipo 2">
-                    </div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal2">
-                    <div class="d-flex align-items-center">
-                        <img src="imagenes/la dormida.jpg" alt="Logo Equipo 3">
-                        <span class="ms-3">Equipo 3</span>
-                    </div>
-                    <div class="score">2 - 3</div>
-                    <div class="d-flex align-items-center">
-                        <span class="me-3">Equipo 4</span>
-                        <img src="imagenes/arrias.jpg" alt="Logo Equipo 4">
-                    </div>
-                </li>
-                <!-- Agrega más resultados aquí -->
-            </ul>
-        </section>
+        <h2 class="text-center">Resultados Recientes</h2>
+
+        <!-- Tabs de categorías -->
+        <ul class="nav nav-tabs justify-content-center" id="resultadosTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="masculinoLibre-tab" data-bs-toggle="tab" data-bs-target="#masculinoLibre" type="button" role="tab" aria-controls="masculinoLibre" aria-selected="true">Masculino Libre</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="masculinoSub16-tab" data-bs-toggle="tab" data-bs-target="#masculinoSub16" type="button" role="tab" aria-controls="masculinoSub16" aria-selected="false">Masculino Sub-16</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="femeninoLibre-tab" data-bs-toggle="tab" data-bs-target="#femeninoLibre" type="button" role="tab" aria-controls="femeninoLibre" aria-selected="false">Femenino Libre</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="femeninoSub16-tab" data-bs-toggle="tab" data-bs-target="#femeninoSub16" type="button" role="tab" aria-controls="femeninoSub16" aria-selected="false">Femenino Sub-16</button>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-4" id="resultadosTabContent">
+            <!-- Resultados de la categoría Masculino Libre -->
+            <div class="tab-pane fade show active" id="masculinoLibre" role="tabpanel" aria-labelledby="masculinoLibre-tab">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal1">
+                        <div class="d-flex align-items-center">
+                            <img src="imagenes/chañar.jpg" alt="Logo Equipo 1">
+                            <span class="ms-3">Equipo Masculino Libre 1</span>
+                        </div>
+                        <div class="score">3 - 2</div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">Equipo Masculino Libre 2</span>
+                            <img src="imagenes/cuervos rs y ld.jpg" alt="Logo Equipo 2">
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal2">
+                        <div class="d-flex align-items-center">
+                            <img src="imagenes/la dormida.jpg" alt="Logo Equipo 3">
+                            <span class="ms-3">Equipo Masculino Libre 3</span>
+                        </div>
+                        <div class="score">2 - 3</div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">Equipo Masculino Libre 4</span>
+                            <img src="imagenes/arrias.jpg" alt="Logo Equipo 4">
+                        </div>
+                    </li>
+                    <!-- Agrega más resultados aquí -->
+                </ul>
+            </div>
+
+            <!-- Resultados de la categoría Masculino Sub-16 -->
+            <div class="tab-pane fade" id="masculinoSub16" role="tabpanel" aria-labelledby="masculinoSub16-tab">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal3">
+                        <div class="d-flex align-items-center">
+                            <img src="imagenes/team5.jpg" alt="Logo Equipo 5">
+                            <span class="ms-3">Equipo Masculino Sub-16 1</span>
+                        </div>
+                        <div class="score">1 - 3</div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">Equipo Masculino Sub-16 2</span>
+                            <img src="imagenes/team6.jpg" alt="Logo Equipo 6">
+                        </div>
+                    </li>
+                    <!-- Agrega más resultados aquí -->
+                </ul>
+            </div>
+
+            <!-- Resultados de la categoría Femenino Libre -->
+            <div class="tab-pane fade" id="femeninoLibre" role="tabpanel" aria-labelledby="femeninoLibre-tab">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal4">
+                        <div class="d-flex align-items-center">
+                            <img src="imagenes/team7.jpg" alt="Logo Equipo 7">
+                            <span class="ms-3">Equipo Femenino Libre 1</span>
+                        </div>
+                        <div class="score">0 - 3</div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">Equipo Femenino Libre 2</span>
+                            <img src="imagenes/team8.jpg" alt="Logo Equipo 8">
+                        </div>
+                    </li>
+                    <!-- Agrega más resultados aquí -->
+                </ul>
+            </div>
+
+            <!-- Resultados de la categoría Femenino Sub-16 -->
+            <div class="tab-pane fade" id="femeninoSub16" role="tabpanel" aria-labelledby="femeninoSub16-tab">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal5">
+                        <div class="d-flex align-items-center">
+                            <img src="imagenes/team9.jpg" alt="Logo Equipo 9">
+                            <span class="ms-3">Equipo Femenino Sub-16 1</span>
+                        </div>
+                        <div class="score">3 - 1</div>
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">Equipo Femenino Sub-16 2</span>
+                            <img src="imagenes/team10.jpg" alt="Logo Equipo 10">
+                        </div>
+                    </li>
+                    <!-- Agrega más resultados aquí -->
+                </ul>
+            </div>
+        </div>
     </main>
 
     <!-- Modal 1 -->
@@ -94,7 +188,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="resultadoModal1Label">Detalles del Partido: Equipo 1 vs Equipo 2</h5>
+                    <h5 class="modal-title" id="resultadoModal1Label">Detalles del Partido: Equipo Masculino Libre 1 vs Equipo Masculino Libre 2</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -117,7 +211,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="resultadoModal2Label">Detalles del Partido: Equipo 3 vs Equipo 4</h5>
+                    <h5 class="modal-title" id="resultadoModal2Label">Detalles del Partido: Equipo Masculino Libre 3 vs Equipo Masculino Libre 4</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -135,7 +229,10 @@
         </div>
     </div>
 
-    <footer>
+    <!-- Puedes añadir más modales para otros resultados -->
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
         <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
     </footer>
 
@@ -143,4 +240,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>
