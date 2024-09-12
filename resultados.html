@@ -4,24 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados - Liga Del Norte</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Asegúrate de tener tu archivo CSS -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        h1, h2 {
+            margin: 20px 0;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        ul li img {
+            width: 50px;
+            height: 50px;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+        .score {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    </style>
 </head>
 <body>
+
     <header>
         <h1>Resultados de los Partidos</h1>
     </header>
-    <main>
+
+    <main class="container my-5">
         <section>
-            <h2>Resultados Recientes</h2>
-            <ul>
-                <li>Equipo 1 vs. Equipo 2: 3-2</li>
-                <li>Equipo 3 vs. Equipo 4: 2-3</li>
+            <h2 class="text-center">Resultados Recientes</h2>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal1">
+                    <div class="d-flex align-items-center">
+                        <img src="imagenes/chañar.jpg" alt="Logo Equipo 1">
+                        <span class="ms-3">Equipo 1</span>
+                    </div>
+                    <div class="score">3 - 2</div>
+                    <div class="d-flex align-items-center">
+                        <span class="me-3">Equipo 2</span>
+                        <img src="imagenes/cuervos rs y ld.jpg" alt="Logo Equipo 2">
+                    </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#resultadoModal2">
+                    <div class="d-flex align-items-center">
+                        <img src="imagenes/la dormida.jpg" alt="Logo Equipo 3">
+                        <span class="ms-3">Equipo 3</span>
+                    </div>
+                    <div class="score">2 - 3</div>
+                    <div class="d-flex align-items-center">
+                        <span class="me-3">Equipo 4</span>
+                        <img src="imagenes/arrias.jpg" alt="Logo Equipo 4">
+                    </div>
+                </li>
                 <!-- Agrega más resultados aquí -->
             </ul>
         </section>
     </main>
+
+    <!-- Modal 1 -->
+    <div class="modal fade" id="resultadoModal1" tabindex="-1" aria-labelledby="resultadoModal1Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultadoModal1Label">Detalles del Partido: Equipo 1 vs Equipo 2</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Sets del Partido</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Set 1:</strong> 25-23</li>
+                        <li><strong>Set 2:</strong> 22-25</li>
+                        <li><strong>Set 3:</strong> 15-13</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2 -->
+    <div class="modal fade" id="resultadoModal2" tabindex="-1" aria-labelledby="resultadoModal2Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultadoModal2Label">Detalles del Partido: Equipo 3 vs Equipo 4</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Sets del Partido</h6>
+                    <ul class="list-unstyled">
+                        <li><strong>Set 1:</strong> 21-25</li>
+                        <li><strong>Set 2:</strong> 25-19</li>
+                        <li><strong>Set 3:</strong> 18-16</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
     </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
