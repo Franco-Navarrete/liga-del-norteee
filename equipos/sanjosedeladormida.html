@@ -62,7 +62,7 @@
 <body>
     <header class="bg-warning text-white text-center py-4">
         <img src="../imagenes/logoliga.png" width="100px" alt="Logo de la Liga">
-        <h1 style="color:black" id="categoriaTitulo">Equipos Liga Del Norte</h1>
+        <h1 style="color:black" id="categoriaTitulo">Equipos Liga Del Norte Masculino</h1>
     </header>
 
 <div class="container my-5">
@@ -70,7 +70,7 @@
         <!-- Información básica del equipo -->
         <div class="col-md-4 text-center">
             <img src="../imagenes/la dormida.jpg" alt="Logo del equipo" class="team-logo">
-            <h2>San Jose</h2>
+            <h2>San Jose De La Dormida</h2>
             <p><strong>Localidad:</strong> San Jose De La Dormida, Córdoba</p>
         </div>
         <!-- Información del DT y lista de buena fe -->
@@ -80,29 +80,68 @@
                     <i class="fas fa-user-tie fa-2x"></i>
                     <h4 class="mb-0">Director Técnico: Rodriguez Milagros</h4>
                 </div>
-                <div class="player-list mt-4">
-                    <h5>Lista de Buena Fe - Jugadores</h5>
-                    <ul>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>1. Diego Martínez</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>2. Carlos Gómez</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>3. Andrés López</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>4. Miguel Torres</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>5. Fernando Rojas</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>6. Javier Fernández</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>7. Laura Pérez</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>8. Marta Gómez</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>9. Luis Hernández</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>10. Pedro Ruiz</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>11. Sonia Morales</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>12. Raúl Martínez</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>13. Beatriz Jiménez</strong></li>
-                        <li><i class="fas fa-volleyball-ball"></i><strong>14. José Rodríguez</strong></li>
-                    </ul>
+
+                <!-- Barra de navegación -->
+                <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="team1-tab" data-bs-toggle="tab" data-bs-target="#team1" type="button" role="tab" aria-controls="team1" aria-selected="true">Libre</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2" type="button" role="tab" aria-controls="team2" aria-selected="false">Sub 16</button>
+                    </li>
+                </ul>
+
+                <!-- Contenido de las listas -->
+                <div class="tab-content mt-3" id="myTabContent">
+                    <!-- Lista de jugadores 1 -->
+                    <div class="tab-pane fade show active player-list" id="team1" role="tabpanel" aria-labelledby="team1-tab">
+                        <h5>libre</h5>
+                        <ul>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Diego Martínez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Carlos Gómez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Andrés López</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>4. Miguel Torres</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>5. Fernando Rojas</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Diego Martínez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Carlos Gómez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Andrés López</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>4. Miguel Torres</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>5. Fernando Rojas</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Diego Martínez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Carlos Gómez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Andrés López</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>4. Miguel Torres</strong></li>
+                            <!-- Más jugadores si es necesario -->
+                        </ul>
+                    </div>
+
+                    <!-- Lista de jugadores 2 -->
+                    <div class="tab-pane fade player-list" id="team2" role="tabpanel" aria-labelledby="team2-tab">
+                        <h5>Sub 16</h5>
+                        <ul>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Javier Fernández</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Laura Pérez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Marta Gómez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>4. Luis Hernández</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>5. Pedro Ruiz</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Javier Fernández</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Laura Pérez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Marta Gómez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>4. Luis Hernández</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>5. Pedro Ruiz</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Javier Fernández</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Laura Pérez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Marta Gómez</strong></li>
+                            <li><i class="fas fa-volleyball-ball"></i><strong>4. Luis Hernández</strong></li>
+                            <!-- Más jugadores si es necesario -->
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Footer -->
 <footer>
