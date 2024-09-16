@@ -30,6 +30,24 @@
         .card {
             background-color: #f5f5f5;
         }
+            /* Botón flotante */
+            .float-button {
+               position: fixed;
+               bottom: 20px;
+               right: 20px;
+               background-color: #ffc107;
+               color: white;
+               border: none;
+               border-radius: 50%;
+               padding: 15px;
+               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+               font-size: 24px;
+               cursor: pointer;
+           }
+    
+           .float-button:hover {
+               background-color: #ffca28;
+           }
     </style>
 </head>
 <body>
@@ -391,6 +409,10 @@
             }
         }
     </script>
-
+    <a href="index.html" class="float-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+            <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
+        </svg>
+    </a>
 </body>
 </html>
