@@ -25,6 +25,7 @@
             from {
                 background-position: 0 0;
             }
+
             to {
                 background-position: 100% 100%;
             }
@@ -74,7 +75,6 @@
         <div class="container-fluid d-flex justify-content-between">
             <div>
                 <span>Tel: 3521 53-4882- </span>
-                
                 <span>Email: mr7626448@gmail.com </span>
             </div>
             <div class="social-icons">
@@ -94,13 +94,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                   
                     <li class="nav-item">
                         <a class="nav-link" href="sobrenosotros.html">Sobre Nosotros</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="competenciaDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             Calendario
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="competenciaDropdown">
@@ -123,7 +122,7 @@
                             <li><a class="dropdown-item" href="equiposfemeninos.html">Femenino</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item"></li>
+                    <li class="nav-item">
                         <a class="nav-link" href="como formar parte.html">Como formar parte</a>
                     </li>
                     <li class="nav-item">
@@ -133,8 +132,6 @@
             </div>
         </div>
     </nav>
-    
-    
 
     <!-- Footer opcional -->
     <footer>
@@ -143,31 +140,31 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
 </body>
-<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
-</html>
+
 <script type="module">
-    // Import the functions you need from the SDKs you need
+    // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-  
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+    // Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
-      authDomain: "liga-del-norte.firebaseapp.com",
-      projectId: "liga-del-norte",
-      storageBucket: "liga-del-norte.appspot.com",
-      messagingSenderId: "655679074901",
-      appId: "1:655679074901:web:867a248306701963039adc",
-      measurementId: "G-CZ5P9YCEWK"
+        apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
+        authDomain: "liga-del-norte.firebaseapp.com",
+        projectId: "liga-del-norte",
+        storageBucket: "liga-del-norte.appspot.com",
+        messagingSenderId: "655679074901",
+        appId: "1:655679074901:web:867a248306701963039adc",
+        measurementId: "G-CZ5P9YCEWK"
     };
-  
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
-  </script>
+</script>
+
+</html>
