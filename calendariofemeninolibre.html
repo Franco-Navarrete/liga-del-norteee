@@ -47,7 +47,6 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Fecha</th>
-                        <th>hora</th>
                         <th>Estadio</th>
                         <th>Equipo Local</th>
                         <th>Equipo Visitante</th>
@@ -83,10 +82,6 @@
               <div class="mb-3">
                 <label for="fecha" class="form-label">Fecha</label>
                 <input type="date" class="form-control" id="fecha">
-              </div>
-              <div class="mb-3"></div>
-                <label for="fecha" class="form-label">hora</label>
-                <input type="date" class="form-control" id="hora">
               </div>
               <div class="mb-3">
                 <label for="estadio" class="form-label">Nombre del Estadio</label>
@@ -142,7 +137,6 @@
                     const fila = `
                         <tr>
                             <td>${partido.fecha}</td>
-                            <td>${partido.hora}</td>
                             <td>${partido.estadio}</td>
                             <td>${partido.equipoLocal}</td>
                             <td>${partido.equipoVisitante}</td>
@@ -166,11 +160,10 @@
             const equipoVisitante = document.getElementById('equipoVisitante').value;
 
             const partidoData = {
-                Fecha,
-                hora
-                Estadio,
-                EquipoLocal,
-                EquipoVisitante,
+                fecha,
+                estadio,
+                equipoLocal,
+                equipoVisitante
             };
 
             if (partidoId) {
@@ -206,7 +199,6 @@
         function editarPartido(id, fecha, estadio, equipoLocal, equipoVisitante) {
             document.getElementById('partidoId').value = id;
             document.getElementById('fecha').value = fecha;
-            document.getElementById('equipoVisitante').value = hora;
             document.getElementById('estadio').value = estadio;
             document.getElementById('equipoLocal').value = equipoLocal;
             document.getElementById('equipoVisitante').value = equipoVisitante;
