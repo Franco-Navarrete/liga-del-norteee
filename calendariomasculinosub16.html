@@ -34,7 +34,7 @@
     <header class="bg-warning text-white text-center py-4">
         <img src="imagenes/logoliga.png" width="100px" alt="">
         <h1 style="color:black">Calendario de Partidos</h1>
-        <h2 style="color:black">Masculino Sub 16</h2>
+        <h2 style="color:black">Masculino sub 16</h2>
     </header>
     <main class="container my-4">
         <section>
@@ -47,12 +47,21 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Fecha</th>
+                        <th>Hora</th> <!-- Aquí está la línea que agrega "Hora" -->
                         <th>Estadio</th>
                         <th>Equipo Local</th>
                         <th>Equipo Visitante</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
+                <tbody id="calendario-body">
+                    <!-- Aquí se llenarán los datos desde Firebase -->
+                </tbody>
+            </table>
+        </section>
+        <!-- Botón para abrir el modal de agregar/editar -->
+    
+
                 <tbody id="calendario-body">
                     <!-- Aquí se llenarán los datos desde Firebase -->
                 </tbody>
@@ -70,41 +79,46 @@
     </a>
 
     <!-- Modal para agregar/editar partidos -->
-    <div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+<div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form id="partido-form">
-              <div class="mb-3">
-                <label for="fecha" class="form-label">Fecha</label>
-                <input type="date" class="form-control" id="fecha">
-              </div>
-              <div class="mb-3">
-                <label for="estadio" class="form-label">Nombre del Estadio</label>
-                <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
-              </div>
-              <div class="mb-3">
-                <label for="equipoLocal" class="form-label">Equipo Local</label>
-                <input type="text" class="form-control" id="equipoLocal" placeholder="Nombre del equipo local">
-              </div>
-              <div class="mb-3">
-                <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
-                <input type="text" class="form-control" id="equipoVisitante" placeholder="Nombre del equipo visitante">
-              </div>
-              <input type="hidden" id="partidoId">
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
-          </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="partido-form">
+                    <div class="mb-3">
+                        <label for="fecha" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="fecha">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hora" class="form-label">Hora</label>
+                        <input type="time" class="form-control" id="hora"> <!-- Cambiado a tipo "time" -->
+                    </div>
+                    <div class="mb-3">
+                        <label for="estadio" class="form-label">Nombre del Estadio</label>
+                        <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipoLocal" class="form-label">Equipo Local</label>
+                        <input type="text" class="form-control" id="equipoLocal" placeholder="Nombre del equipo local">
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
+                        <input type="text" class="form-control" id="equipoVisitante" placeholder="Nombre del equipo visitante">
+                    </div>
+                    <input type="hidden" id="partidoId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
+            </div>
         </div>
-      </div>
     </div>
+</div>
+
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
@@ -137,11 +151,12 @@
                     const fila = `
                         <tr>
                             <td>${partido.fecha}</td>
+                            <td>${partido.hora}</td>
                             <td>${partido.estadio}</td>
                             <td>${partido.equipoLocal}</td>
                             <td>${partido.equipoVisitante}</td>
                             <td>
-                                <button class="btn btn-sm btn-warning edit-button" onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
+                                <button class="btn btn-sm btn-warning edit-button" onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.hora}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
                                 <button class="btn btn-sm btn-danger delete-button" onclick="eliminarPartido('${doc.id}')">Eliminar</button>
                             </td>
                         </tr>
@@ -155,12 +170,14 @@
         document.getElementById('guardar-partido').addEventListener('click', function() {
             const partidoId = document.getElementById('partidoId').value;
             const fecha = document.getElementById('fecha').value;
+            const hora = document.getElementById('hora').value;
             const estadio = document.getElementById('estadio').value;
             const equipoLocal = document.getElementById('equipoLocal').value;
             const equipoVisitante = document.getElementById('equipoVisitante').value;
 
             const partidoData = {
                 fecha,
+                hora,
                 estadio,
                 equipoLocal,
                 equipoVisitante
@@ -173,6 +190,8 @@
                     document.getElementById('partido-form').reset();
                     document.getElementById('partidoId').value = '';
                     cargarCalendario();
+                    document.getElementById('partidoId').value = '';
+                    cargarHora();
                     document.getElementById('partidoModal').classList.remove('show');
                 });
             } else {
@@ -181,6 +200,8 @@
                     alert('Partido agregado correctamente');
                     document.getElementById('partido-form').reset();
                     cargarCalendario();
+                    document.getElementById('partido-form').reset();
+                    cargarHora();
                 });
             }
         });
@@ -193,12 +214,14 @@
                     cargarCalendario();
                 });
             }
+            // partidos-sub-16 fem?! que le como cambio eso para que afecte al fem libre?
         }
 
         // Función para cargar los datos en el modal para editar
         function editarPartido(id, fecha, estadio, equipoLocal, equipoVisitante) {
             document.getElementById('partidoId').value = id;
             document.getElementById('fecha').value = fecha;
+            document.getElementById('hora').value = hora;
             document.getElementById('estadio').value = estadio;
             document.getElementById('equipoLocal').value = equipoLocal;
             document.getElementById('equipoVisitante').value = equipoVisitante;
