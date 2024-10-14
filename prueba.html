@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Equipos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .team {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        img {
+            width: 50px;
+        }
+    </style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-storage.js"></script>
+
+    <script>
+        // Configura tu Firebase aquí
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
+            authDomain: "liga-del-norte.firebaseapp.com",
+            projectId: "liga-del-norte",
+            storageBucket: "liga-del-norte.appspot.com",
+            messagingSenderId: "655679074901",
+            appId: "1:655679074901:web:867a248306701963039adc",
+            measurementId: "G-CZ5P9YCEWK"
+        };
+        
+        // Inicializa Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+    </script>
+</head>
+<body>
+
+<h1>Gestor de Equipos</h1>
+<div>
+    <h2>Agregar Nuevo Equipo</h2>
+    <input type="text" id="teamName" placeholder="Nombre del equipo"><br><br>
+    <input type="text" id="teamLocation" placeholder="Localidad del equipo"><br><br>
+    <input type="text" id="teamCategory" placeholder="Categoría"><br><br>
+    <input type="text" id="teamCoach" placeholder="Entrenador"><br><br>
+    <input type="file" id="teamLogo" accept="image/*"><br><br>
+    <button onclick="addTeam()">Agregar Equipo</button>
+</div>
+
+<div id="teamsContainer"></div>
+
+<script>
+    async function addTeam() {
+        const teamName = document.getElementById('teamName').value;
+        const teamLocation = document.getElementById('teamLocation').value;
+        const teamCategory = document.getElementById('teamCategory').value;
+        const teamCoach = document.getElementById('teamCoach').value;
+        const teamLogo = document.getElementById('teamLogo').files[0];
+
+        if (!teamName || !teamLocation || !teamCategory || !teamCoach || !teamLogo) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+
+        // Subir logo a Firebase Storage
+        const logoRef = storage.ref(`team-logos/${teamLogo.name}`);
+        await logoRef.put(teamLogo);
+        const logoURL = await logoRef.getDownloadURL();
+
+        // Agregar el equipo a Firestore
+        const teamRef = await db.collection('teams').add({
+            name: teamName,
+            location: teamLocation,
+            category: teamCategory,
+            coach: teamCoach,
+            logo: logoURL,
+            players: []
+        });
+
+        renderTeam(teamRef.id, teamName, teamLocation, teamCategory, teamCoach, logoURL);
+        document.getElementById('teamName').value = '';
+        document.getElementById('teamLocation').value = '';
+        document.getElementById('teamCategory').value = '';
+        document.getElementById('teamCoach').value = '';
+        document.getElementById('teamLogo').value = '';
+    }
+
+    function renderTeam(teamId, teamName, teamLocation, teamCategory, teamCoach, logoURL) {
+        const teamDiv = document.createElement('div');
+        teamDiv.classList.add('team');
+
+        const nameElement = document.createElement('h3');
+        nameElement.innerText = teamName;
+
+        const locationElement = document.createElement('p');
+        locationElement.innerText = `Localidad: ${teamLocation}`;
+
+        const categoryElement = document.createElement('p');
+        categoryElement.innerText = `Categoría: ${teamCategory}`;
+
+        const coachElement = document.createElement('p');
+        coachElement.innerText = `Entrenador: ${teamCoach}`;
+
+        const logoElement = document.createElement('img');
+        logoElement.src = logoURL;
+        logoElement.alt = `Logo de ${teamName}`;
+
+        const editButton = document.createElement('button');
+        editButton.innerText = 'Editar';
+        editButton.onclick = () => editTeam(teamId, nameElement, locationElement, categoryElement, coachElement, logoElement);
+
+        const playersList = document.createElement('ul');
+        const addPlayerInput = document.createElement('input');
+        addPlayerInput.type = 'text';
+        addPlayerInput.placeholder = 'Nombre del jugador';
+
+        const addPlayerButton = document.createElement('button');
+        addPlayerButton.innerText = 'Agregar Jugador';
+        addPlayerButton.onclick = () => addPlayer(teamId, addPlayerInput.value, playersList);
+
+        teamDiv.appendChild(nameElement);
+        teamDiv.appendChild(locationElement);
+        teamDiv.appendChild(categoryElement);
+        teamDiv.appendChild(coachElement);
+        teamDiv.appendChild(logoElement);
+        teamDiv.appendChild(editButton);
+        teamDiv.appendChild(addPlayerInput);
+        teamDiv.appendChild(addPlayerButton);
+        teamDiv.appendChild(playersList);
+
+        document.getElementById('teamsContainer').appendChild(teamDiv);
+    }
+
+    async function editTeam(teamId, nameElement, locationElement, categoryElement, coachElement, logoElement) {
+        const newName = prompt('Editar nombre del equipo:', nameElement.innerText);
+        const newLocation = prompt('Editar localidad del equipo:', locationElement.innerText.split(': ')[1]);
+        const newCategory = prompt('Editar categoría del equipo:', categoryElement.innerText.split(': ')[1]);
+        const newCoach = prompt('Editar entrenador:', coachElement.innerText.split(': ')[1]);
+
+        if (newName) {
+            nameElement.innerText = newName;
+            await db.collection('teams').doc(teamId).update({ name: newName });
+        }
+        if (newLocation) {
+            locationElement.innerText = `Localidad: ${newLocation}`;
+            await db.collection('teams').doc(teamId).update({ location: newLocation });
+        }
+        if (newCategory) {
+            categoryElement.innerText = `Categoría: ${newCategory}`;
+            await db.collection('teams').doc(teamId).update({ category: newCategory });
+        }
+        if (newCoach) {
+            coachElement.innerText = `Entrenador: ${newCoach}`;
+            await db.collection('teams').doc(teamId).update({ coach: newCoach });
+        }
+
+        const newLogo = document.createElement('input');
+        newLogo.type = 'file';
+        newLogo.accept = 'image/*';
+        const uploadLogo = confirm('¿Quieres cambiar el logo del equipo?');
+
+        if (uploadLogo) {
+            newLogo.onchange = async () => {
+                const newLogoFile = newLogo.files[0];
+                const logoRef = storage.ref(`team-logos/${newLogoFile.name}`);
+                await logoRef.put(newLogoFile);
+                const logoURL = await logoRef.getDownloadURL();
+
+                logoElement.src = logoURL;
+                await db.collection('teams').doc(teamId).update({ logo: logoURL });
+            };
+            newLogo.click();
+        }
+    }
+
+    async function addPlayer(teamId, playerName, playersList) {
+        if (!playerName) {
+            alert('Por favor, ingresa un nombre de jugador.');
+            return;
+        }
+
+        await db.collection('teams').doc(teamId).update({
+            players: firebase.firestore.FieldValue.arrayUnion(playerName)
+        });
+
+        const playerItem = document.createElement('li');
+        playerItem.innerText = playerName;
+        playersList.appendChild(playerItem);
+    }
+</script>
+
+</body>
+</html>

@@ -30,12 +30,32 @@
         .edit-button, .delete-button {
             margin-right: 10px;
         }
+
+        .login-button {
+            margin-top: 20px;
+        }
+
+        .auth-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .auth-container form {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
+    
     <header class="bg-warning text-white text-center py-4">
         <img src="imagenes/logoliga.png" width="100px" alt="">
         <h1 style="color:black">Calendario de Partidos</h1>
         <h2 style="color:black">Masculino sub 16</h2>
     </header>
+    
     <main class="container my-4">
         <section>
             <table class="table table-bordered table-hover">
@@ -47,11 +67,11 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Fecha</th>
-                        <th>Hora</th> <!-- Aquí está la línea que agrega "Hora" -->
+                        <th>Hora</th>
                         <th>Estadio</th>
                         <th>Equipo Local</th>
                         <th>Equipo Visitante</th>
-                        <th>Acciones</th>
+                        <th id="acciones-header" class="hidden">Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="calendario-body">
@@ -60,15 +80,7 @@
             </table>
         </section>
         <!-- Botón para abrir el modal de agregar/editar -->
-    
-
-                <tbody id="calendario-body">
-                    <!-- Aquí se llenarán los datos desde Firebase -->
-                </tbody>
-            </table>
-        </section>
-        <!-- Botón para abrir el modal de agregar/editar -->
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#partidoModal">Agregar Partido</button>
+        <button class="btn btn-primary hidden" id="agregar-partido-button" data-bs-toggle="modal" data-bs-target="#partidoModal">Agregar Partido</button>
     </main>
 
     <!-- Botón flotante que lleva a index.html -->
@@ -78,47 +90,66 @@
         </svg>
     </a>
 
+    <!-- Botón para iniciar sesión -->
+    <div class="auth-container">
+        <button class="btn btn-secondary" id="login-button">Iniciar sesión</button>
+    </div>
+
+    <!-- Formulario de inicio de sesión (oculto inicialmente) -->
+    <div id="login-form-container" class="auth-container hidden">
+        <form id="login-form">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Ingresa tu email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
+            </div>
+            <button type="button" class="btn btn-primary login-button" id="submit-login-button">Iniciar sesión</button>
+        </form>
+    </div>
+
     <!-- Modal para agregar/editar partidos -->
-<div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="partido-form">
-                    <div class="mb-3">
-                        <label for="fecha" class="form-label">Fecha</label>
-                        <input type="date" class="form-control" id="fecha">
-                    </div>
-                    <div class="mb-3">
-                        <label for="hora" class="form-label">Hora</label>
-                        <input type="time" class="form-control" id="hora"> <!-- Cambiado a tipo "time" -->
-                    </div>
-                    <div class="mb-3">
-                        <label for="estadio" class="form-label">Nombre del Estadio</label>
-                        <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
-                    </div>
-                    <div class="mb-3">
-                        <label for="equipoLocal" class="form-label">Equipo Local</label>
-                        <input type="text" class="form-control" id="equipoLocal" placeholder="Nombre del equipo local">
-                    </div>
-                    <div class="mb-3">
-                        <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
-                        <input type="text" class="form-control" id="equipoVisitante" placeholder="Nombre del equipo visitante">
-                    </div>
-                    <input type="hidden" id="partidoId">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
+    <div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="partido-form">
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha">
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora" class="form-label">Hora</label>
+                            <input type="time" class="form-control" id="hora">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estadio" class="form-label">Nombre del Estadio</label>
+                            <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipoLocal" class="form-label">Equipo Local</label>
+                            <input type="text" class="form-control" id="equipoLocal" placeholder="Nombre del equipo local">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
+                            <input type="text" class="form-control" id="equipoVisitante" placeholder="Nombre del equipo visitante">
+                        </div>
+                        <input type="hidden" id="partidoId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
@@ -127,7 +158,6 @@
 
     <!-- Configuración de Firebase -->
     <script>
-        // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
             authDomain: "liga-del-norte.firebaseapp.com",
@@ -139,10 +169,36 @@
         };
 
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Cargar los partidos desde Firebase Firestore
-        function cargarCalendario() {
+        // Verificar si el usuario tiene permisos (autenticado)
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                mostrarOpcionesDeAdmin();
+            } else {
+                mostrarCalendarioSoloLectura();
+            }
+        });
+
+        // Mostrar calendario con opciones de edición
+        function mostrarOpcionesDeAdmin() {
+            document.getElementById('login-form-container').classList.add('hidden');
+            document.getElementById('agregar-partido-button').classList.remove('hidden');
+            document.getElementById('acciones-header').classList.remove('hidden');
+            cargarCalendario(true);
+        }
+
+        // Mostrar calendario solo lectura
+        function mostrarCalendarioSoloLectura() {
+            document.getElementById('login-form-container').classList.add('hidden');
+            document.getElementById('agregar-partido-button').classList.add('hidden');
+            document.getElementById('acciones-header').classList.add('hidden');
+            cargarCalendario(false);
+        }
+
+        // Función para cargar el calendario desde Firebase
+        function cargarCalendario(adminMode) {
             const calendarioBody = document.getElementById('calendario-body');
             calendarioBody.innerHTML = ''; // Limpiar contenido
             db.collection("partidos-sub16-masc").get().then((querySnapshot) => {
@@ -155,9 +211,9 @@
                             <td>${partido.estadio}</td>
                             <td>${partido.equipoLocal}</td>
                             <td>${partido.equipoVisitante}</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning edit-button" onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.hora}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
-                                <button class="btn btn-sm btn-danger delete-button" onclick="eliminarPartido('${doc.id}')">Eliminar</button>
+                            <td class="${adminMode ? '' : 'hidden'}">
+                                <button class="btn btn-sm btn-warning edit-button ${adminMode ? '' : 'hidden'}" onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.hora}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
+                                <button class="btn btn-sm btn-danger delete-button ${adminMode ? '' : 'hidden'}" onclick="eliminarPartido('${doc.id}')">Eliminar</button>
                             </td>
                         </tr>
                     `;
@@ -166,8 +222,27 @@
             });
         }
 
-        // Función para guardar o editar un partido
-        document.getElementById('guardar-partido').addEventListener('click', function() {
+        // Mostrar formulario de login
+        document.getElementById('login-button').addEventListener('click', function () {
+            document.getElementById('login-form-container').classList.toggle('hidden');
+        });
+
+        // Manejo del login
+        document.getElementById('submit-login-button').addEventListener('click', function () {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    mostrarOpcionesDeAdmin();
+                })
+                .catch((error) => {
+                    alert('Error al iniciar sesión: ' + error.message);
+                });
+        });
+
+        // Guardar o editar partido
+        document.getElementById('guardar-partido').addEventListener('click', function () {
             const partidoId = document.getElementById('partidoId').value;
             const fecha = document.getElementById('fecha').value;
             const hora = document.getElementById('hora').value;
@@ -175,33 +250,19 @@
             const equipoLocal = document.getElementById('equipoLocal').value;
             const equipoVisitante = document.getElementById('equipoVisitante').value;
 
-            const partidoData = {
-                fecha,
-                hora,
-                estadio,
-                equipoLocal,
-                equipoVisitante
-            };
+            const partidoData = { fecha, hora, estadio, equipoLocal, equipoVisitante };
 
             if (partidoId) {
-                // Editar partido
                 db.collection("partidos-sub16-masc").doc(partidoId).update(partidoData).then(() => {
                     alert('Partido actualizado correctamente');
                     document.getElementById('partido-form').reset();
-                    document.getElementById('partidoId').value = '';
-                    cargarCalendario();
-                    document.getElementById('partidoId').value = '';
-                    cargarHora();
-                    document.getElementById('partidoModal').classList.remove('show');
+                    cargarCalendario(true);
                 });
             } else {
-                // Agregar nuevo partido
                 db.collection("partidos-sub16-masc").add(partidoData).then(() => {
                     alert('Partido agregado correctamente');
                     document.getElementById('partido-form').reset();
-                    cargarCalendario();
-                    document.getElementById('partido-form').reset();
-                    cargarHora();
+                    cargarCalendario(true);
                 });
             }
         });
@@ -211,14 +272,13 @@
             if (confirm('¿Estás seguro de que deseas eliminar este partido?')) {
                 db.collection("partidos-sub16-masc").doc(id).delete().then(() => {
                     alert('Partido eliminado correctamente');
-                    cargarCalendario();
+                    cargarCalendario(true);
                 });
             }
-           
         }
 
-        // Función para cargar los datos en el modal para editar
-        function editarPartido(id, fecha, estadio, equipoLocal, equipoVisitante) {
+        // Función para editar un partido
+        function editarPartido(id, fecha, hora, estadio, equipoLocal, equipoVisitante) {
             document.getElementById('partidoId').value = id;
             document.getElementById('fecha').value = fecha;
             document.getElementById('hora').value = hora;
@@ -226,13 +286,9 @@
             document.getElementById('equipoLocal').value = equipoLocal;
             document.getElementById('equipoVisitante').value = equipoVisitante;
 
-            // Mostrar el modal
             const modal = new bootstrap.Modal(document.getElementById('partidoModal'));
             modal.show();
         }
-
-        // Cargar el calendario al cargar la página
-        window.onload = cargarCalendario;
     </script>
 
     <!-- Bootstrap JS -->
