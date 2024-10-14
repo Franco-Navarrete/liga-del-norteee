@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario - Liga Del Norte</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <style>
         /* Botón flotante */
@@ -27,7 +29,8 @@
             background-color: #ffca28;
         }
 
-        .edit-button, .delete-button {
+        .edit-button,
+        .delete-button {
             margin-right: 10px;
         }
     </style>
@@ -60,12 +63,12 @@
             </table>
         </section>
         <!-- Botón para abrir el modal de agregar/editar -->
-    
 
-                <tbody id="calendario-body">
-                    <!-- Aquí se llenarán los datos desde Firebase -->
-                </tbody>
-            </table>
+
+        <tbody id="calendario-body">
+            <!-- Aquí se llenarán los datos desde Firebase -->
+        </tbody>
+        </table>
         </section>
         <!-- Botón para abrir el modal de agregar/editar -->
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#partidoModal">Agregar Partido</button>
@@ -73,51 +76,55 @@
 
     <!-- Botón flotante que lleva a index.html -->
     <a href="index.html" class="float-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house-door-fill" viewBox="0 0 16 16">
-            <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house-door-fill"
+            viewBox="0 0 16 16">
+            <path
+                d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z" />
         </svg>
     </a>
 
     <!-- Modal para agregar/editar partidos -->
-<div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="partido-form">
-                    <div class="mb-3">
-                        <label for="fecha" class="form-label">Fecha</label>
-                        <input type="date" class="form-control" id="fecha">
-                    </div>
-                    <div class="mb-3">
-                        <label for="hora" class="form-label">Hora</label>
-                        <input type="time" class="form-control" id="hora"> <!-- Cambiado a tipo "time" -->
-                    </div>
-                    <div class="mb-3">
-                        <label for="estadio" class="form-label">Nombre del Estadio</label>
-                        <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
-                    </div>
-                    <div class="mb-3">
-                        <label for="equipoLocal" class="form-label">Equipo Local</label>
-                        <input type="text" class="form-control" id="equipoLocal" placeholder="Nombre del equipo local">
-                    </div>
-                    <div class="mb-3">
-                        <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
-                        <input type="text" class="form-control" id="equipoVisitante" placeholder="Nombre del equipo visitante">
-                    </div>
-                    <input type="hidden" id="partidoId">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
+    <div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="partido-form">
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha">
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora" class="form-label">Hora</label>
+                            <input type="time" class="form-control" id="hora"> <!-- Cambiado a tipo "time" -->
+                        </div>
+                        <div class="mb-3">
+                            <label for="estadio" class="form-label">Nombre del Estadio</label>
+                            <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipoLocal" class="form-label">Equipo Local</label>
+                            <input type="text" class="form-control" id="equipoLocal"
+                                placeholder="Nombre del equipo local">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
+                            <input type="text" class="form-control" id="equipoVisitante"
+                                placeholder="Nombre del equipo visitante">
+                        </div>
+                        <input type="hidden" id="partidoId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <!-- Firebase SDKs -->
@@ -156,7 +163,9 @@
                             <td>${partido.equipoLocal}</td>
                             <td>${partido.equipoVisitante}</td>
                             <td>
-                                <button class="btn btn-sm btn-warning edit-button" onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.hora}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
+                              <button class="btn btn-sm btn-warning edit-button" 
+    onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.hora}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
+
                                 <button class="btn btn-sm btn-danger delete-button" onclick="eliminarPartido('${doc.id}')">Eliminar</button>
                             </td>
                         </tr>
@@ -167,7 +176,7 @@
         }
 
         // Función para guardar o editar un partido
-        document.getElementById('guardar-partido').addEventListener('click', function() {
+        document.getElementById('guardar-partido').addEventListener('click', function () {
             const partidoId = document.getElementById('partidoId').value;
             const fecha = document.getElementById('fecha').value;
             const hora = document.getElementById('hora').value;
@@ -214,14 +223,14 @@
                     cargarCalendario();
                 });
             }
-            
+
         }
 
         // Función para cargar los datos en el modal para editar
-        function editarPartido(id, fecha, estadio, equipoLocal, equipoVisitante) {
+        function editarPartido(id, fecha, hora, estadio, equipoLocal, equipoVisitante) {
             document.getElementById('partidoId').value = id;
             document.getElementById('fecha').value = fecha;
-            document.getElementById('hora').value = hora;
+            document.getElementById('hora').value = hora; // Ahora se pasa correctamente la hora
             document.getElementById('estadio').value = estadio;
             document.getElementById('equipoLocal').value = equipoLocal;
             document.getElementById('equipoVisitante').value = equipoVisitante;
@@ -231,6 +240,7 @@
             modal.show();
         }
 
+
         // Cargar el calendario al cargar la página
         window.onload = cargarCalendario;
     </script>
@@ -238,4 +248,5 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

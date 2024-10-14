@@ -14,103 +14,104 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-color: #f0f0f5;
         }
 
         .info-header {
             background-color: #007bff;
             color: white;
-            padding: 50px 0;
+            padding: 30px 0;
             text-align: center;
         }
 
         .info-header h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: bold;
         }
 
         .info-header p {
             font-size: 1.2rem;
+            margin-top: 10px;
         }
 
         .info-section {
-            padding: 60px 0;
-        }
-
-        .info-section h2 {
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 40px;
+            padding: 40px 0;
         }
 
         .info-details {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-bottom: 30px;
         }
 
         .info-details i {
-            font-size: 2rem;
-            margin-right: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
             color: #007bff;
         }
 
         footer {
             background-color: #343a40;
             color: white;
+            padding: 20px 0;
             text-align: center;
-            padding: 20px;
         }
 
-        footer .social-icons a {
+        .social-icons a {
             color: white;
-            margin-right: 15px;
+            margin: 0 10px;
+            font-size: 1.5rem;
         }
 
-        footer .social-icons a:hover {
+        .social-icons a:hover {
             color: #ffeb3b;
+        }
+
+        .float-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            border-radius: 50%;
+            padding: 10px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .float-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 
 <body>
-    <!-- Header de información -->
     <header class="info-header">
-        <h1>Información de la Liga del Norte de Voleibol</h1>
+        <h1>Liga del Norte de Voleibol</h1>
         <p>Conoce más sobre nuestra liga y cómo puedes participar.</p>
     </header>
 
     <!-- Sección de información -->
     <section class="info-section">
         <div class="container">
-            <h2>Detalles de la Liga</h2>
             <div class="info-details">
-                <p><i class="fas fa-phone"></i>Teléfono: 3521534882</p>
-                <p><i class="fas fa-envelope"></i>Email: ligadelnorte569@gmail.com</p>
-                <p><i class="fas fa-map-marker-alt"></i>Dirección: Calle Falsa 123, La Dormida, Córdoba</p>
-                <p><i class="fas fa-info-circle"></i> La Liga del Norte de Voleibol organiza torneos locales y regionales para equipos aficionados y profesionales. Nuestro objetivo es fomentar el voleibol en todas las edades y niveles, proporcionando una plataforma de competencia justa y emocionante.</p>
+                <p><i class="fas fa-phone"></i> Teléfono: 3521534882</p>
+                <p><i class="fas fa-envelope"></i> Email: ligadelnorte569@gmail.com</p>
+                <p><i class="fas fa-info-circle"></i> Organizamos torneos locales y regionales para fomentar el voleibol en todas las edades y niveles.</p>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p>&copy; 2024 Liga del Norte de Voleibol. Todos los derechos reservados.</p>
-                </div>
-                <div class="col-md-6 social-icons">
-                    <a href="https://www.instagram.com/liga_del_norte2024?igsh=MWVhM2g5Z2FsYjQybg%3D%3D" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
-                </div>
-                <a href="index.html" class="float-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="yellow" class="bi bi-house-door-fill" viewBox="0 0 16 16">
-                        <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
-                    </svg>
-                </a>
-            </div>
+        <p>&copy; 2024 Liga del Norte de Voleibol</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/liga_del_norte2024" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
         </div>
+        <a href="index.html" class="float-button">
+            <i class="fas fa-home"></i>
+        </a>
     </footer>
 
     <!-- Bootstrap JS -->
