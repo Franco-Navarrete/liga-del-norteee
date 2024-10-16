@@ -10,11 +10,12 @@
     <!-- Font Awesome para los iconos -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
+        html, body {
+            height: 100%; /* Asegura que el cuerpo ocupe toda la altura */
             margin: 0;
             padding: 0;
-            background-color: #f0f0f5;
+            display: flex;
+            flex-direction: column;
         }
 
         .info-header {
@@ -36,6 +37,8 @@
 
         .info-section {
             padding: 40px 0;
+            flex: 1; /* Esto empuja el contenido hacia abajo */
+
         }
 
         .info-details {
@@ -82,6 +85,15 @@
 
         .float-button:hover {
             background-color: #0056b3;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
