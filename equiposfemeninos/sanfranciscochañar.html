@@ -45,11 +45,16 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Alineación para los botones */
+            justify-content: space-between;
         }
         .player-list li i {
             margin-right: 10px;
             color: #ffa200;
+        }
+        .team-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         footer {
             background-color: #343a40;
@@ -66,261 +71,307 @@
         <h1 style="color:black" id="categoriaTitulo">Equipos Liga Del Norte</h1>
     </header>
 
-<div class="container my-5">
-    <div class="row">
-        <!-- Información básica del equipo -->
-        <div class="col-md-4 text-center">
-            <img src="../imagenes/chañar.jpg" alt="Logo del equipo" class="team-logo">
-            <h2>San Fransisco de Chañar</h2>
-            <p><strong>Localidad:</strong> San Francisco de Chañar, Córdoba</p>
-        </div>
-         <!-- Información del DT y lista de buena fe -->
-         <div class="col-md-8">
-            <div class="team-info">
-                <div class="coach-info">
-                    <i class="fas fa-user-tie fa-2x"></i>
-                    <h4 class="mb-0">Director Técnico: Diaz Luciano/Diaz Claudio</h4>
-                </div>
-
-                <!-- Barra de navegación -->
-                <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="team1-tab" data-bs-toggle="tab" data-bs-target="#team1" type="button" role="tab" aria-controls="team1" aria-selected="true">Sub 16</button>
-                    </li>
-                    
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2" type="button" role="tab" aria-controls="team2" aria-selected="false">Femenino Libre 1</button>
-                    </li>
-                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="team3-tab" data-bs-toggle="tab" data-bs-target="#team3" type="button" role="tab" aria-controls="team3" aria-selected="false">Femenino Libre 2</button>
-                    </li>
-                </ul>
-
-                <!-- Botón para agregar/edit jugador -->
-                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#playerModal">Agregar Jugador</button>
-
-                <!-- Contenido de las listas -->
-                <div class="tab-content mt-3" id="myTabContent">
-                    <!-- Lista de jugadores Sub 16 -->
-                    <div class="tab-pane fade show active player-list" id="team1" role="tabpanel" aria-labelledby="team1-tab">
-                        <h5>Sub 16</h5>
-                        <ul id="sub16List"> 
-                            <li>
-                                <i class="fas fa-volleyball-ball"></i>
-                                <strong>1. Ana Agustina Diaz</strong>
-                                <span class="date">(01/01/2005)</span>
-                                <span class="dni">D.N.I: 12345678</span>
-                                <div>
-                                    <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
-                                </div>
-                            </li> 
-                            <li>
-                                <i class="fas fa-volleyball-ball"></i>
-                                <strong>2. Fatima Villaruel</strong>
-                                <span class="date">(02/02/2004)</span>
-                                <span class="dni">D.N.I: 23456789</span>
-                                <div>
-                                    <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
-                                </div>
-                            </li> 
-                            <li>
-                                <i class="fas fa-volleyball-ball"></i>
-                                <strong>3. Pia Muriel Navarro</strong>
-                                <span class="date">(03/03/2003)</span>
-                                <span class="dni">D.N.I: 34567890</span>
-                                <div>
-                                    <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
-                                </div>
-                            </li> 
-                        </ul> 
-                    </div>
-
-                    <!-- Lista de jugadores Femenino Libre 1 -->
-                    <div class="tab-pane fade player-list" id="team2" role="tabpanel" aria-labelledby="team2-tab">
-                        <h5>Femenino Libre 1</h5>
-                        <ul id="femeninoLibre1List">
-                            <li>
-                                <i class="fas fa-volleyball-ball"></i>
-                                <strong>1. a</strong>
-                                <span class="date">(01/01/2000)</span>
-                                <span class="dni">D.N.I: 45678901</span>
-                                <div>
-                                    <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Lista de jugadores Femenino Libre 2 -->
-                    <div class="tab-pane fade player-list" id="team3" role="tabpanel" aria-labelledby="team3-tab">
-                        <h5>Femenino Libre 2</h5>
-                        <ul id="femeninoLibre2List">
-                            <li>
-                                <i class="fas fa-volleyball-ball"></i>
-                                <strong>1. a</strong>
-                                <span class="date">(01/01/2001)</span>
-                                <span class="dni">D.N.I: 56789012</span>
-                                <div>
-                                    <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                    <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+    <div class="container my-5">
+        <div class="row">
+            <!-- Información básica del equipo -->
+            <div class="col-md-4 text-center">
+                <img src="../imagenes/chañar.jpg" alt="Logo del equipo" class="team-logo">
+                <h2>San Fransisco de Chañar</h2>
+                <p><strong>Localidad:</strong> San Francisco de Chañar, Córdoba</p>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- Modal para agregar/edit jugador -->
-<div class="modal fade" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="playerModalLabel">Agregar Jugador</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="playerForm">
-                    <div class="mb-3">
-                        <label for="playerFirstName" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="playerFirstName" placeholder="Nombre" required>
+            <!-- Información del DT y lista de buena fe -->
+            <div class="col-md-8">
+                <div class="team-info">
+                    <div class="coach-info">
+                        <i class="fas fa-user-tie fa-2x"></i>
+                        <h4 class="mb-0">Director Técnico: Diaz Luciano/Diaz Claudio</h4>
                     </div>
-                    <div class="mb-3">
-                        <label for="playerLastName" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" id="playerLastName" placeholder="Apellido" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="playerDNI" class="form-label">D.N.I.</label>
-                        <input type="text" class="form-control" id="playerDNI" placeholder="D.N.I." required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dobDay" class="form-label">Fecha de Nacimiento</label>
-                        <div class="row">
-                            <div class="col">
-                                <input type="number" class="form-control" id="dobDay" placeholder="Día" min="1" max="31" required>
+
+                    <!-- Barra de navegación -->
+                    <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <div class="team-header">
+                                <button class="nav-link active" id="team1-tab" data-bs-toggle="tab" data-bs-target="#team1" type="button" role="tab" aria-controls="team1" aria-selected="true">
+                                    <span id="team1Name">Sub 16</span>
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="editTeamName('team1')">Editar</button>
                             </div>
-                            <div class="col">
-                                <input type="number" class="form-control" id="dobMonth" placeholder="Mes" min="1" max="12" required>
+                        </li>
+                        
+                        <li class="nav-item" role="presentation">
+                            <div class="team-header">
+                                <button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2" type="button" role="tab" aria-controls="team2" aria-selected="false">
+                                    <span id="team2Name">Femenino Libre 1</span>
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="editTeamName('team2')">Editar</button>
                             </div>
-                            <div class="col">
-                                <input type="number" class="form-control" id="dobYear" placeholder="Año" min="1900" max="2024" required>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <div class="team-header">
+                                <button class="nav-link" id="team3-tab" data-bs-toggle="tab" data-bs-target="#team3" type="button" role="tab" aria-controls="team3" aria-selected="false">
+                                    <span id="team3Name">Femenino Libre 2</span>
+                                </button>
+                                <button class="btn btn-warning btn-sm" onclick="editTeamName('team3')">Editar</button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="teamSelect" class="form-label">Seleccionar Equipo</label>
-                        <select class="form-select" id="teamSelect" required>
-                            <option value="sub16">Sub 16</option>
-                            <option value="femeninoLibre1">Femenino Libre 1</option>
-                            <option value="femeninoLibre2">Femenino Libre 2</option>
-                        </select>
-                    </div>
-                    <input type="hidden" id="playerIndex">
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" form="playerForm" class="btn btn-primary">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
+                        </li>
+                    </ul>
 
-<!-- Footer -->
-<footer>
-    <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
-</footer>
+                    <!-- Botón para agregar jugador -->
+                    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#playerModal">Agregar Jugador</button>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    let editingIndex = -1;
-
-    document.getElementById("playerForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        const playerFirstName = document.getElementById("playerFirstName").value;
-        const playerLastName = document.getElementById("playerLastName").value;
-        const playerDNI = document.getElementById("playerDNI").value;
-        const dobDay = document.getElementById("dobDay").value;
-        const dobMonth = document.getElementById("dobMonth").value;
-        const dobYear = document.getElementById("dobYear").value;
-        const dateOfBirth = `${dobDay}/${dobMonth}/${dobYear}`;
-        const team = document.getElementById("teamSelect").value;
-
-        const playerName = `${playerFirstName} ${playerLastName}`;
-
-        if (editingIndex === -1) {
-            // Agregar jugador
-            let newPlayerHtml = `<li>
+                    <!-- Contenido de las listas -->
+                    <div class="tab-content mt-3" id="myTabContent">
+                        <!-- Lista de jugadores Sub 16 -->
+                        <div class="tab-pane fade show active player-list" id="team1" role="tabpanel" aria-labelledby="team1-tab">
+                            <h5><span id="team1ListName">Sub 16</span></h5>
+                            <ul id="sub16List">
+                                <!-- Jugadores de ejemplo -->
+                                <li>
                                     <i class="fas fa-volleyball-ball"></i>
-                                    <strong>${playerName}</strong>
-                                    <span class="date">(${dateOfBirth})</span>
-                                    <span class="dni">D.N.I.: ${playerDNI}</span>
+                                    <strong>Ana Agustina Diaz</strong>
+                                    <span class="date">(01/01/2005)</span>
+                                    <span class="dni">D.N.I.: 12345678</span>
                                     <div>
                                         <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this, 'sub16')">Editar</button>
                                     </div>
-                                  </li>`;
-            if (team === "sub16") {
-                document.getElementById("sub16List").insertAdjacentHTML("beforeend", newPlayerHtml);
-            } else if (team === "femeninoLibre1") {
-                document.getElementById("femeninoLibre1List").insertAdjacentHTML("beforeend", newPlayerHtml);
-            } else if (team === "femeninoLibre2") {
-                document.getElementById("femeninoLibre2List").insertAdjacentHTML("beforeend", newPlayerHtml);
-            }
-        } else {
-            // Editar jugador
-            const playerList = team === "sub16" ? document.getElementById("sub16List") :
-                               team === "femeninoLibre1" ? document.getElementById("femeninoLibre1List") :
-                               document.getElementById("femeninoLibre2List");
-            playerList.children[editingIndex].innerHTML = `<i class="fas fa-volleyball-ball"></i>
-                                                            <strong>${playerName}</strong>
-                                                            <span class="date">(${dateOfBirth})</span>
-                                                            <span class="dni">D.N.I: ${playerDNI}</span>
-                                                            <div>
-                                                                <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                                                <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
-                                                            </div>`;
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Lista de jugadores Femenino Libre 1 -->
+                        <div class="tab-pane fade player-list" id="team2" role="tabpanel" aria-labelledby="team2-tab">
+                            <h5><span id="team2ListName">Femenino Libre 1</span></h5>
+                            <ul id="femeninoLibre1List">
+                                <!-- Jugadores de ejemplo -->
+                                <li>
+                                    <i class="fas fa-volleyball-ball"></i>
+                                    <strong>Fatima Villaruel</strong>
+                                    <span class="date">(02/02/2004)</span>
+                                    <span class="dni">D.N.I.: 23456789</span>
+                                    <div>
+                                        <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this, 'femeninoLibre1')">Editar</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Lista de jugadores Femenino Libre 2 -->
+                        <div class="tab-pane fade player-list" id="team3" role="tabpanel" aria-labelledby="team3-tab">
+                            <h5><span id="team3ListName">Femenino Libre 2</span></h5>
+                            <ul id="femeninoLibre2List">
+                                <!-- Jugadores de ejemplo -->
+                                <li>
+                                    <i class="fas fa-volleyball-ball"></i>
+                                    <strong>Pia Muriel Navarro</strong>
+                                    <span class="date">(03/03/2003)</span>
+                                    <span class="dni">D.N.I.: 34567890</span>
+                                    <div>
+                                        <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this, 'femeninoLibre2')">Editar</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/edit jugador -->
+    <div class="modal fade" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="playerModalLabel">Agregar/Editar Jugador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="playerForm">
+                        <div class="mb-3">
+                            <label for="playerFirstName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="playerFirstName" placeholder="Nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="playerLastName" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="playerLastName" placeholder="Apellido" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="playerDNI" class="form-label">D.N.I.</label>
+                            <input type="text" class="form-control" id="playerDNI" placeholder="D.N.I." required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dobDay" class="form-label">Fecha de Nacimiento</label>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" class="form-control" id="dobDay" placeholder="Día" min="1" max="31" required>
+                                </div>
+                                <div class="col">
+                                    <input type="number" class="form-control" id="dobMonth" placeholder="Mes" min="1" max="12" required>
+                                </div>
+                                <div class="col">
+                                    <input type="number" class="form-control" id="dobYear" placeholder="Año" min="1900" max="2024" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="teamSelect" class="form-label">Seleccionar Equipo</label>
+                            <select class="form-select" id="teamSelect" required>
+                                <option value="sub16">Sub 16</option>
+                                <option value="femeninoLibre1">Femenino Libre 1</option>
+                                <option value="femeninoLibre2">Femenino Libre 2</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="playerIndex">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" form="playerForm" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar nombre de equipo -->
+    <div class="modal fade" id="editTeamModal" tabindex="-1" aria-labelledby="editTeamModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editTeamModalLabel">Editar Nombre del Equipo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editTeamForm">
+                        <div class="mb-3">
+                            <label for="teamNameInput" class="form-label">Nombre del Equipo</label>
+                            <input type="text" class="form-control" id="teamNameInput" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" form="editTeamForm" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let editingTeamId = '';
+
+        // Función para editar nombre de equipo
+        document.getElementById("editTeamForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const newTeamName = document.getElementById("teamNameInput").value;
+            document.getElementById(editingTeamId + 'Name').innerText = newTeamName; // Actualizar el nombre del equipo
+            document.getElementById(editingTeamId + 'ListName').innerText = newTeamName; // Actualizar el nombre en la lista
+            var modal = bootstrap.Modal.getInstance(document.getElementById('editTeamModal'));
+            modal.hide();
+        });
+
+        function editTeamName(teamId) {
+            editingTeamId = teamId;
+            const currentTeamName = document.getElementById(teamId + 'Name').innerText;
+            document.getElementById("teamNameInput").value = currentTeamName; // Cargar nombre actual en el formulario
+            var modal = new bootstrap.Modal(document.getElementById('editTeamModal'));
+            modal.show();
         }
 
-        // Limpiar el formulario y cerrar el modal
-        document.getElementById("playerForm").reset();
-        editingIndex = -1;
-        document.getElementById("playerIndex").value = "";
-        var modal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
-        modal.hide();
-    });
+        // Función para mover jugador a otra categoría
+        function movePlayerToNewTeam(playerLi, newTeamId) {
+            const playerList = document.getElementById(newTeamId + "List");
+            playerList.appendChild(playerLi);
+        }
 
-    function removePlayer(button) {
-        button.parentElement.parentElement.remove(); // Eliminar el jugador
-    }
+        // Lógica para agregar y editar jugadores
+        document.getElementById("playerForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const playerFirstName = document.getElementById("playerFirstName").value;
+            const playerLastName = document.getElementById("playerLastName").value;
+            const playerDNI = document.getElementById("playerDNI").value;
+            const dobDay = document.getElementById("dobDay").value;
+            const dobMonth = document.getElementById("dobMonth").value;
+            const dobYear = document.getElementById("dobYear").value;
+            const selectedTeam = document.getElementById("teamSelect").value;
 
-    function editPlayer(button) {
-        const playerData = button.parentElement.parentElement.innerText.split(" ");
-        const playerName = playerData[1]; // Obtener nombre del jugador
-        const playerLastName = playerData[2]; // Obtener apellido del jugador
-        const dateOfBirth = button.parentElement.parentElement.querySelector(".date").innerText.slice(1, -1); // Obtener fecha de nacimiento
-        const playerDNI = button.parentElement.parentElement.querySelector(".dni").innerText.slice(9); // Obtener D.N.I.
-        const team = document.getElementById("teamSelect").value; // Obtener el equipo
-        
-        document.getElementById("playerFirstName").value = playerName; // Cargar nombre al formulario
-        document.getElementById("playerLastName").value = playerLastName; // Cargar apellido al formulario
-        document.getElementById("playerDNI").value = playerDNI; // Cargar D.N.I. al formulario
-        const [day, month, year] = dateOfBirth.split("/");
-        document.getElementById("dobDay").value = day; // Cargar día
-        document.getElementById("dobMonth").value = month; // Cargar mes
-        document.getElementById("dobYear").value = year; // Cargar año
-        editingIndex = Array.from(button.parentElement.parentElement.parentElement.children).indexOf(button.parentElement.parentElement); // Obtener el índice del jugador
-        document.getElementById("playerIndex").value = editingIndex; // Guardar índice para referencia
-        var modal = new bootstrap.Modal(document.getElementById('playerModal'));
-        modal.show();
-    }
-</script>
+            const fullName = playerFirstName + " " + playerLastName;
+            const dob = `(${dobDay}/${dobMonth}/${dobYear})`;
+            const dni = `D.N.I.: ${playerDNI}`;
+
+            const playerIndex = document.getElementById("playerIndex").value;
+
+            let playerLi;
+            if (playerIndex === "") {
+                // Nuevo jugador
+                playerLi = document.createElement("li");
+                playerLi.innerHTML = `<i class="fas fa-volleyball-ball"></i>
+                                      <strong>${fullName}</strong>
+                                      <span class="date">${dob}</span>
+                                      <span class="dni">${dni}</span>
+                                      <div>
+                                          <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
+                                          <button class="btn btn-warning btn-sm" onclick="editPlayer(this, '${selectedTeam}')">Editar</button>
+                                      </div>`;
+                document.getElementById(selectedTeam + "List").appendChild(playerLi);
+            } else {
+                // Editar jugador existente
+                playerLi = document.querySelector(`li[data-index="${playerIndex}"]`);
+                playerLi.innerHTML = `<i class="fas fa-volleyball-ball"></i>
+                                      <strong>${fullName}</strong>
+                                      <span class="date">${dob}</span>
+                                      <span class="dni">${dni}</span>
+                                      <div>
+                                          <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
+                                          <button class="btn btn-warning btn-sm" onclick="editPlayer(this, '${selectedTeam}')">Editar</button>
+                                      </div>`;
+                const currentTeam = playerLi.parentElement.id.replace("List", "");
+                if (currentTeam !== selectedTeam) {
+                    movePlayerToNewTeam(playerLi, selectedTeam);
+                }
+            }
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
+            modal.hide();
+        });
+
+        // Función para eliminar jugador
+        function removePlayer(button) {
+            const playerLi = button.parentElement.parentElement;
+            playerLi.remove();
+        }
+
+        // Función para editar jugador (abre el modal con los datos del jugador)
+        function editPlayer(button, team) {
+            const playerLi = button.parentElement.parentElement;
+            const playerName = playerLi.querySelector("strong").innerText.split(" ");
+            const dni = playerLi.querySelector(".dni").innerText.replace("D.N.I.: ", "");
+            const dob = playerLi.querySelector(".date").innerText.replace(/[()]/g, "").split("/");
+
+            document.getElementById("playerFirstName").value = playerName[0];
+            document.getElementById("playerLastName").value = playerName[1];
+            document.getElementById("playerDNI").value = dni;
+            document.getElementById("dobDay").value = dob[0];
+            document.getElementById("dobMonth").value = dob[1];
+            document.getElementById("dobYear").value = dob[2];
+            document.getElementById("teamSelect").value = team;
+
+            document.getElementById("playerIndex").value = playerLi.getAttribute("data-index");
+
+            var modal = new bootstrap.Modal(document.getElementById('playerModal'));
+            modal.show();
+        }
+    </script>
 </body>
 </html>
