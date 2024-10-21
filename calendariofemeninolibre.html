@@ -31,20 +31,6 @@
             margin-right: 10px;
         }
 
-        .login-button {
-            margin-top: 20px;
-        }
-
-        .auth-container {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .auth-container form {
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
         .hidden {
             display: none;
         }
@@ -89,26 +75,6 @@
             <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
         </svg>
     </a>
-
-    <!-- Botón para iniciar sesión -->
-    <div class="auth-container">
-        <button class="btn btn-secondary" id="login-button">Iniciar sesión</button>
-    </div>
-
-    <!-- Formulario de inicio de sesión (oculto inicialmente) -->
-    <div id="login-form-container" class="auth-container hidden">
-        <form id="login-form">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Ingresa tu email" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" placeholder="Ingresa tu contraseña" required>
-            </div>
-            <button type="button" class="btn btn-primary login-button" id="submit-login-button">Iniciar sesión</button>
-        </form>
-    </div>
 
     <!-- Modal para agregar/editar partidos -->
     <div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -182,7 +148,6 @@
 
         // Mostrar calendario con opciones de edición
         function mostrarOpcionesDeAdmin() {
-            document.getElementById('login-form-container').classList.add('hidden');
             document.getElementById('agregar-partido-button').classList.remove('hidden');
             document.getElementById('acciones-header').classList.remove('hidden');
             cargarCalendario(true);
@@ -190,7 +155,6 @@
 
         // Mostrar calendario solo lectura
         function mostrarCalendarioSoloLectura() {
-            document.getElementById('login-form-container').classList.add('hidden');
             document.getElementById('agregar-partido-button').classList.add('hidden');
             document.getElementById('acciones-header').classList.add('hidden');
             cargarCalendario(false);
@@ -220,25 +184,6 @@
                 });
             });
         }
-
-        // Mostrar formulario de login
-        document.getElementById('login-button').addEventListener('click', function () {
-            document.getElementById('login-form-container').classList.toggle('hidden');
-        });
-
-        // Manejo del login
-        document.getElementById('submit-login-button').addEventListener('click', function () {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    mostrarOpcionesDeAdmin();
-                })
-                .catch((error) => {
-                    alert('Error al iniciar sesión: ' + error.message);
-                });
-        });
 
         // Guardar o editar partido
         document.getElementById('guardar-partido').addEventListener('click', function () {

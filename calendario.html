@@ -15,6 +15,11 @@
     </header>
 
     <main class="container my-4">
+        <!-- Botón para agregar partidos (visible solo si el usuario está logueado) -->
+        <div id="adminActions" class="mb-4 d-none">
+            <button class="btn btn-success" id="addGameBtn">Agregar Partido</button>
+        </div>
+
         <!-- Tabla de calendario -->
         <section>
             <h2 class="text-center mb-4">Calendario de Partidos</h2>
@@ -27,6 +32,8 @@
                             <th>Logo Local</th>
                             <th>Equipo Visitante</th>
                             <th>Logo Visitante</th>
+                            <!-- Opciones para editar/eliminar (visible solo si el usuario está logueado) -->
+                            <th id="adminOptionsHeader" class="d-none">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="calendarioBody">
@@ -37,30 +44,41 @@
         </section>
     </main>
 
-    <!-- Modal para Login -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <!-- Modal para Agregar/Editar Partido (visible solo si el usuario está logueado) -->
+    <div class="modal fade" id="gameModal" tabindex="-1" aria-labelledby="gameModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+                    <h5 class="modal-title" id="gameModalLabel">Agregar/Editar Partido</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="loginForm">
+                    <form id="gameForm">
                         <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" required>
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" required>
+                            <label for="equipoLocal" class="form-label">Equipo Local</label>
+                            <input type="text" class="form-control" id="equipoLocal" required>
                         </div>
-                        <div id="loginError" class="text-danger"></div>
+                        <div class="mb-3">
+                            <label for="logoLocal" class="form-label">Logo Local (URL)</label>
+                            <input type="text" class="form-control" id="logoLocal" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
+                            <input type="text" class="form-control" id="equipoVisitante" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="logoVisitante" class="form-label">Logo Visitante (URL)</label>
+                            <input type="text" class="form-control" id="logoVisitante" required>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="loginButton">Iniciar Sesión</button>
+                    <button type="button" class="btn btn-primary" id="saveGameBtn">Guardar Partido</button>
                 </div>
             </div>
         </div>
@@ -91,22 +109,32 @@
         const db = firebase.firestore();
 
         // Función para cargar el calendario desde Firestore
-        const cargarCalendario = () => {
+        const cargarCalendario = (user) => {
             const calendarioBody = document.getElementById('calendarioBody');
             calendarioBody.innerHTML = ''; // Limpiar el contenido existente
 
             db.collection("calendario").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    const row = `
+                    let row = `
                         <tr>
                             <td>${data.fecha}</td>
                             <td>${data.equipo_local}</td>
                             <td><img src="${data.logo_local}" alt="Logo Local" width="60"></td>
                             <td>${data.equipo_visitante}</td>
                             <td><img src="${data.logo_visitante}" alt="Logo Visitante" width="60"></td>
-                        </tr>
                     `;
+
+                    // Si el usuario está logueado, mostrar opciones de editar y eliminar
+                    if (user) {
+                        row += `
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="editGame('${doc.id}')">Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteGame('${doc.id}')">Eliminar</button>
+                            </td>
+                        `;
+                    }
+                    row += `</tr>`;
                     calendarioBody.innerHTML += row;
                 });
             }).catch((error) => {
@@ -114,33 +142,65 @@
             });
         };
 
-        // Verificar si el usuario está autenticado
+        // Verificar si el usuario está autenticado al cargar la página
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // El usuario está logueado, cargar el calendario
-                cargarCalendario();
+                // El usuario está autenticado, mostrar el contenido de admin y cargar el calendario
+                document.getElementById('adminActions').classList.remove('d-none');
+                document.getElementById('adminOptionsHeader').classList.remove('d-none');
+                cargarCalendario(user);
             } else {
-                // Mostrar el modal de login si no está autenticado
-                const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-                loginModal.show();
+                // El usuario no está autenticado, cargar el calendario sin opciones de edición
+                cargarCalendario(null);
             }
         });
 
-        // Manejar inicio de sesión
-        document.getElementById('loginButton').addEventListener('click', () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        // Funciones para editar y eliminar partidos
+        const editGame = (id) => {
+            // Lógica para editar el partido con el id correspondiente
+            alert('Editar partido con ID: ' + id);
+        };
 
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                    loginModal.hide();
-                    cargarCalendario();
-                })
-                .catch((error) => {
-                    document.getElementById('loginError').innerText = error.message;
+        const deleteGame = (id) => {
+            if (confirm('¿Seguro que deseas eliminar este partido?')) {
+                db.collection("calendario").doc(id).delete().then(() => {
+                    alert('Partido eliminado');
+                    window.location.reload();
+                }).catch((error) => {
+                    console.error("Error eliminando el partido: ", error);
                 });
+            }
+        };
+
+        // Agregar partido
+        document.getElementById('addGameBtn').addEventListener('click', () => {
+            // Limpiar el formulario y mostrar el modal para agregar partido
+            document.getElementById('gameForm').reset();
+            const gameModal = new bootstrap.Modal(document.getElementById('gameModal'));
+            gameModal.show();
+        });
+
+        // Guardar partido
+        document.getElementById('saveGameBtn').addEventListener('click', () => {
+            const fecha = document.getElementById('fecha').value;
+            const equipoLocal = document.getElementById('equipoLocal').value;
+            const logoLocal = document.getElementById('logoLocal').value;
+            const equipoVisitante = document.getElementById('equipoVisitante').value;
+            const logoVisitante = document.getElementById('logoVisitante').value;
+
+            // Agregar nuevo partido a Firestore
+            db.collection("calendario").add({
+                fecha: fecha,
+                equipo_local: equipoLocal,
+                logo_local: logoLocal,
+                equipo_visitante: equipoVisitante,
+                logo_visitante: logoVisitante
+            }).then(() => {
+                alert('Partido agregado exitosamente');
+                window.location.reload();
+            }).catch((error) => {
+                console.error("Error agregando el partido: ", error);
+            });
         });
     </script>
 </body>

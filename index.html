@@ -130,8 +130,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="contacto.html">Contacto</a>
                     </li>
+                    <!-- Mostrar email si está autenticado -->
                     <li class="nav-item">
+                        <span id="userEmail" class="nav-link"></span>
+                    </li>
+                    <!-- Botón para iniciar sesión solo si no está autenticado -->
+                    <li class="nav-item" id="loginNavItem">
                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a>
+                    </li>
+                    <!-- Botón para cerrar sesión, solo si está autenticado -->
+                    <li class="nav-item" id="logoutNavItem" style="display: none;">
+                        <a class="nav-link" href="#" id="logoutButton">Cerrar Sesión</a>
                     </li>
                 </ul>
             </div>
@@ -177,15 +186,9 @@
     <!-- Firebase JS SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
 
-    <script type="module">
-        // Import Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
-
-        // Firebase configuration
+    <script>
+        // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
             authDomain: "liga-del-norte.firebaseapp.com",
@@ -196,10 +199,13 @@
             measurementId: "G-CZ5P9YCEWK"
         };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const analytics = getAnalytics(app);
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Mostrar correo si está autenticado
+        const userEmailSpan = document.getElementById('userEmail');
+        const loginNavItem = document.getElementById('loginNavItem');
+        const logoutNavItem = document.getElementById('logoutNavItem');
 
         // Manejar inicio de sesión
         document.getElementById('loginButton').addEventListener('click', function () {
@@ -207,13 +213,18 @@
             const password = document.getElementById('password').value;
 
             // Iniciar sesión con Firebase
-            signInWithEmailAndPassword(auth, email, password)
+            auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Inicio de sesión exitoso
                     const user = userCredential.user;
                     alert('Inicio de sesión exitoso');
-                    document.getElementById('loginModal').modal('hide');
-                    window.location.href = "calendario_editor.html"; // Redirigir a la página de edición
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    loginModal.hide();
+
+                    // Mostrar el correo del usuario logueado
+                    userEmailSpan.textContent = user.email;
+                    loginNavItem.style.display = 'none'; // Ocultar botón de login
+                    logoutNavItem.style.display = 'block'; // Mostrar botón de logout
                 })
                 .catch((error) => {
                     const errorMessage = error.message;
@@ -221,13 +232,32 @@
                 });
         });
 
-        // Verificar si el usuario ya está autenticado
-        onAuthStateChanged(auth, (user) => {
+        // Verificar si el usuario ya está autenticado al cargar la página
+        auth.onAuthStateChanged((user) => {
             if (user) {
-                console.log("Usuario autenticado: ", user.email);
+                // Si el usuario está autenticado, mostrar su correo y el botón de logout
+                userEmailSpan.textContent = user.email;
+                loginNavItem.style.display = 'none';
+                logoutNavItem.style.display = 'block';
             } else {
-                console.log("Usuario no autenticado");
+                // Si no está autenticado, asegurarse de que el botón de login esté visible
+                userEmailSpan.textContent = '';
+                loginNavItem.style.display = 'block';
+                logoutNavItem.style.display = 'none';
             }
+        });
+
+        // Manejar cierre de sesión
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            auth.signOut().then(() => {
+                // Cerrar sesión exitosa
+                userEmailSpan.textContent = ''; // Limpiar el correo mostrado
+                loginNavItem.style.display = 'block'; // Mostrar botón de login
+                logoutNavItem.style.display = 'none'; // Ocultar botón de logout
+                alert('Sesión cerrada exitosamente');
+            }).catch((error) => {
+                alert('Error al cerrar sesión: ' + error.message);
+            });
         });
     </script>
 
