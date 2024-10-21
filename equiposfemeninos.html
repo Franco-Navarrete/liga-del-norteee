@@ -1,53 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipos Femeninos - Liga Del Norte</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Tabla de Posiciones - Liga Del Norte</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Fondo y estilo general */
         body {
-            background-image: url('imagenes/fondo.png');
+            background-image: url('imagenes/logoliga.png');
             background-size: cover;
             background-attachment: fixed;
-        }
-        table {
-            color: white;
-        }
-        th, td, tr {
-            color: white;
-        }
-        .social-icons a:hover {
-            color: #ffeb3b;
         }
 
         .float-button {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #007bff;
-            border-radius: 50%;
-            padding: 10px;
+            background-color: #ffc107;
             color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: none;
+            border-radius: 50%;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            cursor: pointer;
         }
 
         .float-button:hover {
-            background-color: #0056b3;
+            background-color: #ffca28;
+        }
+
+        /* Cards de los equipos */
+        .card-img-top {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .card {
+            background-color: #f5f5f5;
         }
     </style>
 </head>
+
 <body>
     <header class="bg-warning text-white text-center py-4">
-        <img src="imagenes/logoliga.png" width="100px" alt="Logo de la Liga">
-        <h1 style="color:black">Equipos de la Liga Del Norte Femeninos</h1>
+        <img src="imagenes/logoliga.png" width="100px" alt="Logo Liga Del Norte">
+        <h1 style="color:black">Tabla de Posiciones y Equipos</h1>
     </header>
 
-    <!-- Tabla de posiciones dinámica -->
-    <main class="container mt-5">
-        <h2 style="padding: 20px;border-radius:10px;" class="text-center bg-dark text-light">Tabla de Posiciones Femenino Libre</h2>
-        <div class="table-responsive" id="tablaPosiciones">
-            <table class="table table-dark table-bordered table-hover table-striped mt-3">
+    <!-- Sección de Tabla de Posiciones -->
+    <main class="container my-4">
+        <h2 style="padding: 20px; border-radius:10px;" class="bg-dark text-light text-center mt-5">Tabla de Posiciones Femenino Libre</h2>
+        <div class="table-responsive">
+            <table class="table table-dark table-bordered table-hover table-striped">
                 <thead class="thead-light">
                     <tr>
                         <th>Posición</th>
@@ -60,47 +68,82 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Sección de Tabla de Posiciones sub 16 -->
+        <h2 style="padding: 20px; border-radius:10px;" class="bg-dark text-light text-center mt-5">Tabla de Posiciones Femenino Sub 16</h2>
+        <div class="table-responsive">
+            <table class="table table-dark table-bordered table-hover table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Posición</th>
+                        <th>Equipo</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody id="posiciones-body-sub16">
+                    <!-- Los datos se llenarán desde Firebase -->
+                </tbody>
+            </table>
+        </div>
     </main>
 
-    <!-- Logos con enlaces a las páginas de los equipos -->
-    <h2 style="padding: 20px;border-radius:10px;" class="text-center bg-dark text-light">Equipos Participantes</h2>
-    <div class="row text-center mt-4">
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <a href="equiposfemeninos/arrias.html">
-                    <img src="imagenes/arrias.jpg" alt="Arrias" class="card-img-top">
-                </a>
-                <div class="card-body">
-                    <h5 class="card-title">Arrias</h5>
+    <!-- Sección de Cards de los Equipos -->
+    <section class="container my-5">
+        <h2 style="padding: 20px; border-radius:10px;" class="text-center bg-dark text-light">Equipos Participantes</h2>
+        <div class="row text-center mt-4">
+            <!-- Card ejemplo 1 -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <a href="equipos/arrias.html">
+                        <img src="imagenes/arrias.jpg" alt="Equipo Arrias" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">Arrias</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Card ejemplo 2 -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <a href="equipos/laspeñasm.html">
+                        <img src="imagenes/peñas.jpg" alt="Equipo Las Peñas" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">Las Peñas</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Card ejemplo 3 -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <a href="equipos/sanfranciscochañar.html">
+                        <img src="imagenes/chañar.jpg" alt="Equipo San Francisco del Chañar" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">San Francisco del Chañar</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Card ejemplo 4 -->
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <a href="equipos/sanjosedeladormida.html">
+                        <img src="imagenes/la dormida.jpg" alt="San Jose de la Dormida" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">San Jose de la Dormida</h5>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card">
-                <a href="equiposfemeninos/laspeñas.html">
-                    <img src="imagenes/peñas.jpg" alt="Las Peñas" class="card-img-top">
-                </a>
-                <div class="card-body">
-                    <h5 class="card-title">Las Peñas</h5>
-                </div>
-            </div>
-        </div>
-        <!-- Añade más equipos aquí -->
-    </div>
+    </section>
 
-    <!-- Botón flotante para volver a la página principal -->
-   <a href="index.html" class="float-button">
-            <i class="fas fa-home"></i>
-        </a><footer>
-        <p>&copy; 2024 Liga del Norte de Voleibol</p>
-        <div class="social-icons">
-            <a href="https://www.instagram.com/liga_del_norte2024" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
-        </div>
-        <a href="index.html" class="float-button">
-            <i class="fas fa-home"></i>
-        </a>
-    </footer>
+    <!-- Botón flotante que lleva a index.html -->
+    <a href="index.html" class="float-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+            <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
+        </svg>
+    </a>
 
     <!-- Footer -->
     <footer class="bg-dark text-white text-center py-3 mt-5">
@@ -109,7 +152,6 @@
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
 
     <!-- Configuración de Firebase -->
@@ -130,13 +172,16 @@
 
         // Estructura para almacenar los puntos de cada equipo
         const equipos = {};
+        const equiposSub16 = {};
 
-        // Cargar la tabla de posiciones basada en los puntos de los partidos
+        // Calcular la tabla de posiciones basada en los partidos
         function cargarPosiciones() {
             const posicionesBody = document.getElementById('posiciones-body');
+            const posicionesBodySub16 = document.getElementById('posiciones-body-sub16');
             posicionesBody.innerHTML = ''; // Limpiar la tabla antes de agregar los datos
+            posicionesBodySub16.innerHTML = ''; // Limpiar la tabla sub 16
 
-            db.collection("partidos-femenino-libre").get().then((querySnapshot) => {
+            db.collection("partidos").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const partido = doc.data();
                     const equipoLocal = partido.equipoLocal;
@@ -148,17 +193,24 @@
                     if (!equipos[equipoLocal]) equipos[equipoLocal] = { puntos: 0 };
                     if (!equipos[equipoVisitante]) equipos[equipoVisitante] = { puntos: 0 };
 
+                    if (!equiposSub16[equipoLocal]) equiposSub16[equipoLocal] = { puntos: 0 };
+                    if (!equiposSub16[equipoVisitante]) equiposSub16[equipoVisitante] = { puntos: 0 };
+
                     // Asignar puntos dependiendo del resultado
                     if (resultadoLocal > resultadoVisitante) {
                         // Victoria para el equipo local
                         equipos[equipoLocal].puntos += 3;
+                        equiposSub16[equipoLocal].puntos += 3;
                     } else if (resultadoLocal < resultadoVisitante) {
                         // Victoria para el equipo visitante
                         equipos[equipoVisitante].puntos += 3;
+                        equiposSub16[equipoVisitante].puntos += 3;
                     } else {
                         // Empate, ambos equipos suman 1 punto
                         equipos[equipoLocal].puntos += 1;
                         equipos[equipoVisitante].puntos += 1;
+                        equiposSub16[equipoLocal].puntos += 1;
+                        equiposSub16[equipoVisitante].puntos += 1;
                     }
                 });
 
@@ -174,7 +226,19 @@
                     })
                     .join('');
 
+                const equiposOrdenadosSub16 = Object.entries(equiposSub16)
+                    .sort((a, b) => b[1].puntos - a[1].puntos)
+                    .map(([equipo, datos], index) => {
+                        return `<tr>
+                                    <td>${index + 1}</td>
+                                    <td>${equipo}</td>
+                                    <td>${datos.puntos}</td>
+                                </tr>`;
+                    })
+                    .join('');
+
                 posicionesBody.innerHTML = equiposOrdenados;
+                posicionesBodySub16.innerHTML = equiposOrdenadosSub16;
             });
         }
 
@@ -183,6 +247,7 @@
     </script>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

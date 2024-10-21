@@ -53,7 +53,7 @@
 
     <!-- Sección de Tabla de Posiciones -->
     <main class="container my-4">
-        <h2 style="padding: 20px; border-radius:10px;" class="bg-dark text-light text-center mt-5">Tabla de Posiciones</h2>
+        <h2 style="padding: 20px; border-radius:10px;" class="bg-dark text-light text-center mt-5">Tabla de Posiciones Masculino Libre</h2>
         <div class="table-responsive">
             <table class="table table-dark table-bordered table-hover table-striped">
                 <thead class="thead-light">
@@ -64,6 +64,23 @@
                     </tr>
                 </thead>
                 <tbody id="posiciones-body">
+                    <!-- Los datos se llenarán desde Firebase -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sección de Tabla de Posiciones sub 16 -->
+        <h2 style="padding: 20px; border-radius:10px;" class="bg-dark text-light text-center mt-5">Tabla de Posiciones Masculino Sub 16</h2>
+        <div class="table-responsive">
+            <table class="table table-dark table-bordered table-hover table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Posición</th>
+                        <th>Equipo</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody id="posiciones-body-sub16">
                     <!-- Los datos se llenarán desde Firebase -->
                 </tbody>
             </table>
@@ -155,11 +172,14 @@
 
         // Estructura para almacenar los puntos de cada equipo
         const equipos = {};
+        const equiposSub16 = {};
 
         // Calcular la tabla de posiciones basada en los partidos
         function cargarPosiciones() {
             const posicionesBody = document.getElementById('posiciones-body');
+            const posicionesBodySub16 = document.getElementById('posiciones-body-sub16');
             posicionesBody.innerHTML = ''; // Limpiar la tabla antes de agregar los datos
+            posicionesBodySub16.innerHTML = ''; // Limpiar la tabla sub 16
 
             db.collection("partidos").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -173,17 +193,24 @@
                     if (!equipos[equipoLocal]) equipos[equipoLocal] = { puntos: 0 };
                     if (!equipos[equipoVisitante]) equipos[equipoVisitante] = { puntos: 0 };
 
+                    if (!equiposSub16[equipoLocal]) equiposSub16[equipoLocal] = { puntos: 0 };
+                    if (!equiposSub16[equipoVisitante]) equiposSub16[equipoVisitante] = { puntos: 0 };
+
                     // Asignar puntos dependiendo del resultado
                     if (resultadoLocal > resultadoVisitante) {
                         // Victoria para el equipo local
                         equipos[equipoLocal].puntos += 3;
+                        equiposSub16[equipoLocal].puntos += 3;
                     } else if (resultadoLocal < resultadoVisitante) {
                         // Victoria para el equipo visitante
                         equipos[equipoVisitante].puntos += 3;
+                        equiposSub16[equipoVisitante].puntos += 3;
                     } else {
                         // Empate, ambos equipos suman 1 punto
                         equipos[equipoLocal].puntos += 1;
                         equipos[equipoVisitante].puntos += 1;
+                        equiposSub16[equipoLocal].puntos += 1;
+                        equiposSub16[equipoVisitante].puntos += 1;
                     }
                 });
 
@@ -199,7 +226,19 @@
                     })
                     .join('');
 
+                const equiposOrdenadosSub16 = Object.entries(equiposSub16)
+                    .sort((a, b) => b[1].puntos - a[1].puntos)
+                    .map(([equipo, datos], index) => {
+                        return `<tr>
+                                    <td>${index + 1}</td>
+                                    <td>${equipo}</td>
+                                    <td>${datos.puntos}</td>
+                                </tr>`;
+                    })
+                    .join('');
+
                 posicionesBody.innerHTML = equiposOrdenados;
+                posicionesBodySub16.innerHTML = equiposOrdenadosSub16;
             });
         }
 
@@ -212,3 +251,4 @@
 </body>
 
 </html>
+
