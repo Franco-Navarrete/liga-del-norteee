@@ -45,6 +45,7 @@
         <h2 style="color:black">Masculino libre</h2>
     </header>
 
+    
     <main class="container my-4">
         <section>
             <table class="table table-bordered table-hover">
@@ -68,7 +69,106 @@
                 </tbody>
             </table>
         </section>
+        <!-- Botón para abrir el modal de agregar/editar -->
+        <button class="btn btn-primary" id="agregar-partido-button" data-bs-toggle="modal" data-bs-target="#partidoModal">Agregar Partido</button>
     </main>
+    
+    <!-- Botón flotante que lleva a index.html -->
+    <a href="index.html" class="float-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+            <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
+        </svg>
+    </a>
+    
+    <!-- Modal para agregar/editar partidos -->
+    <div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="partido-form">
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" id="fecha">
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora" class="form-label">Hora</label>
+                            <input type="time" class="form-control" id="hora">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estadio" class="form-label">Nombre del Estadio</label>
+                            <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipoLocal" class="form-label">Equipo Local</label>
+                            <input type="text" class="form-control" id="equipoLocal" placeholder="Nombre del equipo local">
+                        </div>
+                        <div class="mb-3">
+                            <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
+                            <input type="text" class="form-control" id="equipoVisitante" placeholder="Nombre del equipo visitante">
+                        </div>
+                        <input type="hidden" id="partidoId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<!-- Botón flotante que lleva a index.html -->
+<a href="index.html" class="float-button">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+        <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
+    </svg>
+</a>
+
+<!-- Modal para agregar/editar partidos -->
+<div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar/Editar Partido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="partido-form">
+                    <div class="mb-3">
+                        <label for="fecha" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="fecha">
+                    </div>
+                    <div class="mb-3">
+                        <label for="hora" class="form-label">Hora</label>
+                        <input type="time" class="form-control" id="hora">
+                    </div>
+                    <div class="mb-3">
+                        <label for="estadio" class="form-label">Nombre del Estadio</label>
+                        <input type="text" class="form-control" id="estadio" placeholder="Nombre del estadio">
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipoLocal" class="form-label">Equipo Local</label>
+                        <input type="text" class="form-control" id="equipoLocal" placeholder="Nombre del equipo local">
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
+                        <input type="text" class="form-control" id="equipoVisitante" placeholder="Nombre del equipo visitante">
+                    </div>
+                    <input type="hidden" id="partidoId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <!-- Botón flotante que lleva a index.html -->
     <a href="index.html" class="float-button">
