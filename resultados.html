@@ -20,8 +20,7 @@
             text-align: center;
         }
 
-        h1,
-        h2 {
+        h1, h2 {
             margin: 20px 0;
         }
 
@@ -42,11 +41,6 @@
             cursor: pointer;
         }
 
-        ul li img {
-            width: 50px;
-            height: 50px;
-        }
-
         footer {
             background-color: #343a40;
             color: white;
@@ -60,17 +54,14 @@
             font-size: 1.2em;
         }
 
-        /* Estilo centrado para las pestañas */
         .nav-tabs {
             justify-content: center;
         }
 
-        /* Asegura que el main ocupe el espacio necesario */
         main {
             flex-grow: 1;
         }
 
-        /* Botón flotante */
         .float-button {
             position: fixed;
             bottom: 20px;
@@ -83,6 +74,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             font-size: 24px;
             cursor: pointer;
+            display: none; /* Oculto por defecto hasta que el usuario se autentique */
         }
 
         .float-button:hover {
@@ -182,30 +174,45 @@
         </div>
     </div>
 
-    <!-- Botón flotante para agregar resultados -->
-    <button class="float-button" data-bs-toggle="modal" data-bs-target="#addResultModal">
+    <!-- Botón flotante para agregar resultados (solo visible si está autenticado) -->
+    <button class="float-button" id="addResultButton" data-bs-toggle="modal" data-bs-target="#addResultModal">
         +
     </button>
 
-   <!-- Firebase SDKs -->
-   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
-   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
 
-   <!-- Configuración de Firebase -->
-   <script>
-       // Inicializar Firebase
-       const firebaseConfig = {
-           apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
-           authDomain: "liga-del-norte.firebaseapp.com",
-           projectId: "liga-del-norte",
-           storageBucket: "liga-del-norte.appspot.com",
-           messagingSenderId: "655679074901",
-           appId: "1:655679074901:web:867a248306701963039adc",
-           measurementId: "G-CZ5P9YCEWK"
-       };
+    <!-- Configuración de Firebase -->
+    <script>
+        // Inicializar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
+            authDomain: "liga-del-norte.firebaseapp.com",
+            projectId: "liga-del-norte",
+            storageBucket: "liga-del-norte.appspot.com",
+            messagingSenderId: "655679074901",
+            appId: "1:655679074901:web:867a248306701963039adc",
+            measurementId: "G-CZ5P9YCEWK"
+        };
+
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
+
+        // Mostrar/Ocultar botón de agregar resultados según el estado de autenticación
+        const addResultButton = document.getElementById('addResultButton');
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Si el usuario está autenticado, mostrar el botón de agregar resultados
+                addResultButton.style.display = 'block';
+            } else {
+                // Si no está autenticado, ocultar el botón de agregar resultados
+                addResultButton.style.display = 'none';
+            }
+        });
 
         // Función para cargar resultados para una categoría específica
         function loadResults(category, containerSelector) {
@@ -260,7 +267,7 @@
             loadResults('resultados_masculino_libre', '#masculinoLibre ul');
         };
 
-        // Agregar resultados al Firestore
+        // Agregar resultados al Firestore (solo si el usuario está autenticado)
         document.getElementById('addResultForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
