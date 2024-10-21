@@ -45,6 +45,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
+            justify-content: space-between; /* Alineación para el botón de eliminar */
         }
         .player-list li i {
             margin-right: 10px;
@@ -91,82 +92,92 @@
                         <button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2" type="button" role="tab" aria-controls="team2" aria-selected="false">Femenino Libre 1</button>
                     </li>
                      <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="team3-tab" data-bs-toggle="tab" data-bs-target="#team2" type="button" role="tab" aria-controls="team2" aria-selected="false">Femenino Libre 2</button>
+                        <button class="nav-link" id="team3-tab" data-bs-toggle="tab" data-bs-target="#team3" type="button" role="tab" aria-controls="team3" aria-selected="false">Femenino Libre 2</button>
                     </li>
                 </ul>
 
+                <!-- Botón para agregar/edit jugador -->
+                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#playerModal">Agregar/Editar Jugador</button>
+
                 <!-- Contenido de las listas -->
                 <div class="tab-content mt-3" id="myTabContent">
-                    <!-- Lista de jugadores 1 -->
+                    <!-- Lista de jugadores Sub 16 -->
                     <div class="tab-pane fade show active player-list" id="team1" role="tabpanel" aria-labelledby="team1-tab">
                         <h5>Sub 16</h5>
-                        <ul> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Ana Agustina Diaz</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Fatima Villaruel</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Pia Muriel Navarro</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>4. Mia Navarro</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>5. Fiorela Judith</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>6. Delfina Gorostegui</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>7. Catalina Medina</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>8. Sheila Marisol Lucero</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>9. Yael Stefania Castilo</strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>10. </strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>11. </strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>12. </strong></li> 
-                            <li><i class="fas fa-volleyball-ball"></i><strong>13. </strong></li> 
-                          </ul> 
-    
+                        <ul id="sub16List"> 
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. Ana Agustina Diaz</strong><span class="date">(01/01/2005)</span><button class="btn btn-danger btn-sm float-end" onclick="removePlayer(this)">Eliminar</button></li> 
+                            <li><i class="fas fa-volleyball-ball"></i><strong>2. Fatima Villaruel</strong><span class="date">(02/02/2004)</span><button class="btn btn-danger btn-sm float-end" onclick="removePlayer(this)">Eliminar</button></li> 
+                            <li><i class="fas fa-volleyball-ball"></i><strong>3. Pia Muriel Navarro</strong><span class="date">(03/03/2003)</span><button class="btn btn-danger btn-sm float-end" onclick="removePlayer(this)">Eliminar</button></li> 
+                        </ul> 
                     </div>
 
-                    <!-- Lista de jugadores 2 -->
-                     <!-- Contenido de las listas -->
-                <div class="tab-content mt-3" id="myTabContent">
+                    <!-- Lista de jugadores Femenino Libre 1 -->
                     <div class="tab-pane fade player-list" id="team2" role="tabpanel" aria-labelledby="team2-tab">
                         <h5>Femenino Libre 1</h5>
-                        <ul>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>1. a</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>2. b</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>3. a</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>4.ae</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>5. aaas</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>6. Sa</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>7.a Altamirano</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>8. Yaez</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>9. Laerg</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>10. Maande</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>11. a</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>12. </strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>13. </strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>14. </strong></li>
-                            <!-- Más jugadores si es necesario -->
+                        <ul id="femeninoLibre1List">
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. a</strong><span class="date">(01/01/2000)</span><button class="btn btn-danger btn-sm float-end" onclick="removePlayer(this)">Eliminar</button></li>
                         </ul>
                     </div>
-                    <!-- Contenido de las listas -->
-                <div class="tab-content mt-5" id="myTabContent">
-                    <!-- Lista de jugadores 2 -->
+
+                    <!-- Lista de jugadores Femenino Libre 2 -->
                     <div class="tab-pane fade player-list" id="team3" role="tabpanel" aria-labelledby="team3-tab">
                         <h5>Femenino Libre 2</h5>
-                        <ul>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>1. a</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>2. b</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>3. a</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>4.ae</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>5. aaas</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>6. Sa</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>7.a Altamirano</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>8. Yaez</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>9. Laerg</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>10. Maande</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>11. a</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>12. zz</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>13. aaaa</strong></li>
-                            <li><i class="fas fa-volleyball-ball"></i><strong>14. afasfasf</strong></li>
-                            <!-- Más jugadores si es necesario -->
+                        <ul id="femeninoLibre2List">
+                            <li><i class="fas fa-volleyball-ball"></i><strong>1. a</strong><span class="date">(01/01/2001)</span><button class="btn btn-danger btn-sm float-end" onclick="removePlayer(this)">Eliminar</button></li>
                         </ul>
                     </div>
                 </div>
             </div>
-                
+        </div>
+    </div>
+</div>
+
+<!-- Modal para agregar/edit jugador -->
+<div class="modal fade" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="playerModalLabel">Agregar/Editar Jugador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="playerForm">
+                    <div class="mb-3">
+                        <label for="playerFirstName" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="playerFirstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="playerLastName" class="form-label">Apellido</label>
+                        <input type="text" class="form-control" id="playerLastName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Fecha de Nacimiento</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="number" class="form-control" id="dobDay" placeholder="Día" min="1" max="31" required>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" id="dobMonth" placeholder="Mes" min="1" max="12" required>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" id="dobYear" placeholder="Año" min="1900" max="2024" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="teamSelect" class="form-label">Selecciona el Equipo</label>
+                        <select class="form-select" id="teamSelect" required>
+                            <option value="sub16">Sub 16</option>
+                            <option value="femeninoLibre1">Femenino Libre 1</option>
+                            <option value="femeninoLibre2">Femenino Libre 2</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="playerIndex">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" form="playerForm" class="btn btn-primary">Guardar</button>
             </div>
         </div>
     </div>
@@ -179,5 +190,70 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let editingIndex = -1;
+
+    document.getElementById("playerForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const playerFirstName = document.getElementById("playerFirstName").value;
+        const playerLastName = document.getElementById("playerLastName").value;
+        const dobDay = document.getElementById("dobDay").value;
+        const dobMonth = document.getElementById("dobMonth").value;
+        const dobYear = document.getElementById("dobYear").value;
+        const dateOfBirth = `${dobDay}/${dobMonth}/${dobYear}`;
+        const team = document.getElementById("teamSelect").value;
+
+        const playerName = `${playerFirstName} ${playerLastName}`;
+
+        if (editingIndex === -1) {
+            // Agregar jugador
+            let newPlayerHtml = `<li><i class="fas fa-volleyball-ball"></i><strong>${playerName}</strong><span class="date">(${dateOfBirth})</span><button class="btn btn-danger btn-sm float-end" onclick="removePlayer(this)">Eliminar</button></li>`;
+            if (team === "sub16") {
+                document.getElementById("sub16List").insertAdjacentHTML("beforeend", newPlayerHtml);
+            } else if (team === "femeninoLibre1") {
+                document.getElementById("femeninoLibre1List").insertAdjacentHTML("beforeend", newPlayerHtml);
+            } else if (team === "femeninoLibre2") {
+                document.getElementById("femeninoLibre2List").insertAdjacentHTML("beforeend", newPlayerHtml);
+            }
+        } else {
+            // Editar jugador
+            const playerList = team === "sub16" ? document.getElementById("sub16List") :
+                               team === "femeninoLibre1" ? document.getElementById("femeninoLibre1List") :
+                               document.getElementById("femeninoLibre2List");
+            playerList.children[editingIndex].innerHTML = `<i class="fas fa-volleyball-ball"></i><strong>${playerName}</strong><span class="date">(${dateOfBirth})</span><button class="btn btn-danger btn-sm float-end" onclick="removePlayer(this)">Eliminar</button>`;
+        }
+
+        // Limpiar el formulario y cerrar el modal
+        document.getElementById("playerForm").reset();
+        editingIndex = -1;
+        document.getElementById("playerIndex").value = "";
+        var modal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
+        modal.hide();
+    });
+
+    function removePlayer(button) {
+        button.parentElement.remove(); // Eliminar el jugador
+    }
+
+    function editPlayer(button) {
+        const playerData = button.parentElement.innerText.split(" ");
+        const playerName = playerData[1]; // Obtener nombre del jugador
+        const playerLastName = playerData[2]; // Obtener apellido del jugador
+        const dateOfBirth = button.parentElement.querySelector(".date").innerText.slice(1, -1); // Obtener fecha de nacimiento
+        const team = button.parentElement.dataset.team; // Obtener el equipo (se debe agregar en el HTML)
+        
+        document.getElementById("playerFirstName").value = playerName; // Cargar nombre al formulario
+        document.getElementById("playerLastName").value = playerLastName; // Cargar apellido al formulario
+        const [day, month, year] = dateOfBirth.split("/");
+        document.getElementById("dobDay").value = day; // Cargar día
+        document.getElementById("dobMonth").value = month; // Cargar mes
+        document.getElementById("dobYear").value = year; // Cargar año
+        document.getElementById("teamSelect").value = team; // Cargar equipo al formulario
+        editingIndex = Array.from(button.parentElement.parentElement.children).indexOf(button.parentElement); // Obtener el índice del jugador
+        document.getElementById("playerIndex").value = editingIndex; // Guardar índice para referencia
+        var modal = new bootstrap.Modal(document.getElementById('playerModal'));
+        modal.show();
+    }
+</script>
 </body>
 </html>
