@@ -1,309 +1,292 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Información del Equipo</title>
+    <title>Liga de Quilino</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome para los iconos -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
-        }
-        .team-logo {
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-            border: 2px solid #343a40;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-        .team-info {
-            margin-top: 20px;
-        }
-        .coach-info {
-            background-color: #f7af05;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-        .coach-info i {
-            margin-right: 10px;
-        }
-        .player-list ul {
-            list-style-type: none;
+            font-family: Arial, sans-serif;
+            background: url('imagenes/fondo.png') repeat;
+            background-size: cover;
+            animation: moveBackground 20s linear infinite;
+            color: #333;
+            height: 100vh;
+            margin: 0;
             padding: 0;
         }
-        .player-list li {
-            background-color: #fff;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+
+        @keyframes moveBackground {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 100% 100%;
+            }
         }
-        .player-list li i {
-            margin-right: 10px;
-            color: #ffa200;
+
+        nav.social-nav {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
         }
-        .team-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+
+        nav.social-nav a {
+            color: white;
+            margin-right: 15px;
         }
+
+        nav.social-nav a:hover {
+            color: #ffeb3b;
+        }
+
+        nav.social-nav .social-icons {
+            text-align: right;
+        }
+
+        nav.main-nav {
+            background-color: #343a40;
+        }
+
+        nav.main-nav .navbar-nav .nav-link {
+            color: white !important;
+        }
+
         footer {
             background-color: #343a40;
             color: white;
             text-align: center;
             padding: 20px;
-            margin-top: 40px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
         }
     </style>
 </head>
+
 <body>
-    <header class="bg-warning text-white text-center py-4">
-        <img src="../imagenes/logoliga.png" width="100px" alt="Logo de la Liga">
-        <h1 style="color:black" id="categoriaTitulo">Equipos Liga Del Norte</h1>
-    </header>
-
-    <div class="container my-5">
-        <div class="row">
-            <!-- Información básica del equipo -->
-            <div class="col-md-4 text-center">
-                <img src="../imagenes/chañar.jpg" alt="Logo del equipo" class="team-logo">
-                <h2 id="teamName" onclick="editMainTeamName()">San Francisco de Chañar</h2>
-                <p><strong>Localidad:</strong> San Francisco de Chañar, Córdoba</p>
+    <!-- Barra social superior -->
+    <nav class="social-nav">
+        <div class="container-fluid d-flex justify-content-between">
+            <div>
+                <span>Tel: 3521 53-4882 </span>
+                <span>Email: ligadelnorte569@gmail.com </span>
             </div>
-
-            <!-- Información del DT y lista de buena fe -->
-            <div class="col-md-8">
-                <div class="team-info">
-                    <div class="coach-info">
-                        <i class="fas fa-user-tie fa-2x"></i>
-                        <h4 class="mb-0">Director Técnico: Diaz Luciano/Diaz Claudio</h4>
-                    </div>
-
-                    <!-- Barra de navegación -->
-                    <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <div class="team-header">
-                                <button class="nav-link active" id="team1-tab" data-bs-toggle="tab" data-bs-target="#team1" type="button" role="tab" aria-controls="team1" aria-selected="true">
-                                    <span id="team1Name">Sub 16</span>
-                                </button>
-                                <button class="btn btn-warning btn-sm" onclick="editTeamName('team1')">Editar</button>
-                            </div>
-                        </li>
-                        
-                        <li class="nav-item" role="presentation">
-                            <div class="team-header">
-                                <button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2" type="button" role="tab" aria-controls="team2" aria-selected="false">
-                                    <span id="team2Name">Femenino Libre 1</span>
-                                </button>
-                                <button class="btn btn-warning btn-sm" onclick="editTeamName('team2')">Editar</button>
-                            </div>
-                        </li>
-
-                        <li class="nav-item" role="presentation">
-                            <div class="team-header">
-                                <button class="nav-link" id="team3-tab" data-bs-toggle="tab" data-bs-target="#team3" type="button" role="tab" aria-controls="team3" aria-selected="false">
-                                    <span id="team3Name">Femenino Libre 2</span>
-                                </button>
-                                <button class="btn btn-warning btn-sm" onclick="editTeamName('team3')">Editar</button>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <!-- Botón para agregar jugador -->
-                    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#playerModal">Agregar Jugador</button>
-
-                    <!-- Contenido de las listas -->
-                    <div class="tab-content mt-3" id="myTabContent">
-                        <!-- Lista de jugadores Sub 16 -->
-                        <div class="tab-pane fade show active player-list" id="team1" role="tabpanel" aria-labelledby="team1-tab">
-                            <h5><span id="team1ListName">Sub 16</span></h5>
-                            <ul id="sub16List">
-                                <!-- Jugadores de ejemplo -->
-                                <li>
-                                    <i class="fas fa-volleyball-ball"></i>
-                                    <strong>Ana Agustina Diaz</strong>
-                                    <span class="date">(01/01/2005)</span>
-                                    <span class="dni">D.N.I.: 12345678</span>
-                                    <div>
-                                        <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this, 'sub16')">Editar</button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Lista de jugadores Femenino Libre 1 -->
-                        <div class="tab-pane fade player-list" id="team2" role="tabpanel" aria-labelledby="team2-tab">
-                            <h5><span id="team2ListName">Femenino Libre 1</span></h5>
-                            <ul id="femeninoLibre1List">
-                                <!-- Jugadores de ejemplo -->
-                                <li>
-                                    <i class="fas fa-volleyball-ball"></i>
-                                    <strong>Fatima Villaruel</strong>
-                                    <span class="date">(02/02/2004)</span>
-                                    <span class="dni">D.N.I.: 23456789</span>
-                                    <div>
-                                        <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this, 'femeninoLibre1')">Editar</button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Lista de jugadores Femenino Libre 2 -->
-                        <div class="tab-pane fade player-list" id="team3" role="tabpanel" aria-labelledby="team3-tab">
-                            <h5><span id="team3ListName">Femenino Libre 2</span></h5>
-                            <ul id="femeninoLibre2List">
-                                <!-- Jugadores de ejemplo -->
-                                <li>
-                                    <i class="fas fa-volleyball-ball"></i>
-                                    <strong>Pia Muriel Navarro</strong>
-                                    <span class="date">(03/03/2003)</span>
-                                    <span class="dni">D.N.I.: 34567890</span>
-                                    <div>
-                                        <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this, 'femeninoLibre2')">Editar</button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <div class="social-icons">
+                <a href="https://www.instagram.com/liga_del_norte2024?igsh=MWVhM2g5Z2FsYjQybg%3D%3D" target="_blank"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
-    </div>
+    </nav>
 
-<<<<<<< HEAD
-    <!-- Modal para agregar/edit jugador -->
-    <div class="modal fade" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true">
+    <!-- Barra de navegación principal -->
+    <nav class="navbar navbar-expand-lg navbar-dark main-nav">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="imagenes/logoliga.png" alt="Logo" width="90" height="90" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="sobrenosotros.html">Sobre Nosotros</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="competenciaDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Calendario
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="competenciaDropdown">
+                            <li><a class="dropdown-item" href="calendariomasculinolibre.html">Masculino Libre</a></li>
+                            <li><a class="dropdown-item" href="calendariofemeninolibre.html">Femenino Libre</a></li>
+                            <li><a class="dropdown-item" href="calendariofemeninosub16.html">Femenino Sub 16</a></li>
+                            <li><a class="dropdown-item" href="calendariomasculinosub16.html">Masculino Sub 16</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="resultados.html">Resultados</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="competenciaDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Competencia
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="competenciaDropdown">
+                            <li><a class="dropdown-item" href="equipos.html">Masculino</a></li>
+                            <li><a class="dropdown-item" href="equiposfemeninos.html">Femenino</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="como formar parte.html">Como formar parte</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                    <!-- Mostrar email si está autenticado -->
+                    <li class="nav-item">
+                        <span id="userEmail" class="nav-link"></span>
+                    </li>
+                    <!-- Botón para iniciar sesión solo si no está autenticado -->
+                    <li class="nav-item" id="loginNavItem">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Iniciar Sesión</a>
+                    </li>
+                    <!-- Botón para cerrar sesión, solo si está autenticado -->
+                    <li class="nav-item" id="logoutNavItem" style="display: none;">
+                        <a class="nav-link" href="#" id="logoutButton">Cerrar Sesión</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modal para Login -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="playerModalLabel">Agregar/Editar Jugador</h5>
+                    <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="loginForm">
                         <div class="mb-3">
-                            <label for="playerFirstName" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="playerFirstName" placeholder="Nombre" required>
+                            <label for="email" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="email" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="playerLastName" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="playerLastName" placeholder="Apellido" required>
+                        <div class="mb-3 password-container">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" required>
+                            <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                         </div>
-                        <div class="mb-3">
-                            <label for="playerBirthDate" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="playerBirthDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="playerDNI" class="form-label">D.N.I.</label>
-                            <input type="text" class="form-control" id="playerDNI" placeholder="D.N.I." required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="playerTeam" class="form-label">Equipo</label>
-                            <select class="form-select" id="playerTeam">
-                                <option value="sub16">Sub 16</option>
-                                <option value="femeninoLibre1">Femenino Libre 1</option>
-                                <option value="femeninoLibre2">Femenino Libre 2</option>
-                            </select>
-                        </div>
+                        <div id="loginError" class="text-danger"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="savePlayerBtn">Guardar</button>
+                    <button type="button" class="btn btn-primary" id="loginButton">Iniciar Sesión</button>
                 </div>
             </div>
         </div>
     </div>
-=======
+
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Liga Del Norte. Todos los derechos .</p>
+        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
     </footer>
->>>>>>> bcf47d4 (dd)
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+
     <script>
-        // Función para editar el nombre del equipo principal
-        function editMainTeamName() {
-            const teamName = prompt('Ingresa el nuevo nombre del equipo:');
-            if (teamName) {
-                document.getElementById('teamName').innerText = teamName;
-            }
-        }
+        // Inicializar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
+            authDomain: "liga-del-norte.firebaseapp.com",
+            projectId: "liga-del-norte",
+            storageBucket: "liga-del-norte.appspot.com",
+            messagingSenderId: "655679074901",
+            appId: "1:655679074901:web:867a248306701963039adc",
+            measurementId: "G-CZ5P9YCEWK"
+        };
 
-        // Función para editar el nombre del equipo en las pestañas
-        function editTeamName(teamId) {
-            const teamName = prompt('Ingresa el nuevo nombre del equipo:');
-            if (teamName) {
-                document.getElementById(teamId + 'Name').innerText = teamName;
-                document.getElementById(teamId + 'ListName').innerText = teamName;
-            }
-        }
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-        // Función para agregar jugador
-        document.getElementById('savePlayerBtn').addEventListener('click', function () {
-            const playerFirstName = document.getElementById('playerFirstName').value;
-            const playerLastName = document.getElementById('playerLastName').value;
-            const playerBirthDate = document.getElementById('playerBirthDate').value;
-            const playerDNI = document.getElementById('playerDNI').value;
-            const playerTeam = document.getElementById('playerTeam').value; // Obtener equipo seleccionado
+        // Mostrar correo si está autenticado
+        const userEmailSpan = document.getElementById('userEmail');
+        const loginNavItem = document.getElementById('loginNavItem');
+        const logoutNavItem = document.getElementById('logoutNavItem');
 
-            if (playerFirstName && playerLastName && playerBirthDate && playerDNI) {
-                const player = document.createElement('li');
-                player.innerHTML = `
-                    <i class="fas fa-volleyball-ball"></i>
-                    <strong>${playerFirstName} ${playerLastName}</strong>
-                    <span class="date">(${playerBirthDate})</span>
-                    <span class="dni">D.N.I.: ${playerDNI}</span>
-                    <div>
-                        <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this)">Editar</button>
-                    </div>
-                `;
+        // Manejar inicio de sesión
+        document.getElementById('loginButton').addEventListener('click', function () {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-                // Añadir el jugador al equipo seleccionado
-                document.getElementById(playerTeam + 'List').appendChild(player);
-                const modal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
-                modal.hide();
+            // Iniciar sesión con Firebase
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Inicio de sesión exitoso
+                    const user = userCredential.user;
+                    alert('Inicio de sesión exitoso');
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    loginModal.hide();
+
+                    // Mostrar el correo del usuario logueado
+                    userEmailSpan.textContent = user.email;
+                    loginNavItem.style.display = 'none'; // Ocultar botón de login
+                    logoutNavItem.style.display = 'block'; // Mostrar botón de logout
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    document.getElementById('loginError').innerText = 'Error: ' + errorMessage;
+                });
+        });
+
+        // Verificar si el usuario ya está autenticado al cargar la página
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Si el usuario está autenticado, mostrar su correo y el botón de logout
+                userEmailSpan.textContent = user.email;
+                loginNavItem.style.display = 'none';
+                logoutNavItem.style.display = 'block';
+            } else {
+                // Si no está autenticado, asegurarse de que el botón de login esté visible
+                userEmailSpan.textContent = '';
+                loginNavItem.style.display = 'block';
+                logoutNavItem.style.display = 'none';
             }
         });
 
-        // Función para eliminar un jugador
-        function removePlayer(button) {
-            button.closest('li').remove();
-        }
+        // Manejar cierre de sesión
+        document.getElementById('logoutButton').addEventListener('click', function () {
+            auth.signOut().then(() => {
+                // Cerrar sesión exitosa
+                userEmailSpan.textContent = ''; // Limpiar el correo mostrado
+                loginNavItem.style.display = 'block'; // Mostrar botón de login
+                logoutNavItem.style.display = 'none'; // Ocultar botón de logout
+                alert('Sesión cerrada exitosamente');
+            }).catch((error) => {
+                alert('Error al cerrar sesión: ' + error.message);
+            });
+        });
 
-        // Función para editar jugador
-        function editPlayer(button) {
-            const li = button.closest('li');
-            const playerFirstName = li.querySelector('strong').innerText.split(' ')[0];
-            const playerLastName = li.querySelector('strong').innerText.split(' ')[1];
-            const playerBirthDate = li.querySelector('.date').innerText.replace(/[()]/g, '');
-            const playerDNI = li.querySelector('.dni').innerText.replace('D.N.I.: ', '');
+        // Funcionalidad para mostrar/ocultar la contraseña
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
 
-            document.getElementById('playerFirstName').value = playerFirstName;
-            document.getElementById('playerLastName').value = playerLastName;
-            document.getElementById('playerBirthDate').value = playerBirthDate;
-            document.getElementById('playerDNI').value = playerDNI;
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
 
-            const modal = new bootstrap.Modal(document.getElementById('playerModal'));
-            modal.show();
-
-            li.remove(); // Elimina el jugador editado de la lista
-        }
+            // Cambiar ícono
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
     </script>
+
 </body>
+
 </html>
