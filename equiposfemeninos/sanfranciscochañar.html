@@ -76,7 +76,7 @@
             <!-- Información básica del equipo -->
             <div class="col-md-4 text-center">
                 <img src="../imagenes/chañar.jpg" alt="Logo del equipo" class="team-logo">
-                <h2>San Fransisco de Chañar</h2>
+                <h2 id="teamName" onclick="editMainTeamName()">San Francisco de Chañar</h2>
                 <p><strong>Localidad:</strong> San Francisco de Chañar, Córdoba</p>
             </div>
 
@@ -191,7 +191,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="playerForm">
+                    <form>
                         <div class="mb-3">
                             <label for="playerFirstName" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="playerFirstName" placeholder="Nombre" required>
@@ -201,176 +201,91 @@
                             <input type="text" class="form-control" id="playerLastName" placeholder="Apellido" required>
                         </div>
                         <div class="mb-3">
+                            <label for="playerBirthDate" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="playerBirthDate" required>
+                        </div>
+                        <div class="mb-3">
                             <label for="playerDNI" class="form-label">D.N.I.</label>
                             <input type="text" class="form-control" id="playerDNI" placeholder="D.N.I." required>
                         </div>
-                        <div class="mb-3">
-                            <label for="dobDay" class="form-label">Fecha de Nacimiento</label>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="number" class="form-control" id="dobDay" placeholder="Día" min="1" max="31" required>
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control" id="dobMonth" placeholder="Mes" min="1" max="12" required>
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control" id="dobYear" placeholder="Año" min="1900" max="2024" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="teamSelect" class="form-label">Seleccionar Equipo</label>
-                            <select class="form-select" id="teamSelect" required>
-                                <option value="sub16">Sub 16</option>
-                                <option value="femeninoLibre1">Femenino Libre 1</option>
-                                <option value="femeninoLibre2">Femenino Libre 2</option>
-                            </select>
-                        </div>
-                        <input type="hidden" id="playerIndex">
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" form="playerForm" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-primary" id="savePlayerBtn">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Modal para editar nombre de equipo -->
-    <div class="modal fade" id="editTeamModal" tabindex="-1" aria-labelledby="editTeamModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editTeamModalLabel">Editar Nombre del Equipo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editTeamForm">
-                        <div class="mb-3">
-                            <label for="teamNameInput" class="form-label">Nombre del Equipo</label>
-                            <input type="text" class="form-control" id="teamNameInput" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" form="editTeamForm" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
-    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let editingTeamId = '';
-
-        // Función para editar nombre de equipo
-        document.getElementById("editTeamForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const newTeamName = document.getElementById("teamNameInput").value;
-            document.getElementById(editingTeamId + 'Name').innerText = newTeamName; // Actualizar el nombre del equipo
-            document.getElementById(editingTeamId + 'ListName').innerText = newTeamName; // Actualizar el nombre en la lista
-            var modal = bootstrap.Modal.getInstance(document.getElementById('editTeamModal'));
-            modal.hide();
-        });
-
-        function editTeamName(teamId) {
-            editingTeamId = teamId;
-            const currentTeamName = document.getElementById(teamId + 'Name').innerText;
-            document.getElementById("teamNameInput").value = currentTeamName; // Cargar nombre actual en el formulario
-            var modal = new bootstrap.Modal(document.getElementById('editTeamModal'));
-            modal.show();
-        }
-
-        // Función para mover jugador a otra categoría
-        function movePlayerToNewTeam(playerLi, newTeamId) {
-            const playerList = document.getElementById(newTeamId + "List");
-            playerList.appendChild(playerLi);
-        }
-
-        // Lógica para agregar y editar jugadores
-        document.getElementById("playerForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const playerFirstName = document.getElementById("playerFirstName").value;
-            const playerLastName = document.getElementById("playerLastName").value;
-            const playerDNI = document.getElementById("playerDNI").value;
-            const dobDay = document.getElementById("dobDay").value;
-            const dobMonth = document.getElementById("dobMonth").value;
-            const dobYear = document.getElementById("dobYear").value;
-            const selectedTeam = document.getElementById("teamSelect").value;
-
-            const fullName = playerFirstName + " " + playerLastName;
-            const dob = `(${dobDay}/${dobMonth}/${dobYear})`;
-            const dni = `D.N.I.: ${playerDNI}`;
-
-            const playerIndex = document.getElementById("playerIndex").value;
-
-            let playerLi;
-            if (playerIndex === "") {
-                // Nuevo jugador
-                playerLi = document.createElement("li");
-                playerLi.innerHTML = `<i class="fas fa-volleyball-ball"></i>
-                                      <strong>${fullName}</strong>
-                                      <span class="date">${dob}</span>
-                                      <span class="dni">${dni}</span>
-                                      <div>
-                                          <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                          <button class="btn btn-warning btn-sm" onclick="editPlayer(this, '${selectedTeam}')">Editar</button>
-                                      </div>`;
-                document.getElementById(selectedTeam + "List").appendChild(playerLi);
-            } else {
-                // Editar jugador existente
-                playerLi = document.querySelector(`li[data-index="${playerIndex}"]`);
-                playerLi.innerHTML = `<i class="fas fa-volleyball-ball"></i>
-                                      <strong>${fullName}</strong>
-                                      <span class="date">${dob}</span>
-                                      <span class="dni">${dni}</span>
-                                      <div>
-                                          <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
-                                          <button class="btn btn-warning btn-sm" onclick="editPlayer(this, '${selectedTeam}')">Editar</button>
-                                      </div>`;
-                const currentTeam = playerLi.parentElement.id.replace("List", "");
-                if (currentTeam !== selectedTeam) {
-                    movePlayerToNewTeam(playerLi, selectedTeam);
-                }
+        // Función para editar el nombre del equipo principal
+        function editMainTeamName() {
+            const teamName = prompt('Ingresa el nuevo nombre del equipo:');
+            if (teamName) {
+                document.getElementById('teamName').innerText = teamName;
             }
-
-            var modal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
-            modal.hide();
-        });
-
-        // Función para eliminar jugador
-        function removePlayer(button) {
-            const playerLi = button.parentElement.parentElement;
-            playerLi.remove();
         }
 
-        // Función para editar jugador (abre el modal con los datos del jugador)
-        function editPlayer(button, team) {
-            const playerLi = button.parentElement.parentElement;
-            const playerName = playerLi.querySelector("strong").innerText.split(" ");
-            const dni = playerLi.querySelector(".dni").innerText.replace("D.N.I.: ", "");
-            const dob = playerLi.querySelector(".date").innerText.replace(/[()]/g, "").split("/");
+        // Función para editar el nombre del equipo en las pestañas
+        function editTeamName(teamId) {
+            const teamName = prompt('Ingresa el nuevo nombre del equipo:');
+            if (teamName) {
+                document.getElementById(teamId + 'Name').innerText = teamName;
+                document.getElementById(teamId + 'ListName').innerText = teamName;
+            }
+        }
 
-            document.getElementById("playerFirstName").value = playerName[0];
-            document.getElementById("playerLastName").value = playerName[1];
-            document.getElementById("playerDNI").value = dni;
-            document.getElementById("dobDay").value = dob[0];
-            document.getElementById("dobMonth").value = dob[1];
-            document.getElementById("dobYear").value = dob[2];
-            document.getElementById("teamSelect").value = team;
+        // Función para agregar jugador
+        document.getElementById('savePlayerBtn').addEventListener('click', function () {
+            const playerFirstName = document.getElementById('playerFirstName').value;
+            const playerLastName = document.getElementById('playerLastName').value;
+            const playerBirthDate = document.getElementById('playerBirthDate').value;
+            const playerDNI = document.getElementById('playerDNI').value;
 
-            document.getElementById("playerIndex").value = playerLi.getAttribute("data-index");
+            if (playerFirstName && playerLastName && playerBirthDate && playerDNI) {
+                const player = document.createElement('li');
+                player.innerHTML = `
+                    <i class="fas fa-volleyball-ball"></i>
+                    <strong>${playerFirstName} ${playerLastName}</strong>
+                    <span class="date">(${playerBirthDate})</span>
+                    <span class="dni">D.N.I.: ${playerDNI}</span>
+                    <div>
+                        <button class="btn btn-danger btn-sm" onclick="removePlayer(this)">Eliminar</button>
+                        <button class="btn btn-warning btn-sm" onclick="editPlayer(this, 'sub16')">Editar</button>
+                    </div>
+                `;
 
-            var modal = new bootstrap.Modal(document.getElementById('playerModal'));
+                document.getElementById('sub16List').appendChild(player);
+                const modal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
+                modal.hide();
+            }
+        });
+
+        // Función para eliminar un jugador
+        function removePlayer(button) {
+            button.closest('li').remove();
+        }
+
+        // Función para editar jugador
+        function editPlayer(button) {
+            const li = button.closest('li');
+            const playerFirstName = li.querySelector('strong').innerText.split(' ')[0];
+            const playerLastName = li.querySelector('strong').innerText.split(' ')[1];
+            const playerBirthDate = li.querySelector('.date').innerText.replace(/[()]/g, '');
+            const playerDNI = li.querySelector('.dni').innerText.replace('D.N.I.: ', '');
+
+            document.getElementById('playerFirstName').value = playerFirstName;
+            document.getElementById('playerLastName').value = playerLastName;
+            document.getElementById('playerBirthDate').value = playerBirthDate;
+            document.getElementById('playerDNI').value = playerDNI;
+
+            const modal = new bootstrap.Modal(document.getElementById('playerModal'));
             modal.show();
+
+            li.remove(); // Elimina el jugador editado de la lista
         }
     </script>
 </body>
