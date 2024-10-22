@@ -181,8 +181,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
 
-    <!-- Configuración de Firebase -->
-    <script>
+       <!-- Configuración de Firebase -->
+       <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
             authDomain: "liga-del-norte.firebaseapp.com",
@@ -223,7 +223,7 @@
         function cargarCalendario(adminMode) {
             const calendarioBody = document.getElementById('calendario-body');
             calendarioBody.innerHTML = ''; // Limpiar contenido
-            db.collection("partidos-libre-mascm").get().then((querySnapshot) => {
+            db.collection("partidos-libre-masc").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const partido = doc.data();
                     const fila = `
@@ -258,13 +258,13 @@
             if (partidoId) {
                 db.collection("partidos-libre-masc").doc(partidoId).update(partidoData).then(() => {
                     alert('Partido actualizado correctamente');
-                    document.getElementById('partidos-libre-masc').reset();
+                    document.getElementById('partido-form').reset();
                     cargarCalendario(true);
                 });
             } else {
                 db.collection("partidos-libre-masc").add(partidoData).then(() => {
                     alert('Partido agregado correctamente');
-                    document.getElementById('partidos-libre-masc').reset();
+                    document.getElementById('partido-form').reset();
                     cargarCalendario(true);
                 });
             }
