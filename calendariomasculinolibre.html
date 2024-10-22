@@ -258,13 +258,13 @@
             if (partidoId) {
                 db.collection("partidos-libre-masc").doc(partidoId).update(partidoData).then(() => {
                     alert('Partido actualizado correctamente');
-                    document.getElementById('partido-form').reset();
+                    document.getElementById('partidos-libre-masc').reset();
                     cargarCalendario(true);
                 });
             } else {
                 db.collection("partidos-libre-masc").add(partidoData).then(() => {
                     alert('Partido agregado correctamente');
-                    document.getElementById('partido-form').reset();
+                    document.getElementById('partidos-libre-masc').reset();
                     cargarCalendario(true);
                 });
             }
