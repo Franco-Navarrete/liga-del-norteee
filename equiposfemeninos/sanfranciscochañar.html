@@ -216,33 +216,85 @@
         <p>&copy; 2024 Liga Del Norte</p>
     </footer>
 
+    <!-- Firebase JS SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+
+    <!-- Firebase Configuration -->
     <script>
-        const playersData = {
-            sub16: [],
-            femeninoLibre1: [],
-            femeninoLibre2: []
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
+            authDomain: "liga-del-norte.firebaseapp.com",
+            projectId: "liga-del-norte",
+            storageBucket: "liga-del-norte.appspot.com",
+            messagingSenderId: "655679074901",
+            appId: "1:655679074901:web:867a248306701963039adc",
+            measurementId: "G-CZ5P9YCEWK"
         };
 
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let coachId = null; // Para almacenar el ID del técnico en Firestore si ya está guardado
+
+        // Función para cargar la información del técnico desde Firestore
+        function loadCoachInfo() {
+            // Aquí asumimos que tienes un documento específico para el técnico en la colección 'tecnicos'
+            db.collection("tecnicos").doc("tecnico1").get().then((doc) => {
+                if (doc.exists) {
+                    const coachData = doc.data();
+                    document.getElementById("coachName").innerText = `Director Técnico: ${coachData.nombre}`;
+                    document.getElementById("coachDOB").innerText = coachData.fecha_nacimiento;
+                    document.getElementById("coachDNI").innerText = coachData.dni;
+                    coachId = doc.id; // Guardar el ID del técnico para futuras actualizaciones
+                } else {
+                    console.log("No se encontró información del técnico.");
+                }
+            }).catch((error) => {
+                console.error("Error al obtener el técnico: ", error);
+            });
+        }
+    
+        // Función para editar la información del técnico
         function editCoachInfo() {
+            // Llenar el formulario de edición con la información actual del técnico
             document.getElementById("newCoachName").value = document.getElementById("coachName").innerText.split(": ")[1];
             document.getElementById("newCoachDOB").value = document.getElementById("coachDOB").innerText;
             document.getElementById("newCoachDNI").value = document.getElementById("coachDNI").innerText;
+    
+            // Mostrar el modal para editar los datos del técnico
             bootstrap.Modal.getOrCreateInstance(document.getElementById('editCoachModal')).show();
         }
-
+    
+        // Guardar datos del técnico en Firestore
         document.getElementById("editCoachForm").addEventListener("submit", function(event) {
             event.preventDefault();
             const newName = document.getElementById("newCoachName").value;
             const newDOB = document.getElementById("newCoachDOB").value;
             const newDNI = document.getElementById("newCoachDNI").value;
-
+    
+            // Actualizar los valores en la página
             document.getElementById("coachName").innerText = `Director Técnico: ${newName}`;
             document.getElementById("coachDOB").innerText = newDOB;
             document.getElementById("coachDNI").innerText = newDNI;
-
-            bootstrap.Modal.getInstance(document.getElementById('editCoachModal')).hide();
+    
+            // Guardar los cambios en Firestore
+            db.collection("tecnicos").doc("tecnico1").set({
+                nombre: newName,
+                fecha_nacimiento: newDOB,
+                dni: newDNI
+            }).then(() => {
+                console.log("Datos del técnico actualizados correctamente");
+                // Cerrar el modal
+                bootstrap.Modal.getInstance(document.getElementById('editCoachModal')).hide();
+            }).catch((error) => {
+                console.error("Error al actualizar los datos del técnico: ", error);
+            });
         });
+    
 
+        // Guardar jugador en Firestore
         document.getElementById("playerForm").addEventListener("submit", function(event) {
             event.preventDefault();
             const playerName = document.getElementById("playerName").value;
@@ -250,72 +302,56 @@
             const playerDNI = document.getElementById("playerDNI").value;
             const playerCategory = document.getElementById("playerCategory").value;
 
-            playersData[playerCategory].push({ name: playerName, dob: playerDOB, dni: playerDNI });
-            document.getElementById("playerForm").reset();
-            renderPlayers();
-            bootstrap.Modal.getInstance(document.getElementById('playerModal')).hide();
+            db.collection("jugadores").add({
+                nombre: playerName,
+                fecha_nacimiento: playerDOB,
+                dni: playerDNI,
+                categoria: playerCategory
+            }).then(() => {
+                alert("Jugador agregado correctamente");
+                renderPlayers();
+                document.getElementById("playerForm").reset();
+                bootstrap.Modal.getInstance(document.getElementById('playerModal')).hide();
+            }).catch((error) => {
+                console.error("Error al agregar jugador: ", error);
+            });
         });
 
+        
+
+        // Cargar jugadores desde Firestore
         function renderPlayers() {
-            document.getElementById("sub16List").innerHTML = "";
-            document.getElementById("femeninoLibre1List").innerHTML = "";
-            document.getElementById("femeninoLibre2List").innerHTML = "";
+            db.collection("jugadores").get().then((querySnapshot) => {
+                const playersData = {
+                    sub16: [],
+                    femeninoLibre1: [],
+                    femeninoLibre2: []
+                };
 
-            for (let category in playersData) {
-                playersData[category].forEach((player, index) => {
-                    const li = document.createElement("li");
-                    li.innerHTML = `
-                        <div class="player-details">
-                            <p><strong>${player.name}</strong> - <strong>D.N.I:</strong> ${player.dni} - <strong>Fecha de Nacimiento:</strong> ${player.dob}</p>
-                        </div>
-                        <div>
-                            <button class="btn btn-warning btn-sm" onclick="editPlayer(${index}, '${category}')">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletePlayer(${index}, '${category}')">Eliminar</button>
-                        </div>`;
-                    document.getElementById(category + "List").appendChild(li);
+                querySnapshot.forEach((doc) => {
+                    const player = doc.data();
+                    playersData[player.categoria].push(player);
                 });
-            }
+
+                document.getElementById("sub16List").innerHTML = "";
+                document.getElementById("femeninoLibre1List").innerHTML = "";
+                document.getElementById("femeninoLibre2List").innerHTML = "";
+
+                for (let category in playersData) {
+                    playersData[category].forEach((player) => {
+                        const li = document.createElement("li");
+                        li.innerHTML = `
+                            <div class="player-details">
+                                <p><strong>${player.nombre}</strong> - <strong>D.N.I:</strong> ${player.dni} - <strong>Fecha de Nacimiento:</strong> ${player.fecha_nacimiento}</p>
+                            </div>`;
+                        document.getElementById(category + "List").appendChild(li);
+                    });
+                }
+            });
         }
 
-        function editPlayer(index, category) {
-            const player = playersData[category][index];
-            document.getElementById("editPlayerIndex").value = index;
-            document.getElementById("editPlayerOldCategory").value = category;
-            document.getElementById("editPlayerName").value = player.name;
-            document.getElementById("editPlayerDOB").value = player.dob;
-            document.getElementById("editPlayerDNI").value = player.dni;
-            document.getElementById("editPlayerCategory").value = category;
-            bootstrap.Modal.getOrCreateInstance(document.getElementById('editPlayerModal')).show();
-        }
-
-        document.getElementById("editPlayerForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            const index = document.getElementById("editPlayerIndex").value;
-            const oldCategory = document.getElementById("editPlayerOldCategory").value;
-
-            const updatedPlayer = {
-                name: document.getElementById("editPlayerName").value,
-                dob: document.getElementById("editPlayerDOB").value,
-                dni: document.getElementById("editPlayerDNI").value
-            };
-
-            const newCategory = document.getElementById("editPlayerCategory").value;
-            // Mover jugador a una nueva categoría
-            if (oldCategory !== newCategory) {
-                playersData[oldCategory].splice(index, 1); // Eliminar de la categoría anterior
-                playersData[newCategory].push(updatedPlayer); // Agregar a la nueva categoría
-            } else {
-                playersData[oldCategory][index] = updatedPlayer; // Si no se cambia, solo actualizar
-            }
-
-            renderPlayers();
-            bootstrap.Modal.getInstance(document.getElementById('editPlayerModal')).hide();
-        });
-
-        function deletePlayer(index, category) {
-            playersData[category].splice(index, 1);
-            renderPlayers();
-        }
+        // Cargar jugadores al iniciar la página
+        window.onload = renderPlayers;
     </script>
 
     <!-- Bootstrap JS -->
