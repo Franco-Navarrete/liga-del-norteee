@@ -258,15 +258,21 @@
             });
         });
 
-        // Editar jugador
-        function editPlayer(playerId, playerData) {
+        function editPlayer(playerId, button) {
+            // Recoge los datos del jugador almacenados en el data attribute
+            const playerData = JSON.parse(button.getAttribute('data-player'));
+        
+            // Rellena el formulario de edición con los datos del jugador
             document.getElementById("editPlayerId").value = playerId;
             document.getElementById("editPlayerName").value = playerData.nombre;
             document.getElementById("editPlayerDOB").value = playerData.fecha_nacimiento;
             document.getElementById("editPlayerDNI").value = playerData.dni;
             document.getElementById("editPlayerCategory").value = playerData.categoria;
+        
+            // Muestra el modal de edición
             bootstrap.Modal.getOrCreateInstance(document.getElementById('editPlayerModal')).show();
         }
+        
 
         document.getElementById("editPlayerForm").addEventListener("submit", function(event) {
             event.preventDefault();
@@ -326,11 +332,12 @@
                                 <p><strong>${player.nombre}</strong> - <strong>D.N.I:</strong> ${player.dni} - <strong>Fecha de Nacimiento:</strong> ${player.fecha_nacimiento}</p>
                             </div>
                             <div>
-                                <button class="btn btn-warning btn-sm" onclick="editPlayer('${player.id}', ${JSON.stringify(player)})">Editar</button>
+                                <button class="btn btn-warning btn-sm" onclick="editPlayer('${player.id}', this)" data-player='${JSON.stringify(player)}'>Editar</button>
                                 <button class="btn btn-danger btn-sm" onclick="deletePlayer('${player.id}')">Eliminar</button>
                             </div>`;
                         document.getElementById(category + "List").appendChild(li);
                     });
+                    
                 }
             });
         }
