@@ -94,7 +94,7 @@
                     </li>
                 </ul>
 
-                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#playerModal">Agregar Jugador</button>
+                <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#playerModal" id="addPlayerButton" style="display: none;">Agregar Jugador</button>
 
                 <div class="tab-content mt-3" id="myTabContent">
                     <div class="tab-pane fade show active player-list" id="team1" role="tabpanel">
@@ -207,158 +207,108 @@
     </footer>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-
     <script>
-        let players = [];
-        let players2 = [];
-        let players3 = [];
-        let coach = null; // Guardar la información del técnico
-        let isLoggedIn = false; // Variable para verificar si el usuario ha iniciado sesión
+        let isLoggedIn = false; // Cambia esto según el estado de inicio de sesión del usuario
 
-        // Función para mostrar los jugadores en la lista
-        function showPlayers() {
-            const playersList = document.getElementById("playersList");
-            playersList.innerHTML = "";
-            players.forEach((player, index) => {
-                const li = document.createElement("li");
-                li.innerHTML = `
+        document.addEventListener("DOMContentLoaded", () => {
+            // Aquí iría la lógica para cargar los datos del equipo, los jugadores y el técnico
+
+            if (isLoggedIn) {
+                displayCoachInfo();
+                displayPlayerList();
+                document.getElementById('addPlayerButton').style.display = 'block';
+            } else {
+                document.getElementById('coach-info').innerHTML = '<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCoachModal">Agregar Técnico</button>';
+            }
+        });
+
+        function displayCoachInfo() {
+            const coachInfo = `
+                <h5>Datos del Técnico</h5>
+                <p><strong>Nombre:</strong> Juan Pérez</p>
+                <p><strong>Fecha de Nacimiento:</strong> 1980-05-12</p>
+                <p><strong>DNI:</strong> 12345678</p>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCoachModal">Editar Técnico</button>
+            `;
+            document.getElementById('coach-info').innerHTML = coachInfo;
+        }
+
+        function displayPlayerList() {
+            const players = [
+                { name: "Pedro González", dob: "2008-03-15", dni: "98765432", id: 1 },
+                { name: "Lucas Martínez", dob: "2007-08-20", dni: "87654321", id: 2 }
+            ];
+
+            const playersListElement = document.getElementById('playersList');
+            playersListElement.innerHTML = players.map(player => `
+                <li>
                     <div class="player-details">
-                        <strong>${player.name}</strong><br>
-                        Fecha de Nacimiento: ${player.dob}<br>
+                        <strong>${player.name}</strong> <br>
+                        Fecha de Nacimiento: ${player.dob} <br>
                         DNI: ${player.dni}
                     </div>
-                `;
-                if (isLoggedIn) {
-                    li.innerHTML += `
-                        <button class="btn btn-sm btn-warning" onclick="editPlayer(${index})">Editar</button>
-                        <button class="btn btn-sm btn-danger" onclick="deletePlayer(${index})">Eliminar</button>
-                    `;
-                }
-                playersList.appendChild(li);
-            });
+                    <button class="btn btn-warning btn-sm" onclick="openEditPlayerModal(${player.id})">Editar</button>
+                </li>
+            `).join('');
         }
 
-        // Función para agregar un jugador
-        document.getElementById("playerForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const playerName = document.getElementById("playerName").value;
-            const playerDOB = document.getElementById("playerDOB").value;
-            const playerDNI = document.getElementById("playerDNI").value;
+        function openEditPlayerModal(playerId) {
+            // Aquí iría la lógica para obtener los datos del jugador por su ID
+            const player = { name: "Pedro González", dob: "2008-03-15", dni: "98765432", id: playerId };
 
-            players.push({
-                name: playerName,
-                dob: playerDOB,
-                dni: playerDNI
-            });
+            document.getElementById('editPlayerId').value = player.id;
+            document.getElementById('editPlayerName').value = player.name;
+            document.getElementById('editPlayerDOB').value = player.dob;
+            document.getElementById('editPlayerDNI').value = player.dni;
 
-            showPlayers();
-            $('#playerModal').modal('hide');
-            this.reset();
+            const editPlayerModal = new bootstrap.Modal(document.getElementById('editPlayerModal'));
+            editPlayerModal.show();
+        }
+
+        document.getElementById('playerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Lógica para agregar jugador
+            const playerName = document.getElementById('playerName').value;
+            const playerDOB = document.getElementById('playerDOB').value;
+            const playerDNI = document.getElementById('playerDNI').value;
+
+            // Aquí iría la lógica para guardar el nuevo jugador
+
+            alert(`Jugador agregado: ${playerName}`);
+            const playerModal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
+            playerModal.hide();
         });
 
-        // Función para editar un jugador
-        function editPlayer(index) {
-            const player = players[index];
-            document.getElementById("editPlayerId").value = index;
-            document.getElementById("editPlayerName").value = player.name;
-            document.getElementById("editPlayerDOB").value = player.dob;
-            document.getElementById("editPlayerDNI").value = player.dni;
+        document.getElementById('editPlayerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Lógica para editar jugador
+            const playerId = document.getElementById('editPlayerId').value;
+            const playerName = document.getElementById('editPlayerName').value;
+            const playerDOB = document.getElementById('editPlayerDOB').value;
+            const playerDNI = document.getElementById('editPlayerDNI').value;
 
-            $('#editPlayerModal').modal('show');
-        }
+            // Aquí iría la lógica para actualizar el jugador
 
-        document.getElementById("editPlayerForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const index = document.getElementById("editPlayerId").value;
-            const playerName = document.getElementById("editPlayerName").value;
-            const playerDOB = document.getElementById("editPlayerDOB").value;
-            const playerDNI = document.getElementById("editPlayerDNI").value;
-
-            players[index] = {
-                name: playerName,
-                dob: playerDOB,
-                dni: playerDNI
-            };
-
-            showPlayers();
-            $('#editPlayerModal').modal('hide');
+            alert(`Jugador editado: ${playerName}`);
+            const editPlayerModal = bootstrap.Modal.getInstance(document.getElementById('editPlayerModal'));
+            editPlayerModal.hide();
         });
 
-        // Función para eliminar un jugador
-        function deletePlayer(index) {
-            players.splice(index, 1);
-            showPlayers();
-        }
+        document.getElementById('editCoachForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Lógica para editar datos del técnico
+            const coachName = document.getElementById('newCoachName').value;
+            const coachDOB = document.getElementById('newCoachDOB').value;
+            const coachDNI = document.getElementById('newCoachDNI').value;
 
-        // Función para manejar la edición de datos del técnico
-        function editCoach() {
-            if (coach) {
-                document.getElementById("newCoachName").value = coach.name;
-                document.getElementById("newCoachDOB").value = coach.dob;
-                document.getElementById("newCoachDNI").value = coach.dni;
-            } else {
-                document.getElementById("newCoachName").value = "";
-                document.getElementById("newCoachDOB").value = "";
-                document.getElementById("newCoachDNI").value = "";
-            }
-            $('#editCoachModal').modal('show');
-        }
+            // Aquí iría la lógica para guardar o actualizar el técnico
 
-        document.getElementById("editCoachForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const coachName = document.getElementById("newCoachName").value;
-            const coachDOB = document.getElementById("newCoachDOB").value;
-            const coachDNI = document.getElementById("newCoachDNI").value;
-
-            coach = {
-                name: coachName,
-                dob: coachDOB,
-                dni: coachDNI
-            };
-
-            showCoach();
-            $('#editCoachModal').modal('hide');
+            alert(`Técnico guardado: ${coachName}`);
+            const editCoachModal = bootstrap.Modal.getInstance(document.getElementById('editCoachModal'));
+            editCoachModal.hide();
         });
-
-        // Función para mostrar la información del técnico
-        function showCoach() {
-            const coachInfo = document.getElementById("coach-info");
-            coachInfo.innerHTML = "";
-            if (coach) {
-                coachInfo.innerHTML = `
-                    <h5>Entrenador</h5>
-                    <p><strong>Nombre:</strong> ${coach.name}</p>
-                    <p><strong>Fecha de Nacimiento:</strong> ${coach.dob}</p>
-                    <p><strong>DNI:</strong> ${coach.dni}</p>
-                `;
-                if (isLoggedIn) {
-                    coachInfo.innerHTML += `
-                        <button class="btn btn-sm btn-warning" onclick="editCoach()">Editar</button>
-                    `;
-                }
-            } else {
-                coachInfo.innerHTML = `
-                    <h5>Agregar Entrenador</h5>
-                    <button class="btn btn-primary" onclick="editCoach()">Agregar Técnico</button>
-                `;
-            }
-        }
-
-        // Función de inicio de sesión (simulada)
-        function login() {
-            // Aquí puedes implementar la lógica de inicio de sesión real
-            isLoggedIn = true; // Cambia esto a 'true' al iniciar sesión
-            showPlayers();
-            showCoach();
-        }
-
-        // Simular el inicio de sesión al cargar la página
-        window.onload = function() {
-            // Aquí puedes implementar la lógica para verificar si el usuario ya ha iniciado sesión
-            login(); // Llama a la función de inicio de sesión simulada
-        }
     </script>
 </body>
 
