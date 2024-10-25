@@ -149,22 +149,22 @@
         <div class="tab-content mt-4" id="resultadosTabContent">
             <!-- Resultados de la categoría Masculino Libre -->
             <div class="tab-pane fade show active" id="masculinoLibre" role="tabpanel" aria-labelledby="masculinoLibre-tab">
-                <ul class="list-group"></ul>
+                <ul class="list-group" id="masculinoLibreList"></ul>
             </div>
 
             <!-- Resultados de la categoría Masculino Sub-16 -->
             <div class="tab-pane fade" id="masculinoSub16" role="tabpanel" aria-labelledby="masculinoSub16-tab">
-                <ul class="list-group"></ul>
+                <ul class="list-group" id="masculinoSub16List"></ul>
             </div>
 
             <!-- Resultados de la categoría Femenino Libre -->
             <div class="tab-pane fade" id="femeninoLibre" role="tabpanel" aria-labelledby="femeninoLibre-tab">
-                <ul class="list-group"></ul>
+                <ul class="list-group" id="femeninoLibreList"></ul>
             </div>
 
             <!-- Resultados de la categoría Femenino Sub-16 -->
             <div class="tab-pane fade" id="femeninoSub16" role="tabpanel" aria-labelledby="femeninoSub16-tab">
-                <ul class="list-group"></ul>
+                <ul class="list-group" id="femeninoSub16List"></ul>
             </div>
         </div>
     </main>
@@ -212,7 +212,7 @@
         </div>
     </div>
 
-    <!-- Modal para iniciar sesión -->
+    <!-- Modal para inicio de sesión -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -267,18 +267,54 @@
         // Función para actualizar la UI de autenticación
         function updateUI(user) {
             if (user) {
-                // Usuario está autenticado
                 document.getElementById("userEmail").textContent = `Usuario: ${user.email}`;
                 document.getElementById("loginNavItem").style.display = "none";
                 document.getElementById("logoutNavItem").style.display = "block";
                 document.getElementById("addResultButton").style.display = "block"; // Mostrar botón
+                loadResults(); // Cargar resultados al iniciar sesión
             } else {
-                // Usuario no está autenticado
                 document.getElementById("userEmail").textContent = "";
                 document.getElementById("loginNavItem").style.display = "block";
                 document.getElementById("logoutNavItem").style.display = "none";
                 document.getElementById("addResultButton").style.display = "none"; // Ocultar botón
+                clearResults(); // Limpiar resultados si no hay sesión
             }
+        }
+
+        // Función para cargar resultados desde Firebase
+        function loadResults() {
+            const categories = ['resultados_masculino_libre', 'resultados_masculino_sub16', 'resultados_femenino_libre', 'resultados_femenino_sub16'];
+            categories.forEach(category => {
+                const list = document.getElementById(`${category.replace('resultados_', '')}List`);
+                list.innerHTML = ''; // Limpiar la lista
+                database.ref(category).once('value', (snapshot) => {
+                    snapshot.forEach((childSnapshot) => {
+                        const result = childSnapshot.val();
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        listItem.textContent = `${result.equipoLocal} ${result.puntajeLocal} - ${result.equipoVisitante} ${result.puntajeVisitante}`;
+
+                        // Agregar botones de acción
+                        const actionDiv = document.createElement('div');
+                        actionDiv.className = 'action-buttons';
+                        actionDiv.innerHTML = `
+                            <span class="edit-btn" data-id="${childSnapshot.key}">✏️ Editar</span>
+                            <span class="delete-btn" data-id="${childSnapshot.key}">🗑️ Eliminar</span>
+                        `;
+                        listItem.appendChild(actionDiv);
+                        list.appendChild(listItem);
+                    });
+                });
+            });
+        }
+
+        // Limpiar resultados
+        function clearResults() {
+            const categories = ['resultados_masculino_libre', 'resultados_masculino_sub16', 'resultados_femenino_libre', 'resultados_femenino_sub16'];
+            categories.forEach(category => {
+                const list = document.getElementById(`${category.replace('resultados_', '')}List`);
+                list.innerHTML = ''; // Limpiar la lista
+            });
         }
 
         // Manejar el inicio de sesión
@@ -309,7 +345,68 @@
             updateUI(user);
         });
 
-        // Aquí puedes agregar el código para cargar y gestionar los resultados
+        // Manejar el envío del formulario para agregar/editar resultados
+        document.getElementById("addResultForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const id = document.getElementById("resultId").value;
+            const equipoLocal = document.getElementById("equipoLocal").value;
+            const puntajeLocal = document.getElementById("puntajeLocal").value;
+            const equipoVisitante = document.getElementById("equipoVisitante").value;
+            const puntajeVisitante = document.getElementById("puntajeVisitante").value;
+            const categoria = document.getElementById("categoria").value;
+
+            const result = {
+                equipoLocal,
+                puntajeLocal: Number(puntajeLocal),
+                equipoVisitante,
+                puntajeVisitante: Number(puntajeVisitante),
+            };
+
+            if (id) {
+                // Editar resultado existente
+                database.ref(`${categoria}/${id}`).update(result).then(() => {
+                    $('#addResultModal').modal('hide');
+                    loadResults(); // Recargar resultados
+                });
+            } else {
+                // Agregar nuevo resultado
+                database.ref(categoria).push(result).then(() => {
+                    $('#addResultModal').modal('hide');
+                    loadResults(); // Recargar resultados
+                });
+            }
+
+            // Limpiar el formulario
+            document.getElementById("addResultForm").reset();
+            document.getElementById("resultId").value = '';
+        });
+
+        // Manejar la edición y eliminación de resultados
+        document.addEventListener("click", (event) => {
+            if (event.target.classList.contains('edit-btn')) {
+                const id = event.target.getAttribute('data-id');
+                database.ref(`resultados_masculino_libre/${id}`).once('value', (snapshot) => {
+                    const result = snapshot.val();
+                    document.getElementById("equipoLocal").value = result.equipoLocal;
+                    document.getElementById("puntajeLocal").value = result.puntajeLocal;
+                    document.getElementById("equipoVisitante").value = result.equipoVisitante;
+                    document.getElementById("puntajeVisitante").value = result.puntajeVisitante;
+                    document.getElementById("categoria").value = 'resultados_masculino_libre';
+                    document.getElementById("resultId").value = id; // Guardar ID para edición
+                    $('#addResultModal').modal('show'); // Mostrar modal para editar
+                });
+            }
+
+            if (event.target.classList.contains('delete-btn')) {
+                const id = event.target.getAttribute('data-id');
+                const categoria = event.target.closest('.tab-pane').id; // Obtener categoría desde el contenedor
+                database.ref(`${categoria}/${id}`).remove().then(() => {
+                    loadResults(); // Recargar resultados
+                });
+            }
+        });
+
+        // Aquí puedes agregar más funcionalidades según sea necesario
 
     </script>
 
