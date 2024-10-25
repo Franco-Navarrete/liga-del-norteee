@@ -202,215 +202,163 @@
         </div>
     </div>
 
-    <!-- Modal para inicio de sesión -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Iniciar Sesión</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <footer>
-        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
+        <p>© 2024 Liga del Norte. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+
     <script>
-        // Configuración de Firebase
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASE_URL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        // Inicializa Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        let players = [];
+        let players2 = [];
+        let players3 = [];
+        let coach = null; // Guardar la información del técnico
+        let isLoggedIn = false; // Variable para verificar si el usuario ha iniciado sesión
 
-        let teamId = "las-arrias"; // Cambia esto según el ID de tu equipo
-
-        // Función para cargar datos del DT
-        function loadCoachData() {
-            const coachRef = firebase.database().ref(`teams/${teamId}/coach`);
-            coachRef.once("value").then(snapshot => {
-                const coachData = snapshot.val();
-                if (coachData) {
-                    displayCoachData(coachData);
-                } else {
-                    showAddCoachButton();
-                }
-            });
-        }
-
-        function displayCoachData(coach) {
-            const coachInfoDiv = document.getElementById("coach-info");
-            coachInfoDiv.innerHTML = `
-                <strong>Técnico:</strong> ${coach.name} <br>
-                <strong>Fecha de Nacimiento:</strong> ${coach.dob} <br>
-                <strong>DNI:</strong> ${coach.dni} <br>
-                <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#editCoachModal">Editar</button>
-            `;
-        }
-
-        function showAddCoachButton() {
-            const coachInfoDiv = document.getElementById("coach-info");
-            coachInfoDiv.innerHTML = `
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editCoachModal">Agregar Técnico</button>
-            `;
-        }
-
-        // Función para cargar la lista de jugadores
-        function loadPlayers() {
-            const playersRef = firebase.database().ref(`teams/${teamId}/players`);
-            playersRef.on("value", (snapshot) => {
-                const playersList = snapshot.val();
-                updatePlayerList(playersList, "playersList");
-                updatePlayerList(playersList, "playersList2");
-                updatePlayerList(playersList, "playersList3");
-            });
-        }
-
-        function updatePlayerList(playersList, listId) {
-            const listElement = document.getElementById(listId);
-            listElement.innerHTML = "";
-            for (const playerId in playersList) {
-                const player = playersList[playerId];
-                listElement.innerHTML += `
-                    <li>
-                        <div class="player-details">
-                            <strong>${player.name}</strong><br>
-                            <small>Fecha de Nacimiento: ${player.dob} | DNI: ${player.dni}</small>
-                        </div>
-                        <div>
-                            <button class="btn btn-warning btn-sm" onclick="editPlayer('${playerId}', '${listId}')">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletePlayer('${playerId}')">Eliminar</button>
-                        </div>
-                    </li>
+        // Función para mostrar los jugadores en la lista
+        function showPlayers() {
+            const playersList = document.getElementById("playersList");
+            playersList.innerHTML = "";
+            players.forEach((player, index) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <div class="player-details">
+                        <strong>${player.name}</strong><br>
+                        Fecha de Nacimiento: ${player.dob}<br>
+                        DNI: ${player.dni}
+                    </div>
                 `;
-            }
+                if (isLoggedIn) {
+                    li.innerHTML += `
+                        <button class="btn btn-sm btn-warning" onclick="editPlayer(${index})">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="deletePlayer(${index})">Eliminar</button>
+                    `;
+                }
+                playersList.appendChild(li);
+            });
         }
 
-        // Agregar jugador
+        // Función para agregar un jugador
         document.getElementById("playerForm").addEventListener("submit", function (e) {
             e.preventDefault();
             const playerName = document.getElementById("playerName").value;
             const playerDOB = document.getElementById("playerDOB").value;
             const playerDNI = document.getElementById("playerDNI").value;
-            const playersRef = firebase.database().ref(`teams/${teamId}/players`).push();
-            playersRef.set({
+
+            players.push({
                 name: playerName,
                 dob: playerDOB,
                 dni: playerDNI
-            }).then(() => {
-                loadPlayers();
-                $('#playerModal').modal('hide');
-                document.getElementById("playerForm").reset();
             });
+
+            showPlayers();
+            $('#playerModal').modal('hide');
+            this.reset();
         });
 
-        // Editar jugador
-        function editPlayer(playerId, listId) {
-            const playerRef = firebase.database().ref(`teams/${teamId}/players/${playerId}`);
-            playerRef.once("value").then(snapshot => {
-                const player = snapshot.val();
-                document.getElementById("editPlayerId").value = playerId;
-                document.getElementById("editPlayerName").value = player.name;
-                document.getElementById("editPlayerDOB").value = player.dob;
-                document.getElementById("editPlayerDNI").value = player.dni;
-                $('#editPlayerModal').modal('show');
-            });
+        // Función para editar un jugador
+        function editPlayer(index) {
+            const player = players[index];
+            document.getElementById("editPlayerId").value = index;
+            document.getElementById("editPlayerName").value = player.name;
+            document.getElementById("editPlayerDOB").value = player.dob;
+            document.getElementById("editPlayerDNI").value = player.dni;
+
+            $('#editPlayerModal').modal('show');
         }
 
         document.getElementById("editPlayerForm").addEventListener("submit", function (e) {
             e.preventDefault();
-            const playerId = document.getElementById("editPlayerId").value;
+            const index = document.getElementById("editPlayerId").value;
             const playerName = document.getElementById("editPlayerName").value;
             const playerDOB = document.getElementById("editPlayerDOB").value;
             const playerDNI = document.getElementById("editPlayerDNI").value;
 
-            const playerRef = firebase.database().ref(`teams/${teamId}/players/${playerId}`);
-            playerRef.update({
+            players[index] = {
                 name: playerName,
                 dob: playerDOB,
                 dni: playerDNI
-            }).then(() => {
-                loadPlayers();
-                $('#editPlayerModal').modal('hide');
-            });
+            };
+
+            showPlayers();
+            $('#editPlayerModal').modal('hide');
         });
 
-        // Eliminar jugador
-        function deletePlayer(playerId) {
-            if (confirm("¿Estás seguro de que deseas eliminar este jugador?")) {
-                const playerRef = firebase.database().ref(`teams/${teamId}/players/${playerId}`);
-                playerRef.remove().then(() => {
-                    loadPlayers();
-                });
-            }
+        // Función para eliminar un jugador
+        function deletePlayer(index) {
+            players.splice(index, 1);
+            showPlayers();
         }
 
-        // Agregar/Editar DT
+        // Función para manejar la edición de datos del técnico
+        function editCoach() {
+            if (coach) {
+                document.getElementById("newCoachName").value = coach.name;
+                document.getElementById("newCoachDOB").value = coach.dob;
+                document.getElementById("newCoachDNI").value = coach.dni;
+            } else {
+                document.getElementById("newCoachName").value = "";
+                document.getElementById("newCoachDOB").value = "";
+                document.getElementById("newCoachDNI").value = "";
+            }
+            $('#editCoachModal').modal('show');
+        }
+
         document.getElementById("editCoachForm").addEventListener("submit", function (e) {
             e.preventDefault();
             const coachName = document.getElementById("newCoachName").value;
             const coachDOB = document.getElementById("newCoachDOB").value;
             const coachDNI = document.getElementById("newCoachDNI").value;
 
-            const coachRef = firebase.database().ref(`teams/${teamId}/coach`);
-            coachRef.set({
+            coach = {
                 name: coachName,
                 dob: coachDOB,
                 dni: coachDNI
-            }).then(() => {
-                displayCoachData({ name: coachName, dob: coachDOB, dni: coachDNI });
-                $('#editCoachModal').modal('hide');
-            });
+            };
+
+            showCoach();
+            $('#editCoachModal').modal('hide');
         });
 
-        // Inicio de sesión
-        document.getElementById("loginForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    alert("Inicio de sesión exitoso");
-                    $('#loginModal').modal('hide');
-                })
-                .catch((error) => {
-                    alert("Error en el inicio de sesión: " + error.message);
-                });
-        });
+        // Función para mostrar la información del técnico
+        function showCoach() {
+            const coachInfo = document.getElementById("coach-info");
+            coachInfo.innerHTML = "";
+            if (coach) {
+                coachInfo.innerHTML = `
+                    <h5>Entrenador</h5>
+                    <p><strong>Nombre:</strong> ${coach.name}</p>
+                    <p><strong>Fecha de Nacimiento:</strong> ${coach.dob}</p>
+                    <p><strong>DNI:</strong> ${coach.dni}</p>
+                `;
+                if (isLoggedIn) {
+                    coachInfo.innerHTML += `
+                        <button class="btn btn-sm btn-warning" onclick="editCoach()">Editar</button>
+                    `;
+                }
+            } else {
+                coachInfo.innerHTML = `
+                    <h5>Agregar Entrenador</h5>
+                    <button class="btn btn-primary" onclick="editCoach()">Agregar Técnico</button>
+                `;
+            }
+        }
 
-        // Cargar datos al iniciar
-        loadCoachData();
-        loadPlayers();
+        // Función de inicio de sesión (simulada)
+        function login() {
+            // Aquí puedes implementar la lógica de inicio de sesión real
+            isLoggedIn = true; // Cambia esto a 'true' al iniciar sesión
+            showPlayers();
+            showCoach();
+        }
+
+        // Simular el inicio de sesión al cargar la página
+        window.onload = function() {
+            // Aquí puedes implementar la lógica para verificar si el usuario ya ha iniciado sesión
+            login(); // Llama a la función de inicio de sesión simulada
+        }
     </script>
 </body>
 
