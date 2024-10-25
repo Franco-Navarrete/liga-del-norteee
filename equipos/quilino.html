@@ -308,11 +308,12 @@
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCoachModal">Agregar Técnico</button>
                     `;
                 } else {
-                    coach = querySnapshot.docs[0].data();
+                    coach = querySnapshot.docs[0];
+                    const coachData = coach.data();
                     document.getElementById("coach-info").innerHTML = `
-                        <h5>Técnico: ${coach.name}</h5>
-                        <p>Fecha de Nacimiento: ${coach.dob}</p>
-                        <p>DNI: ${coach.dni}</p>
+                        <h5>Técnico: ${coachData.name}</h5>
+                        <p>Fecha de Nacimiento: ${coachData.dob}</p>
+                        <p>DNI: ${coachData.dni}</p>
                         <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCoachModal">Editar Técnico</button>
                     `;
                 }
