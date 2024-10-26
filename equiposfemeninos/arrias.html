@@ -132,7 +132,7 @@
         const selectedTeam = "las_arrias_fem";
 
         // Verificar si el usuario ha iniciado sesión
-        let isAuthenticated = false; // Cambiar a true si el usuario ha iniciado sesión
+        let isAuthenticated = false; // Cambia a true si el usuario ha iniciado sesión
 
         // Aquí debes implementar tu lógica de autenticación
         // Por ejemplo, puedes usar firebase.auth().onAuthStateChanged
@@ -148,8 +148,8 @@
                 querySnapshot.forEach((doc) => {
                     const player = doc.data();
                     const li = document.createElement("li");
-                    li.innerHTML = `<div class="player-details"><p><strong>${player.nombre}</strong> - <strong>DNI:</strong> ${player.dni} - <strong>Fecha de Nacimiento:</strong> ${player.fecha_nacimiento}</p></div>`;
-                    
+                    li.innerHTML = `<div class="player-details"><p><strong>${player.nombre}</strong> - <strong>Fecha de Nacimiento:</strong> ${player.fecha_nacimiento}</p></div>`;
+
                     if (isAuthenticated) {
                         li.innerHTML += `<div>
                             <button class="btn btn-warning btn-sm" onclick="editPlayer('${doc.id}', this)" data-player='${JSON.stringify(player)}'>Editar</button>
