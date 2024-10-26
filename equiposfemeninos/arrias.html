@@ -49,7 +49,7 @@
                     <li class="nav-item"><button class="nav-link" id="team3-tab" data-bs-toggle="tab" data-bs-target="#team3">Libre 2</button></li>
                 </ul>
 
-                <button class="btn btn-primary mt-3" id="addPlayerBtn" data-bs-toggle="modal" data-bs-target="#playerModal">Agregar Jugador</button>
+                <button class="btn btn-primary mt-3 d-none" id="addPlayerBtn" data-bs-toggle="modal" data-bs-target="#playerModal">Agregar Jugador</button>
 
                 <div class="tab-content mt-3" id="myTabContent">
                     <div class="tab-pane fade show active player-list" id="team1" role="tabpanel">
@@ -157,7 +157,7 @@
                 document.getElementById("addPlayerBtn").classList.add("d-none");
                 document.getElementById("editCoachBtn").classList.add("d-none");
                 renderPlayers(false);
-                clearCoachInfo();
+                loadCoachInfo(); // Para mostrar solo el nombre
             }
         });
 
@@ -205,10 +205,6 @@
                     document.getElementById("coach-info").innerHTML = `<p>No hay información del técnico disponible.</p>`;
                 }
             });
-        }
-
-        function clearCoachInfo() {
-            document.getElementById("coach-info").innerHTML = `<p>No hay información del técnico disponible.</p>`;
         }
 
         document.getElementById("playerForm").addEventListener("submit", (e) => {
