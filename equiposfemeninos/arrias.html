@@ -174,8 +174,13 @@
             db.collection("tecnicos").doc(selectedTeam).get().then((doc) => {
                 if (doc.exists) {
                     const coach = doc.data();
-                    const coachDisplay = `<p><strong>${coach.nombre}</strong> - <strong>DNI:</strong> ${coach.dni} - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
-                    document.getElementById("coach-info").innerHTML = coachDisplay;
+                    if (isAuthenticated) {
+                        const coachDisplay = `<p><strong>${coach.nombre}</strong> - <strong>DNI:</strong> ${coach.dni} - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
+                        document.getElementById("coach-info").innerHTML = coachDisplay;
+                    } else {
+                        const coachDisplay = `<p><strong>${coach.nombre}</strong> - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
+                        document.getElementById("coach-info").innerHTML = coachDisplay;
+                    }
                 } else {
                     document.getElementById("coach-info").innerHTML = `<p>No hay información del técnico disponible.</p>`;
                 }
