@@ -131,39 +131,40 @@
         const db = firebase.firestore();
         const selectedTeam = "las_arrias_fem";
 
-        // Verificar si el usuario ha iniciado sesión
-        let isAuthenticated = false; // Cambia a true si el usuario ha iniciado sesión
+        let isAuthenticated = false;
 
-        // Aquí debes implementar tu lógica de autenticación
-        // Por ejemplo, puedes usar firebase.auth().onAuthStateChanged
-
-        renderPlayers();
-        loadCoachInfo();
+        // Autenticación
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                isAuthenticated = true;
+                document.getElementById("editCoachBtn").style.display = 'block';
+                document.getElementById("addPlayerBtn").style.display = 'block';
+                document.getElementById("userEmail").innerText = user.email; // Mostrar email
+            } else {
+                isAuthenticated = false;
+                document.getElementById("userEmail").innerText = ""; // Limpiar email
+            }
+            renderPlayers();
+            loadCoachInfo();
+        });
 
         function renderPlayers() {
             db.collection("jugadores").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
                 const playersList = document.getElementById("playersList");
                 playersList.innerHTML = "";
-
                 querySnapshot.forEach((doc) => {
                     const player = doc.data();
                     const li = document.createElement("li");
-                    li.innerHTML = `<div class="player-details"><p><strong>${player.nombre}</strong> - <strong>Fecha de Nacimiento:</strong> ${player.fecha_nacimiento}</p></div>`;
-
+                    li.className = "player-list-item";
+                    li.innerHTML = `<div class="player-details"><strong>${player.nombre}</strong> - ${player.fecha_nacimiento}</div>`;
                     if (isAuthenticated) {
                         li.innerHTML += `<div>
                             <button class="btn btn-warning btn-sm" onclick="editPlayer('${doc.id}', this)" data-player='${JSON.stringify(player)}'>Editar</button>
                             <button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>
                         </div>`;
                     }
-
                     playersList.appendChild(li);
                 });
-
-                if (isAuthenticated) {
-                    document.getElementById("editCoachBtn").style.display = 'block';
-                    document.getElementById("addPlayerBtn").style.display = 'block';
-                }
             }).catch((error) => console.error("Error al cargar los jugadores: ", error));
         }
 
@@ -186,7 +187,10 @@
             const playerDNI = document.getElementById("playerDNI").value;
 
             db.collection("jugadores").add({
-                nombre: playerName, fecha_nacimiento: playerDOB, dni: playerDNI, equipo: selectedTeam
+                nombre: playerName,
+                fecha_nacimiento: playerDOB,
+                dni: playerDNI,
+                equipo: selectedTeam
             }).then(() => {
                 alert("Jugador agregado");
                 renderPlayers();
@@ -196,14 +200,16 @@
 
         document.getElementById("editCoachForm").addEventListener("submit", (e) => {
             e.preventDefault();
-
             const coachName = document.getElementById("newCoachName").value;
             const coachDOB = document.getElementById("newCoachDOB").value;
             const coachDNI = document.getElementById("newCoachDNI").value;
             const coachPhone = document.getElementById("newCoachPhone").value;
 
             db.collection("tecnicos").doc(selectedTeam).set({
-                nombre: coachName, fecha_nacimiento: coachDOB, dni: coachDNI, celular: coachPhone
+                nombre: coachName,
+                fecha_nacimiento: coachDOB,
+                dni: coachDNI,
+                celular: coachPhone
             }).then(() => {
                 alert("Datos del técnico guardados");
                 loadCoachInfo();
@@ -236,6 +242,10 @@
             }).catch((error) => alert("Error al eliminar jugador: " + error.message));
         }
     </script>
+
+    <footer>
+        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
