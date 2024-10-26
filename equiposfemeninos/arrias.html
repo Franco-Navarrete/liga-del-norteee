@@ -38,7 +38,11 @@
 
             <!-- Información del DT y lista de buena fe -->
             <div class="col-md-8">
-                <div class="coach-info mb-3" id="coach-info"></div>
+                <div class="coach-info mb-3" id="coach-info">
+                    <!-- Aquí se mostrará la información del DT o el botón para agregarlo -->
+                </div>
+                <button class="btn btn-primary mb-3 d-none" id="editCoachBtn" data-bs-toggle="modal" data-bs-target="#editCoachModal">Agregar/Editar Técnico</button>
+
                 <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
                     <li class="nav-item"><button class="nav-link active" id="team1-tab" data-bs-toggle="tab" data-bs-target="#team1">Sub 16</button></li>
                     <li class="nav-item"><button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 1</button></li>
@@ -85,13 +89,54 @@
         </div>
     </div>
 
+    <!-- Modal para editar datos del técnico -->
+    <div class="modal fade" id="editCoachModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCoachModalLabel">Agregar/Editar Datos del Técnico</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCoachForm">
+                        <div class="mb-3">
+                            <label for="newCoachName" class="form-label">Nombre del Técnico</label>
+                            <input type="text" class="form-control" id="newCoachName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newCoachDOB" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="newCoachDOB" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newCoachDNI" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="newCoachDNI" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newCoachPhone" class="form-label">Número de Celular</label>
+                            <input type="text" class="form-control" id="newCoachPhone" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase JS SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE", authDomain: "liga-del-norte.firebaseapp.com", projectId: "liga-del-norte", storageBucket: "liga-del-norte.appspot.com", messagingSenderId: "655679074901", appId: "1:655679074901:web:867a248306701963039adc", measurementId: "G-CZ5P9YCEWK" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
+            authDomain: "liga-del-norte.firebaseapp.com",
+            projectId: "liga-del-norte",
+            storageBucket: "liga-del-norte.appspot.com",
+            messagingSenderId: "655679074901",
+            appId: "1:655679074901:web:867a248306701963039adc",
+            measurementId: "G-CZ5P9YCEWK"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
@@ -103,12 +148,16 @@
                 document.getElementById("loginBtn").classList.add("d-none");
                 document.getElementById("logoutBtn").classList.remove("d-none");
                 document.getElementById("addPlayerBtn").classList.remove("d-none");
+                document.getElementById("editCoachBtn").classList.remove("d-none");
                 renderPlayers(true);
+                loadCoachInfo();
             } else {
                 document.getElementById("loginBtn").classList.remove("d-none");
                 document.getElementById("logoutBtn").classList.add("d-none");
                 document.getElementById("addPlayerBtn").classList.add("d-none");
+                document.getElementById("editCoachBtn").classList.add("d-none");
                 renderPlayers(false);
+                clearCoachInfo();
             }
         });
 
@@ -144,6 +193,24 @@
             }).catch((error) => console.error("Error al cargar los jugadores: ", error));
         }
 
+        function loadCoachInfo() {
+            db.collection("tecnicos").doc(selectedTeam).get().then((doc) => {
+                if (doc.exists) {
+                    const coach = doc.data();
+                    const coachDisplay = auth.currentUser ? `
+                        <p><strong>${coach.nombre}</strong> - <strong>DNI:</strong> ${coach.dni} - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>` :
+                        `<p><strong>${coach.nombre}</strong></p>`; // Solo nombre para usuarios no autenticados
+                    document.getElementById("coach-info").innerHTML = coachDisplay;
+                } else {
+                    document.getElementById("coach-info").innerHTML = `<p>No hay información del técnico disponible.</p>`;
+                }
+            });
+        }
+
+        function clearCoachInfo() {
+            document.getElementById("coach-info").innerHTML = `<p>No hay información del técnico disponible.</p>`;
+        }
+
         document.getElementById("playerForm").addEventListener("submit", (e) => {
             e.preventDefault();
             const playerName = document.getElementById("playerName").value;
@@ -162,6 +229,29 @@
                 renderPlayers(true);
                 document.getElementById("playerForm").reset();
             }).catch((error) => alert("Error al agregar jugador: " + error.message));
+        });
+
+        document.getElementById("editCoachForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (!auth.currentUser) {
+                alert("Debe iniciar sesión para editar los datos del técnico.");
+                return;
+            }
+
+            const coachName = document.getElementById("newCoachName").value;
+            const coachDOB = document.getElementById("newCoachDOB").value;
+            const coachDNI = document.getElementById("newCoachDNI").value;
+            const coachPhone = document.getElementById("newCoachPhone").value;
+
+            db.collection("tecnicos").doc(selectedTeam).set({
+                nombre: coachName, fecha_nacimiento: coachDOB, dni: coachDNI, celular: coachPhone
+            }).then(() => {
+                alert("Datos del técnico guardados");
+                loadCoachInfo();
+                document.getElementById("editCoachForm").reset();
+                $('#editCoachModal').modal('hide'); // Cerrar el modal
+            }).catch((error) => alert("Error al guardar datos del técnico: " + error.message));
         });
 
         function editPlayer(id, btn) {
@@ -202,4 +292,5 @@
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
