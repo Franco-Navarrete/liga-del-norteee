@@ -51,17 +51,18 @@
                     </div>
                     <div class="tab-pane fade player-list" id="team2" role="tabpanel">
                         <h5>Libre 1</h5>
-                        <ul id="playersList"></ul>
+                        <ul id="playersList2"></ul>
                     </div>
                     <div class="tab-pane fade player-list" id="team3" role="tabpanel">
                         <h5>Libre 2</h5>
-                        <ul id="playersList"></ul>
+                        <ul id="playersList3"></ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal para agregar jugador -->
     <div class="modal fade" id="playerModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -81,6 +82,7 @@
         </div>
     </div>
 
+    <!-- Modal para editar técnico -->
     <div class="modal fade" id="editCoachModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -131,18 +133,16 @@
         const db = firebase.firestore();
         const selectedTeam = "las_arrias_fem";
 
+        // Verificar si el usuario ha iniciado sesión
         let isAuthenticated = false;
 
-        // Autenticación
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 isAuthenticated = true;
                 document.getElementById("editCoachBtn").style.display = 'block';
                 document.getElementById("addPlayerBtn").style.display = 'block';
-                document.getElementById("userEmail").innerText = user.email; // Mostrar email
             } else {
                 isAuthenticated = false;
-                document.getElementById("userEmail").innerText = ""; // Limpiar email
             }
             renderPlayers();
             loadCoachInfo();
@@ -152,17 +152,19 @@
             db.collection("jugadores").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
                 const playersList = document.getElementById("playersList");
                 playersList.innerHTML = "";
+
                 querySnapshot.forEach((doc) => {
                     const player = doc.data();
                     const li = document.createElement("li");
-                    li.className = "player-list-item";
                     li.innerHTML = `<div class="player-details"><strong>${player.nombre}</strong> - ${player.fecha_nacimiento}</div>`;
+
                     if (isAuthenticated) {
                         li.innerHTML += `<div>
                             <button class="btn btn-warning btn-sm" onclick="editPlayer('${doc.id}', this)" data-player='${JSON.stringify(player)}'>Editar</button>
                             <button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>
                         </div>`;
                     }
+
                     playersList.appendChild(li);
                 });
             }).catch((error) => console.error("Error al cargar los jugadores: ", error));
@@ -187,10 +189,7 @@
             const playerDNI = document.getElementById("playerDNI").value;
 
             db.collection("jugadores").add({
-                nombre: playerName,
-                fecha_nacimiento: playerDOB,
-                dni: playerDNI,
-                equipo: selectedTeam
+                nombre: playerName, fecha_nacimiento: playerDOB, dni: playerDNI, equipo: selectedTeam
             }).then(() => {
                 alert("Jugador agregado");
                 renderPlayers();
@@ -200,16 +199,14 @@
 
         document.getElementById("editCoachForm").addEventListener("submit", (e) => {
             e.preventDefault();
+
             const coachName = document.getElementById("newCoachName").value;
             const coachDOB = document.getElementById("newCoachDOB").value;
             const coachDNI = document.getElementById("newCoachDNI").value;
             const coachPhone = document.getElementById("newCoachPhone").value;
 
             db.collection("tecnicos").doc(selectedTeam).set({
-                nombre: coachName,
-                fecha_nacimiento: coachDOB,
-                dni: coachDNI,
-                celular: coachPhone
+                nombre: coachName, fecha_nacimiento: coachDOB, dni: coachDNI, celular: coachPhone
             }).then(() => {
                 alert("Datos del técnico guardados");
                 loadCoachInfo();
@@ -242,10 +239,6 @@
             }).catch((error) => alert("Error al eliminar jugador: " + error.message));
         }
     </script>
-
-    <footer>
-        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
