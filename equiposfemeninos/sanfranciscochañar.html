@@ -173,7 +173,7 @@
         });
 
         function loadPlayers() {
-            db.collection("jugadores").get().then(querySnapshot => {
+            db.collection("jugadores femeninos").get().then(querySnapshot => {
                 const playersList = document.getElementById("playersList2");
                 playersList.innerHTML = ''; // Limpiar la lista
                 querySnapshot.forEach(doc => {
@@ -205,7 +205,7 @@
             const playerName = document.getElementById("playerName").value;
             const playerDOB = document.getElementById("playerDOB").value;
             const playerDNI = document.getElementById("playerDNI").value;
-            db.collection("jugadores").add({
+            db.collection("jugadores femeninos").add({
                 nombre: playerName,
                 fechaNacimiento: playerDOB,
                 dni: playerDNI
@@ -218,7 +218,7 @@
         });
 
         function deletePlayer(playerId) {
-            db.collection("jugadores").doc(playerId).delete().then(() => {
+            db.collection("jugadores femeninos").doc(playerId).delete().then(() => {
                 loadPlayers();
             }).catch(error => {
                 console.error("Error removing player: ", error);
