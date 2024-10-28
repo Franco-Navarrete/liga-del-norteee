@@ -127,7 +127,7 @@
                 cargarResultados();
             } else {
                 document.getElementById("addResultButton").style.display = "none";
-                alert("Por favor, inicia sesión y verifica tu cuenta para realizar cambios.");
+                mostrarResultadosSinEditar();
             }
         });
 
@@ -139,116 +139,112 @@
             cargarResultadosCategoria('resultados_femenino_sub16', '#sub16Femenino ul');
         }
 
+        // Función para mostrar resultados sin opción de editar
+        function mostrarResultadosSinEditar() {
+            mostrarResultados('resultados_masculino_libre', '#masculinoLibre ul');
+            mostrarResultados('resultados_masculino_sub16', '#sub16Masculino ul');
+            mostrarResultados('resultados_femenino_libre', '#femeninoLibre ul');
+            mostrarResultados('resultados_femenino_sub16', '#sub16Femenino ul');
+        }
+
+        function mostrarResultados(categoria, selectorContenedor) {
+            const contenedorResultados = document.querySelector(selectorContenedor);
+            contenedorResultados.innerHTML = '';
+            db.collection(categoria).get().then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    const resultado = doc.data();
+                    const resultadoItem = `
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>${resultado.equipoLocal}</span>
+                            <div class="score">${resultado.puntajeLocal} - ${resultado.puntajeVisitante}</div>
+                            <span>${resultado.equipoVisitante}</span>
+                        </li>
+                    `;
+                    contenedorResultados.innerHTML += resultadoItem;
+                });
+            });
+        }
+
         function cargarResultadosCategoria(categoria, selectorContenedor) {
             const contenedorResultados = document.querySelector(selectorContenedor);
             contenedorResultados.innerHTML = '';
             db.collection(categoria).get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const resultado = doc.data();
-                    const resultId = doc.id;
                     const resultadoItem = `
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <span>${resultado.equipoLocal}</span>
                             <div class="score">${resultado.puntajeLocal} - ${resultado.puntajeVisitante}</div>
                             <span>${resultado.equipoVisitante}</span>
-                            <div class="action-buttons">
-                                <i class="fas fa-edit edit-btn" data-id="${resultId}" data-bs-toggle="modal" data-bs-target="#addResultModal"></i>
-                                <i class="fas fa-trash delete-btn" data-id="${resultId}"></i>
-                            </div>
                         </li>
                     `;
                     contenedorResultados.innerHTML += resultadoItem;
                 });
-                agregarEventos();
+                agregarBotonesEditDelete(categoria, contenedorResultados);
             });
         }
 
-        function agregarEventos() {
-            document.querySelectorAll('.edit-btn').forEach(button => {
-                button.addEventListener('click', e => editarResultado(e.target.getAttribute('data-id')));
-            });
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', e => eliminarResultado(e.target.getAttribute('data-id')));
-            });
-        }
+        function agregarBotonesEditDelete(categoria, contenedorResultados) {
+            if (auth.currentUser) { // Solo agregar botones si el usuario está autenticado
+                contenedorResultados.querySelectorAll('.list-group-item').forEach((item, index) => {
+                    const resultId = item.getAttribute('data-id');
+                    item.innerHTML += `
+                        <button class="btn btn-warning btn-sm edit-btn" data-id="${resultId}">Editar</button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="${resultId}">Eliminar</button>
+                    `;
 
-        function editarResultado(resultId) {
-            db.collection('resultados_masculino_sub16').doc(resultId).get().then(doc => {
-                if (doc.exists) {
-                    const resultado = doc.data();
-                    document.getElementById('equipoLocal').value = resultado.equipoLocal;
-                    document.getElementById('puntajeLocal').value = resultado.puntajeLocal;
-                    document.getElementById('equipoVisitante').value = resultado.equipoVisitante;
-                    document.getElementById('puntajeVisitante').value = resultado.puntajeVisitante;
-                    document.getElementById('resultId').value = resultId;
-                }
-            });
-        }
+                    item.querySelector('.edit-btn').addEventListener('click', (e) => {
+                        const resultId = e.target.getAttribute('data-id');
+                        db.collection(categoria).doc(resultId).get().then(doc => {
+                            const data = doc.data();
+                            document.getElementById('equipoLocal').value = data.equipoLocal;
+                            document.getElementById('puntajeLocal').value = data.puntajeLocal;
+                            document.getElementById('equipoVisitante').value = data.equipoVisitante;
+                            document.getElementById('puntajeVisitante').value = data.puntajeVisitante;
+                            document.getElementById('resultId').value = resultId;
+                        });
+                    });
 
-        function eliminarResultado(resultId) {
-            if (confirm('¿Estás seguro de que deseas eliminar este resultado?')) {
-                // Determinar la categoría a eliminar
-                let categoria = '';
-                const activeTab = document.querySelector('.nav-tabs .active');
-                if (activeTab) {
-                    categoria = activeTab.getAttribute('data-bs-target').replace('#', 'resultados_');
-                }
-
-                db.collection(categoria).doc(resultId).delete().then(() => {
-                    alert('Resultado eliminado con éxito.');
-                    cargarResultados();
+                    item.querySelector('.delete-btn').addEventListener('click', (e) => {
+                        const resultId = e.target.getAttribute('data-id');
+                        db.collection(categoria).doc(resultId).delete().then(() => {
+                            cargarResultados();
+                        });
+                    });
                 });
             }
         }
 
-        document.getElementById('addResultForm').addEventListener('submit', function(e) {
+        document.getElementById('addResultForm').addEventListener('submit', e => {
             e.preventDefault();
-            const equipoLocal = document.getElementById('equipoLocal').value;
-            const puntajeLocal = document.getElementById('puntajeLocal').value;
-            const equipoVisitante = document.getElementById('equipoVisitante').value;
-            const puntajeVisitante = document.getElementById('puntajeVisitante').value;
             const resultId = document.getElementById('resultId').value;
-
-            // Determinar la categoría en base a la pestaña activa
-            let categoria = '';
-            const activeTab = document.querySelector('.nav-tabs .active');
-            if (activeTab) {
-                categoria = activeTab.getAttribute('data-bs-target').replace('#', 'resultados_');
-            }
+            const resultado = {
+                equipoLocal: document.getElementById('equipoLocal').value,
+                puntajeLocal: document.getElementById('puntajeLocal').value,
+                equipoVisitante: document.getElementById('equipoVisitante').value,
+                puntajeVisitante: document.getElementById('puntajeVisitante').value,
+            };
 
             if (resultId) {
-                db.collection(categoria).doc(resultId).update({
-                    equipoLocal,
-                    puntajeLocal,
-                    equipoVisitante,
-                    puntajeVisitante
-                }).then(() => {
-                    alert("Resultado actualizado con éxito.");
-                    document.getElementById('addResultForm').reset();
+                // Editar resultado existente
+                db.collection('resultados_masculino_libre').doc(resultId).update(resultado).then(() => {
+                    $('#addResultModal').modal('hide');
                     cargarResultados();
-                    document.querySelector('.btn-close').click();
                 });
             } else {
-                db.collection(categoria).add({
-                    equipoLocal,
-                    puntajeLocal,
-                    equipoVisitante,
-                    puntajeVisitante
-                }).then(() => {
-                    alert("Resultado agregado con éxito.");
-                    document.getElementById('addResultForm').reset();
+                // Agregar nuevo resultado
+                db.collection('resultados_masculino_libre').add(resultado).then(() => {
+                    $('#addResultModal').modal('hide');
                     cargarResultados();
-                    document.querySelector('.btn-close').click();
                 });
             }
-        });
 
-        window.onload = function() {
-            cargarResultados();
-        };
+            document.getElementById('addResultForm').reset();
+        });
     </script>
 
-    <!-- Bootstrap Bundle with Popper.js -->
+    <!-- FontAwesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
