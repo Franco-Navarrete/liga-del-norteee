@@ -176,75 +176,80 @@
                             <span>${resultado.equipoLocal}</span>
                             <div class="score">${resultado.puntajeLocal} - ${resultado.puntajeVisitante}</div>
                             <span>${resultado.equipoVisitante}</span>
+                            <button class="btn btn-danger btn-sm" onclick="eliminarResultado('${doc.id}', '${categoria}')">Eliminar</button>
+                            <button class="btn btn-warning btn-sm" onclick="editarResultado('${doc.id}', '${categoria}')">Editar</button>
                         </li>
                     `;
                     contenedorResultados.innerHTML += resultadoItem;
                 });
-                agregarBotonesEditDelete(categoria, contenedorResultados);
             });
         }
 
-        function agregarBotonesEditDelete(categoria, contenedorResultados) {
-            if (auth.currentUser) { // Solo agregar botones si el usuario está autenticado
-                contenedorResultados.querySelectorAll('.list-group-item').forEach((item) => {
-                    const resultId = item.getAttribute('data-id');
-                    item.innerHTML += `
-                        <button class="btn btn-warning btn-sm edit-btn" data-id="${resultId}">Editar</button>
-                        <button class="btn btn-danger btn-sm delete-btn" data-id="${resultId}">Eliminar</button>
-                    `;
+        // Función para agregar resultado
+        document.getElementById("addResultForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const id = document.getElementById("resultId").value;
+            const categoria = document.querySelector(".tab-pane.active").id;
 
-                    item.querySelector('.edit-btn').addEventListener('click', (e) => {
-                        const resultId = e.target.getAttribute('data-id');
-                        db.collection(categoria).doc(resultId).get().then(doc => {
-                            const data = doc.data();
-                            document.getElementById('equipoLocal').value = data.equipoLocal;
-                            document.getElementById('puntajeLocal').value = data.puntajeLocal;
-                            document.getElementById('equipoVisitante').value = data.equipoVisitante;
-                            document.getElementById('puntajeVisitante').value = data.puntajeVisitante;
-                            document.getElementById('resultId').value = resultId;
-                        });
-                    });
-
-                    item.querySelector('.delete-btn').addEventListener('click', (e) => {
-                        const resultId = e.target.getAttribute('data-id');
-                        db.collection(categoria).doc(resultId).delete().then(() => {
-                            cargarResultados();
-                        });
-                    });
-                });
-            }
-        }
-
-        document.getElementById('addResultForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const resultId = document.getElementById('resultId').value;
             const resultado = {
-                equipoLocal: document.getElementById('equipoLocal').value,
-                puntajeLocal: document.getElementById('puntajeLocal').value,
-                equipoVisitante: document.getElementById('equipoVisitante').value,
-                puntajeVisitante: document.getElementById('puntajeVisitante').value,
+                equipoLocal: document.getElementById("equipoLocal").value,
+                puntajeLocal: parseInt(document.getElementById("puntajeLocal").value),
+                equipoVisitante: document.getElementById("equipoVisitante").value,
+                puntajeVisitante: parseInt(document.getElementById("puntajeVisitante").value),
             };
 
-            if (resultId) {
-                // Editar resultado existente
-                db.collection('resultados_masculino_libre').doc(resultId).update(resultado).then(() => {
-                    $('#addResultModal').modal('hide');
+            if (id) {
+                db.collection(categoria).doc(id).update(resultado).then(() => {
+                    alert("Resultado actualizado!");
                     cargarResultados();
+                    limpiarFormulario();
+                }).catch((error) => {
+                    console.error("Error actualizando resultado: ", error);
                 });
             } else {
-                // Agregar nuevo resultado
-                db.collection('resultados_masculino_libre').add(resultado).then(() => {
-                    $('#addResultModal').modal('hide');
+                db.collection(categoria).add(resultado).then(() => {
+                    alert("Resultado agregado!");
                     cargarResultados();
+                    limpiarFormulario();
+                }).catch((error) => {
+                    console.error("Error agregando resultado: ", error);
                 });
             }
-
-            document.getElementById('addResultForm').reset();
         });
+
+        function limpiarFormulario() {
+            document.getElementById("addResultForm").reset();
+            document.getElementById("resultId").value = '';
+        }
+
+        // Función para editar resultado
+        function editarResultado(id, categoria) {
+            db.collection(categoria).doc(id).get().then((doc) => {
+                if (doc.exists) {
+                    const resultado = doc.data();
+                    document.getElementById("equipoLocal").value = resultado.equipoLocal;
+                    document.getElementById("puntajeLocal").value = resultado.puntajeLocal;
+                    document.getElementById("equipoVisitante").value = resultado.equipoVisitante;
+                    document.getElementById("puntajeVisitante").value = resultado.puntajeVisitante;
+                    document.getElementById("resultId").value = id;
+                }
+            }).catch((error) => {
+                console.error("Error obteniendo resultado: ", error);
+            });
+        }
+
+        // Función para eliminar resultado
+        function eliminarResultado(id, categoria) {
+            db.collection(categoria).doc(id).delete().then(() => {
+                alert("Resultado eliminado!");
+                cargarResultados();
+            }).catch((error) => {
+                console.error("Error eliminando resultado: ", error);
+            });
+        }
     </script>
 
-    <!-- FontAwesome for icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS Bundle con Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
