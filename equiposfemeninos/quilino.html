@@ -166,7 +166,7 @@
             const playerDOB = document.getElementById("playerDOB").value;
             const playerDNI = document.getElementById("playerDNI").value;
 
-            db.collection("jugadores").add({
+            db.collection("jugadores femeninos").add({
                 nombre: playerName,
                 fecha_nacimiento: playerDOB,
                 dni: playerDNI,
@@ -186,7 +186,7 @@
             // Change the form action to edit
             document.getElementById("playerForm").onsubmit = (event) => {
                 event.preventDefault();
-                db.collection("jugadores").doc(id).update({
+                db.collection("jugadores femeninos").doc(id).update({
                     nombre: document.getElementById("playerName").value,
                     fecha_nacimiento: document.getElementById("playerDOB").value,
                     dni: document.getElementById("playerDNI").value,
@@ -201,7 +201,7 @@
         }
 
         function deletePlayer(id) {
-            db.collection("jugadores").doc(id).delete().then(() => {
+            db.collection("jugadores femeninos").doc(id).delete().then(() => {
                 renderPlayers();
             }).catch((error) => console.error("Error deleting player: ", error));
         }
