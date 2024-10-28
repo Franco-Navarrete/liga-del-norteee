@@ -12,102 +12,11 @@
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
         }
-
-        header {
-            background-color: #343a40;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        h1, h2 {
-            margin: 20px 0;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fff;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-        }
-
-        ul li img {
-            width: 50px;
-            height: 50px;
-        }
-
-        footer {
-            background-color: #343a40;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto;
-        }
-
-        .score {
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .nav-tabs {
-            justify-content: center;
-        }
-
-        main {
-            flex-grow: 1;
-        }
-
-        .float-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #ffc107;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .float-button:hover {
-            background-color: #ffca28;
-        }
-
-        .action-buttons {
-            position: absolute;
-            right: 10px;
-            display: none;
-        }
-
-        .edit-btn, .delete-btn {
-            cursor: pointer;
-            margin-left: 5px;
-        }
-
-        .edit-btn:hover, .delete-btn:hover {
-            color: #007bff;
-        }
-
-        .delete-btn:hover {
-            color: red;
-        }
+        /* Estilos generales */
     </style>
 </head>
 
 <body>
-
     <header class="bg-warning text-white text-center py-4">
         <img src="imagenes/logoliga.png" width="100px" alt="Logo de la Liga">
         <h1 style="color:black" id="categoriaTitulo">Resultados Recientes</h1>
@@ -115,20 +24,19 @@
 
     <main class="container my-5">
         <h2 class="text-center"></h2>
-
         <!-- Tabs de categorías -->
         <ul class="nav nav-tabs justify-content-center" id="resultadosTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="masculinoLibre-tab" data-bs-toggle="tab" data-bs-target="#masculinoLibre" type="button" role="tab" aria-controls="masculinoLibre" aria-selected="true">Masculino Libre</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="masculinoSub16-tab" data-bs-toggle="tab" data-bs-target="#masculinoSub16" type="button" role="tab" aria-controls="masculinoSub16" aria-selected="false">Masculino Sub-16</button>
+                <button class="nav-link" id="sub16Masculino-tab" data-bs-toggle="tab" data-bs-target="#sub16Masculino" type="button" role="tab" aria-controls="sub16Masculino" aria-selected="false">Sub 16 Masculino</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="femeninoLibre-tab" data-bs-toggle="tab" data-bs-target="#femeninoLibre" type="button" role="tab" aria-controls="femeninoLibre" aria-selected="false">Femenino Libre</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="femeninoSub16-tab" data-bs-toggle="tab" data-bs-target="#femeninoSub16" type="button" role="tab" aria-controls="femeninoSub16" aria-selected="false">Femenino Sub-16</button>
+                <button class="nav-link" id="sub16Femenino-tab" data-bs-toggle="tab" data-bs-target="#sub16Femenino" type="button" role="tab" aria-controls="sub16Femenino" aria-selected="false">Sub 16 Femenino</button>
             </li>
         </ul>
 
@@ -137,19 +45,16 @@
             <div class="tab-pane fade show active" id="masculinoLibre" role="tabpanel" aria-labelledby="masculinoLibre-tab">
                 <ul class="list-group"></ul>
             </div>
-
-            <!-- Resultados de la categoría Masculino Sub-16 -->
-            <div class="tab-pane fade" id="masculinoSub16" role="tabpanel" aria-labelledby="masculinoSub16-tab">
+            <!-- Resultados de la categoría Sub 16 Masculino -->
+            <div class="tab-pane fade" id="sub16Masculino" role="tabpanel" aria-labelledby="sub16Masculino-tab">
                 <ul class="list-group"></ul>
             </div>
-
             <!-- Resultados de la categoría Femenino Libre -->
             <div class="tab-pane fade" id="femeninoLibre" role="tabpanel" aria-labelledby="femeninoLibre-tab">
                 <ul class="list-group"></ul>
             </div>
-
-            <!-- Resultados de la categoría Femenino Sub-16 -->
-            <div class="tab-pane fade" id="femeninoSub16" role="tabpanel" aria-labelledby="femeninoSub16-tab">
+            <!-- Resultados de la categoría Sub 16 Femenino -->
+            <div class="tab-pane fade" id="sub16Femenino" role="tabpanel" aria-labelledby="sub16Femenino-tab">
                 <ul class="list-group"></ul>
             </div>
         </div>
@@ -165,7 +70,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="addResultForm">
-                        <input type="hidden" id="resultId"> <!-- Input oculto para guardar el ID del resultado en edición -->
+                        <input type="hidden" id="resultId">
                         <div class="mb-3">
                             <label for="equipoLocal" class="form-label">Equipo Local</label>
                             <input type="text" class="form-control" id="equipoLocal" required>
@@ -182,15 +87,6 @@
                             <label for="puntajeVisitante" class="form-label">Puntaje Visitante</label>
                             <input type="number" class="form-control" id="puntajeVisitante" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="categoria" class="form-label">Categoría</label>
-                            <select class="form-select" id="categoria" required>
-                                <option value="resultados_masculino_libre">Masculino Libre</option>
-                                <option value="resultados_masculino_sub16">Masculino Sub-16</option>
-                                <option value="resultados_femenino_libre">Femenino Libre</option>
-                                <option value="resultados_femenino_sub16">Femenino Sub-16</option>
-                            </select>
-                        </div>
                         <button type="submit" class="btn btn-primary">Guardar Resultado</button>
                     </form>
                 </div>
@@ -199,7 +95,7 @@
     </div>
 
     <!-- Botón flotante para agregar resultados (solo visible si está autenticado) -->
-    <button class="float-button" id="addResultButton" data-bs-toggle="modal" data-bs-target="#addResultModal">
+    <button class="float-button" id="addResultButton" data-bs-toggle="modal" data-bs-target="#addResultModal" style="display: none;">
         +
     </button>
 
@@ -210,7 +106,6 @@
 
     <!-- Configuración de Firebase -->
     <script>
-        // Inicializar Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
             authDomain: "liga-del-norte.firebaseapp.com",
@@ -225,183 +120,136 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Función para cargar resultados para una categoría específica
-        function loadResults(category, containerSelector) {
-            const resultadosContainer = document.querySelector(containerSelector);
+        // Control de autenticación y verificación
+        auth.onAuthStateChanged(user => {
+            if (user && user.emailVerified) {
+                document.getElementById("addResultButton").style.display = "block";
+                cargarResultados();
+            } else {
+                document.getElementById("addResultButton").style.display = "none";
+                alert("Por favor, inicia sesión y verifica tu cuenta para realizar cambios.");
+            }
+        });
 
-            // Limpia la lista antes de agregar nuevos resultados
-            resultadosContainer.innerHTML = '';
+        // Función para cargar los resultados de cada categoría
+        function cargarResultados() {
+            cargarResultadosCategoria('resultados_masculino_libre', '#masculinoLibre ul');
+            cargarResultadosCategoria('resultados_masculino_sub16', '#sub16Masculino ul');
+            cargarResultadosCategoria('resultados_femenino_libre', '#femeninoLibre ul');
+            cargarResultadosCategoria('resultados_femenino_sub16', '#sub16Femenino ul');
+        }
 
-            // Accede a la colección en Firestore
-            db.collection(category).get().then((querySnapshot) => {
+        function cargarResultadosCategoria(categoria, selectorContenedor) {
+            const contenedorResultados = document.querySelector(selectorContenedor);
+            contenedorResultados.innerHTML = '';
+            db.collection(categoria).get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const resultado = doc.data();
                     const resultId = doc.id;
-
                     const resultadoItem = `
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
-                                <span class="ms-3">${resultado.equipoLocal}</span>
-                            </div>
+                            <span>${resultado.equipoLocal}</span>
                             <div class="score">${resultado.puntajeLocal} - ${resultado.puntajeVisitante}</div>
-                            <div class="d-flex align-items-center">
-                                <span class="me-3">${resultado.equipoVisitante}</span>
-                            </div>
-
+                            <span>${resultado.equipoVisitante}</span>
                             <div class="action-buttons">
                                 <i class="fas fa-edit edit-btn" data-id="${resultId}" data-bs-toggle="modal" data-bs-target="#addResultModal"></i>
                                 <i class="fas fa-trash delete-btn" data-id="${resultId}"></i>
                             </div>
                         </li>
                     `;
-
-                    resultadosContainer.innerHTML += resultadoItem;
+                    contenedorResultados.innerHTML += resultadoItem;
                 });
-
-                // Agregar funcionalidad a los botones de editar y eliminar
-                document.querySelectorAll('.edit-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const resultId = e.target.getAttribute('data-id');
-                        editResult(resultId);
-                    });
-                });
-
-                document.querySelectorAll('.delete-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const resultId = e.target.getAttribute('data-id');
-                        deleteResult(resultId, category, containerSelector);
-                    });
-                });
-            }).catch((error) => {
-                console.error("Error al cargar los resultados: ", error);
+                agregarEventos();
             });
         }
 
-        // Editar un resultado
-        function editResult(resultId) {
-            const resultRef = db.collection('resultados_masculino_libre').doc(resultId);
-            resultRef.get().then((doc) => {
+        function agregarEventos() {
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', e => editarResultado(e.target.getAttribute('data-id')));
+            });
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', e => eliminarResultado(e.target.getAttribute('data-id')));
+            });
+        }
+
+        function editarResultado(resultId) {
+            db.collection('resultados_masculino_sub16').doc(resultId).get().then(doc => {
                 if (doc.exists) {
                     const resultado = doc.data();
                     document.getElementById('equipoLocal').value = resultado.equipoLocal;
                     document.getElementById('puntajeLocal').value = resultado.puntajeLocal;
                     document.getElementById('equipoVisitante').value = resultado.equipoVisitante;
                     document.getElementById('puntajeVisitante').value = resultado.puntajeVisitante;
-                    document.getElementById('categoria').value = 'resultados_masculino_libre';
                     document.getElementById('resultId').value = resultId;
                 }
-            }).catch((error) => {
-                console.error("Error al obtener el resultado: ", error);
             });
         }
 
-        // Eliminar un resultado
-        function deleteResult(resultId, category, containerSelector) {
+        function eliminarResultado(resultId) {
             if (confirm('¿Estás seguro de que deseas eliminar este resultado?')) {
-                db.collection(category).doc(resultId).delete().then(() => {
+                // Determinar la categoría a eliminar
+                let categoria = '';
+                const activeTab = document.querySelector('.nav-tabs .active');
+                if (activeTab) {
+                    categoria = activeTab.getAttribute('data-bs-target').replace('#', 'resultados_');
+                }
+
+                db.collection(categoria).doc(resultId).delete().then(() => {
                     alert('Resultado eliminado con éxito.');
-                    loadResults(category, containerSelector);
-                }).catch((error) => {
-                    console.error("Error al eliminar el resultado: ", error);
+                    cargarResultados();
                 });
             }
         }
 
-        // Guardar o actualizar resultado
         document.getElementById('addResultForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
             const equipoLocal = document.getElementById('equipoLocal').value;
             const puntajeLocal = document.getElementById('puntajeLocal').value;
             const equipoVisitante = document.getElementById('equipoVisitante').value;
             const puntajeVisitante = document.getElementById('puntajeVisitante').value;
-            const categoria = document.getElementById('categoria').value;
             const resultId = document.getElementById('resultId').value;
 
-            // Si el campo "resultId" tiene un valor, actualizamos el resultado; de lo contrario, agregamos uno nuevo
+            // Determinar la categoría en base a la pestaña activa
+            let categoria = '';
+            const activeTab = document.querySelector('.nav-tabs .active');
+            if (activeTab) {
+                categoria = activeTab.getAttribute('data-bs-target').replace('#', 'resultados_');
+            }
+
             if (resultId) {
                 db.collection(categoria).doc(resultId).update({
-                    equipoLocal: equipoLocal,
-                    puntajeLocal: puntajeLocal,
-                    equipoVisitante: equipoVisitante,
-                    puntajeVisitante: puntajeVisitante
+                    equipoLocal,
+                    puntajeLocal,
+                    equipoVisitante,
+                    puntajeVisitante
                 }).then(() => {
                     alert("Resultado actualizado con éxito.");
                     document.getElementById('addResultForm').reset();
-                    loadResults(categoria, `#${categoria.replace('resultados_', '')} ul`);
+                    cargarResultados();
                     document.querySelector('.btn-close').click();
-                }).catch((error) => {
-                    console.error("Error al actualizar el resultado: ", error);
                 });
             } else {
                 db.collection(categoria).add({
-                    equipoLocal: equipoLocal,
-                    puntajeLocal: puntajeLocal,
-                    equipoVisitante: equipoVisitante,
-                    puntajeVisitante: puntajeVisitante
+                    equipoLocal,
+                    puntajeLocal,
+                    equipoVisitante,
+                    puntajeVisitante
                 }).then(() => {
                     alert("Resultado agregado con éxito.");
                     document.getElementById('addResultForm').reset();
-                    loadResults(categoria, `#${categoria.replace('resultados_', '')} ul`);
+                    cargarResultados();
                     document.querySelector('.btn-close').click();
-                }).catch((error) => {
-                    console.error("Error al agregar resultado: ", error);
                 });
             }
         });
 
-        // Llama a las funciones cuando el usuario selecciona una pestaña
-        document.getElementById('masculinoLibre-tab').addEventListener('click', function() {
-            loadResults('resultados_masculino_libre', '#masculinoLibre ul');
-        });
-
-        document.getElementById('masculinoSub16-tab').addEventListener('click', function() {
-            loadResults('resultados_masculino_sub16', '#masculinoSub16 ul');
-        });
-
-        document.getElementById('femeninoLibre-tab').addEventListener('click', function() {
-            loadResults('resultados_femenino_libre', '#femeninoLibre ul');
-        });
-
-        document.getElementById('femeninoSub16-tab').addEventListener('click', function() {
-            loadResults('resultados_femenino_sub16', '#femeninoSub16 ul');
-        });
-
-        // Cargar la categoría "Masculino Libre" al cargar la página
         window.onload = function() {
-            loadResults('resultados_masculino_libre', '#masculinoLibre ul');
+            cargarResultados();
         };
-
-        // Agregar resultados al Firestore
-        document.getElementById('addResultForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const equipoLocal = document.getElementById('equipoLocal').value;
-            const puntajeLocal = document.getElementById('puntajeLocal').value;
-            const equipoVisitante = document.getElementById('equipoVisitante').value;
-            const puntajeVisitante = document.getElementById('puntajeVisitante').value;
-            const categoria = document.getElementById('categoria').value;
-
-            db.collection(categoria).add({
-                equipoLocal: equipoLocal,
-                puntajeLocal: puntajeLocal,
-                equipoVisitante: equipoVisitante,
-                puntajeVisitante: puntajeVisitante
-            }).then(() => {
-                alert("Resultado agregado con éxito.");
-                document.getElementById('addResultForm').reset();
-                loadResults(categoria, `#${categoria.replace('resultados_', '')} ul`);
-                // Cierra el modal
-                document.querySelector('.btn-close').click();
-            }).catch((error) => {
-                console.error("Error al agregar resultado: ", error);
-            });
-        });
     </script>
 
-    <!-- Bootstrap JS -->
+    <!-- Bootstrap Bundle with Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
