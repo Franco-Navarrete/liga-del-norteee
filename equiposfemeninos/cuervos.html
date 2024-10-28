@@ -27,7 +27,7 @@
     <div class="container my-5">
         <div class="row">
             <div class="col-md-4 text-center">
-                <img src="../imagenes/cuervos rs y ld.jpg" alt="Logo del equipo" class="team-logo">
+                <img src="../imagenes/cuervos" alt="Logo del equipo" class="team-logo">
                 <h2 id="teamName">Cuervos</h2>
                 <p><strong>Localidad:</strong> Rìo Seco, Córdoba</p>
             </div>
@@ -37,23 +37,20 @@
                 <button class="btn btn-primary mb-3" id="editCoachBtn" data-bs-toggle="modal" data-bs-target="#editCoachModal" style="display:none;">Agregar/Editar Técnico</button>
 
                 <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
-                    
+                    <li class="nav-item"><button class="nav-link active" id="team1-tab" data-bs-toggle="tab" data-bs-target="#team1">Sub 16</button></li>
                     <li class="nav-item"><button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 1</button></li>
-                    <li class="nav-item"><button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 2</button></li>
+                    <li class="nav-item"><button class="nav-link" id="team3-tab" data-bs-toggle="tab" data-bs-target="#team3">Libre 2</button></li>
                 </ul>
 
                 <button class="btn btn-primary mt-3" id="addPlayerBtn" data-bs-toggle="modal" data-bs-target="#playerModal" style="display:none;">Agregar Jugador</button>
 
                 <div class="tab-content mt-3" id="myTabContent">
+                    <div class="tab-pane fade show active player-list" id="team1" role="tabpanel">
+                        <h5>Sub 16</h5>
+                        <ul id="playersList"></ul>
+                    </div>
+                  
                    
-                    <div class="tab-pane fade player-list" id="team2" role="tabpanel">
-                        <h5>Libre 1</h5>
-                        <ul id="playersList2"></ul>
-                    </div>
-                    <div class="tab-pane fade player-list" id="team3" role="tabpanel">
-                        <h5>Libre 2</h5>
-                        <ul id="playersList3"></ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -128,7 +125,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const selectedTeam = "cuervos_masc";
+        const selectedTeam = "cuervos_fem_s16";
 
         // Verificar si el usuario ha iniciado sesión
         let isAuthenticated = false;
