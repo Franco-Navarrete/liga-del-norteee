@@ -154,7 +154,7 @@
                 querySnapshot.forEach((doc) => {
                     const resultado = doc.data();
                     const resultadoItem = `
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="${doc.id}">
                             <span>${resultado.equipoLocal}</span>
                             <div class="score">${resultado.puntajeLocal} - ${resultado.puntajeVisitante}</div>
                             <span>${resultado.equipoVisitante}</span>
@@ -172,7 +172,7 @@
                 querySnapshot.forEach((doc) => {
                     const resultado = doc.data();
                     const resultadoItem = `
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center" data-id="${doc.id}">
                             <span>${resultado.equipoLocal}</span>
                             <div class="score">${resultado.puntajeLocal} - ${resultado.puntajeVisitante}</div>
                             <span>${resultado.equipoVisitante}</span>
@@ -186,7 +186,7 @@
 
         function agregarBotonesEditDelete(categoria, contenedorResultados) {
             if (auth.currentUser) { // Solo agregar botones si el usuario está autenticado
-                contenedorResultados.querySelectorAll('.list-group-item').forEach((item, index) => {
+                contenedorResultados.querySelectorAll('.list-group-item').forEach((item) => {
                     const resultId = item.getAttribute('data-id');
                     item.innerHTML += `
                         <button class="btn btn-warning btn-sm edit-btn" data-id="${resultId}">Editar</button>
