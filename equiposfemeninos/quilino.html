@@ -77,6 +77,7 @@
             <div class="col-md-8">
                 <div class="coach-info mb-3" id="coach-info"></div>
                 <button class="btn btn-primary mb-3" id="editCoachBtn" data-bs-toggle="modal" data-bs-target="#editCoachModal" style="display:none;">Agregar/Editar Técnico</button>
+                <button class="btn btn-danger mb-3" id="deleteCoachBtn" style="display:none;" onclick="deleteCoach()">Eliminar Técnico</button>
 
                 <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
                     <li class="nav-item"><button class="nav-link active" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 1</button></li>
@@ -108,6 +109,36 @@
                         <div class="mb-3"><label for="playerDOB" class="form-label">Fecha de Nacimiento</label><input type="date" class="form-control" id="playerDOB" required></div>
                         <div class="mb-3"><label for="playerDNI" class="form-label">DNI</label><input type="text" class="form-control" id="playerDNI" required></div>
                         <button type="submit" class="btn btn-primary">Agregar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar jugador -->
+    <div class="modal fade" id="editPlayerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPlayerModalLabel">Editar Jugador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPlayerForm">
+                        <input type="hidden" id="editPlayerId">
+                        <div class="mb-3">
+                            <label for="editPlayerName" class="form-label">Nombre del Jugador</label>
+                            <input type="text" class="form-control" id="editPlayerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPlayerDOB" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="editPlayerDOB" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPlayerDNI" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="editPlayerDNI" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
@@ -146,7 +177,6 @@
             </div>
         </div>
     </div>
-
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
@@ -157,28 +187,28 @@
             authDomain: "liga-del-norte.firebaseapp.com",
             projectId: "liga-del-norte",
             storageBucket: "liga-del-norte.appspot.com",
-            messagingSenderId: "655679074901",
-            appId: "1:655679074901:web:867a248306701963039adc",
-            measurementId: "G-CZ5P9YCEWK"
+            messagingSenderId: "490266722186",
+            appId: "1:490266722186:web:6c1a672f43d59f2cd10473"
         };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const selectedTeam = "quilino_fem";
 
-        // Verificar si el usuario ha iniciado sesión
-        let isAuthenticated = false;
+        const selectedTeam = "Muni Quilino"; // Cambia esto según el equipo seleccionado.
 
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                isAuthenticated = true;
-                document.getElementById("editCoachBtn").style.display = 'block';
-                document.getElementById("addPlayerBtn").style.display = 'block';
-            } else {
-                isAuthenticated = false;
+        // Autenticación de usuario (agrega aquí tu lógica de autenticación)
+        const userLoggedIn = true; // Cambia a true si el usuario está autenticado.
+
+        window.onload = function () {
+            if (userLoggedIn) {
+                document.getElementById("editCoachBtn").style.display = "inline-block";
+                document.getElementById("deleteCoachBtn").style.display = "inline-block";
+                document.getElementById("addPlayerBtn").style.display = "inline-block";
             }
-            renderPlayers();
+
             loadCoachInfo();
-        });
+            renderPlayers();
+        };
 
         function renderPlayers() {
             db.collection("jugadores femeninos").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
@@ -188,100 +218,124 @@
                 querySnapshot.forEach((doc) => {
                     const player = doc.data();
                     const li = document.createElement("li");
-                    li.innerHTML = `<div class="player-details"><strong>${player.nombre}</strong> - ${player.fecha_nacimiento}</div>`;
-
-                    if (isAuthenticated) {
-                        li.innerHTML += `<div>
+                    li.innerHTML = `
+                        <div class="player-details">
+                            <strong>${player.nombre}</strong>
+                            <p>Fecha de Nacimiento: ${player.fecha_nacimiento}</p>
+                            <p>DNI: ${player.dni}</p>
+                        </div>
+                        <div>
                             <button class="btn btn-warning btn-sm" onclick="openEditPlayerModal('${doc.id}', '${player.nombre}', '${player.fecha_nacimiento}', '${player.dni}')">Editar</button>
                             <button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>
                         </div>`;
-                    }
-
                     playersList.appendChild(li);
                 });
-            }).catch((error) => console.error("Error fetching players: ", error));
+            });
         }
 
         function loadCoachInfo() {
-            db.collection("entrenadores").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
+            db.collection("tecnicos").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
                 const coachInfo = document.getElementById("coach-info");
                 coachInfo.innerHTML = "";
 
                 querySnapshot.forEach((doc) => {
                     const coach = doc.data();
-                    coachInfo.innerHTML = `<strong>Técnico: ${coach.nombre}</strong><br>
-                                          <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento}<br>
-                                          <strong>DNI:</strong> ${coach.dni}<br>
-                                          <strong>Celular:</strong> ${coach.celular}<br>`;
+                    coachInfo.innerHTML = `
+                        <h3>${coach.nombre}</h3>
+                        <p><strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento}</p>
+                        <p><strong>DNI:</strong> ${coach.dni}</p>
+                        <p><strong>Celular:</strong> ${coach.celular}</p>`;
                 });
-            }).catch((error) => console.error("Error fetching coach info: ", error));
+            });
         }
 
-        document.getElementById("playerForm").addEventListener("submit", function (event) {
+        document.getElementById("editCoachForm").addEventListener("submit", (event) => {
             event.preventDefault();
-            const newPlayer = {
-                nombre: document.getElementById("playerName").value,
-                fecha_nacimiento: document.getElementById("playerDOB").value,
-                dni: document.getElementById("playerDNI").value,
+            const newCoachName = document.getElementById("newCoachName").value;
+            const newCoachDOB = document.getElementById("newCoachDOB").value;
+            const newCoachDNI = document.getElementById("newCoachDNI").value;
+            const newCoachPhone = document.getElementById("newCoachPhone").value;
+
+            db.collection("tecnicos").doc(selectedTeam).set({
                 equipo: selectedTeam,
-            };
-
-            db.collection("jugadores femeninos").add(newPlayer).then(() => {
-                document.getElementById("playerForm").reset();
-                $('#playerModal').modal('hide');
-                renderPlayers();
-            }).catch((error) => console.error("Error adding player: ", error));
-        });
-
-        function openEditPlayerModal(id, name, dob, dni) {
-            document.getElementById("playerName").value = name;
-            document.getElementById("playerDOB").value = dob;
-            document.getElementById("playerDNI").value = dni;
-
-            document.getElementById("playerForm").onsubmit = function (event) {
-                event.preventDefault();
-                updatePlayer(id);
-            };
-            $('#playerModal').modal('show');
-        }
-
-        function updatePlayer(id) {
-            const updatedPlayer = {
-                nombre: document.getElementById("playerName").value,
-                fecha_nacimiento: document.getElementById("playerDOB").value,
-                dni: document.getElementById("playerDNI").value,
-            };
-
-            db.collection("jugadores femeninos").doc(id).update(updatedPlayer).then(() => {
-                $('#playerModal').modal('hide');
-                renderPlayers();
-            }).catch((error) => console.error("Error updating player: ", error));
-        }
-
-        function deletePlayer(id) {
-            db.collection("jugadores femeninos").doc(id).delete().then(() => {
-                renderPlayers();
-            }).catch((error) => console.error("Error deleting player: ", error));
-        }
-
-        document.getElementById("editCoachForm").addEventListener("submit", function (event) {
-            event.preventDefault();
-            const coachData = {
-                nombre: document.getElementById("newCoachName").value,
-                fecha_nacimiento: document.getElementById("newCoachDOB").value,
-                dni: document.getElementById("newCoachDNI").value,
-                celular: document.getElementById("newCoachPhone").value,
-                equipo: selectedTeam,
-            };
-
-            db.collection("entrenadores").add(coachData).then(() => {
-                document.getElementById("editCoachForm").reset();
-                $('#editCoachModal').modal('hide');
+                nombre: newCoachName,
+                fecha_nacimiento: newCoachDOB,
+                dni: newCoachDNI,
+                celular: newCoachPhone
+            }).then(() => {
                 loadCoachInfo();
-            }).catch((error) => console.error("Error adding coach: ", error));
+                $('#editCoachModal').modal('hide');
+                alert('Técnico guardado exitosamente');
+            });
         });
+
+        function deleteCoach() {
+            if (confirm("¿Está seguro que desea eliminar la información del técnico? Esta acción no se puede deshacer.")) {
+                db.collection("tecnicos").doc(selectedTeam).delete().then(() => {
+                    document.getElementById("coach-info").innerHTML = "";
+                    alert("Técnico eliminado exitosamente");
+                }).catch((error) => {
+                    console.error("Error al eliminar el técnico: ", error);
+                });
+            }
+        }
+
+        document.getElementById("playerForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const playerName = document.getElementById("playerName").value;
+            const playerDOB = document.getElementById("playerDOB").value;
+            const playerDNI = document.getElementById("playerDNI").value;
+
+            db.collection("jugadores femeninos").add({
+                equipo: selectedTeam,
+                nombre: playerName,
+                fecha_nacimiento: playerDOB,
+                dni: playerDNI
+            }).then(() => {
+                renderPlayers();
+                $('#playerModal').modal('hide');
+                alert('Jugador agregado exitosamente');
+            });
+        });
+
+        function deletePlayer(playerId) {
+            if (confirm("¿Está seguro que desea eliminar este jugador?")) {
+                db.collection("jugadores femeninos").doc(playerId).delete().then(() => {
+                    renderPlayers();
+                    alert("Jugador eliminado exitosamente");
+                }).catch((error) => {
+                    console.error("Error al eliminar el jugador: ", error);
+                });
+            }
+        }
+
+        function openEditPlayerModal(playerId, playerName, playerDOB, playerDNI) {
+            document.getElementById("editPlayerId").value = playerId;
+            document.getElementById("editPlayerName").value = playerName;
+            document.getElementById("editPlayerDOB").value = playerDOB;
+            document.getElementById("editPlayerDNI").value = playerDNI;
+
+            document.getElementById("editPlayerForm").onsubmit = function (event) {
+                event.preventDefault();
+                db.collection("jugadores femeninos").doc(playerId).update({
+                    nombre: document.getElementById("editPlayerName").value,
+                    fecha_nacimiento: document.getElementById("editPlayerDOB").value,
+                    dni: document.getElementById("editPlayerDNI").value
+                }).then(() => {
+                    renderPlayers();
+                    $('#editPlayerModal').modal('hide');
+                    alert('Jugador actualizado exitosamente');
+                }).catch((error) => {
+                    console.error("Error al actualizar el jugador: ", error);
+                });
+            };
+
+            $('#editPlayerModal').modal('show');
+        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>
