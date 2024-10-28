@@ -8,13 +8,55 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; }
-        .team-logo { width: 150px; height: 150px; object-fit: contain; border-radius: 50%; margin-bottom: 10px; }
-        .coach-info { background-color: #f7af05; color: white; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; align-items: flex-start; }
-        .player-list ul { list-style-type: none; padding: 0; }
-        .player-list li { background-color: #fff; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; }
-        .player-details { flex: 1; margin-left: 10px; }
-        footer { background-color: #343a40; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .team-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .coach-info {
+            background-color: #f7af05;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .player-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .player-list li {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .player-details {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
     </style>
 </head>
 
@@ -37,13 +79,13 @@
                 <button class="btn btn-primary mb-3" id="editCoachBtn" data-bs-toggle="modal" data-bs-target="#editCoachModal" style="display:none;">Agregar/Editar Técnico</button>
 
                 <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
-                    <li class="nav-item"><button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 1</button></li>
+                    <li class="nav-item"><button class="nav-link active" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 1</button></li>
                 </ul>
 
                 <button class="btn btn-primary mt-3" id="addPlayerBtn" data-bs-toggle="modal" data-bs-target="#playerModal" style="display:none;">Agregar Jugador</button>
 
                 <div class="tab-content mt-3" id="myTabContent">
-                    <div class="tab-pane fade player-list" id="team2" role="tabpanel">
+                    <div class="tab-pane fade show active player-list" id="team2" role="tabpanel">
                         <h5>Libre 1</h5>
                         <ul id="playersList2"></ul>
                     </div>
@@ -160,18 +202,31 @@
             }).catch((error) => console.error("Error fetching players: ", error));
         }
 
-        document.getElementById("playerForm").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const playerName = document.getElementById("playerName").value;
-            const playerDOB = document.getElementById("playerDOB").value;
-            const playerDNI = document.getElementById("playerDNI").value;
+        function loadCoachInfo() {
+            db.collection("entrenadores").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
+                const coachInfo = document.getElementById("coach-info");
+                coachInfo.innerHTML = "";
 
-            db.collection("jugadores femeninos").add({
-                nombre: playerName,
-                fecha_nacimiento: playerDOB,
-                dni: playerDNI,
-                equipo: selectedTeam
-            }).then(() => {
+                querySnapshot.forEach((doc) => {
+                    const coach = doc.data();
+                    coachInfo.innerHTML = `<strong>Técnico: ${coach.nombre}</strong><br>
+                                          <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento}<br>
+                                          <strong>DNI:</strong> ${coach.dni}<br>
+                                          <strong>Celular:</strong> ${coach.celular}<br>`;
+                });
+            }).catch((error) => console.error("Error fetching coach info: ", error));
+        }
+
+        document.getElementById("playerForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const newPlayer = {
+                nombre: document.getElementById("playerName").value,
+                fecha_nacimiento: document.getElementById("playerDOB").value,
+                dni: document.getElementById("playerDNI").value,
+                equipo: selectedTeam,
+            };
+
+            db.collection("jugadores femeninos").add(newPlayer).then(() => {
                 document.getElementById("playerForm").reset();
                 $('#playerModal').modal('hide');
                 renderPlayers();
@@ -183,21 +238,24 @@
             document.getElementById("playerDOB").value = dob;
             document.getElementById("playerDNI").value = dni;
 
-            // Change the form action to edit
-            document.getElementById("playerForm").onsubmit = (event) => {
+            document.getElementById("playerForm").onsubmit = function (event) {
                 event.preventDefault();
-                db.collection("jugadores femeninos").doc(id).update({
-                    nombre: document.getElementById("playerName").value,
-                    fecha_nacimiento: document.getElementById("playerDOB").value,
-                    dni: document.getElementById("playerDNI").value,
-                    equipo: selectedTeam
-                }).then(() => {
-                    $('#playerModal').modal('hide');
-                    renderPlayers();
-                }).catch((error) => console.error("Error updating player: ", error));
+                updatePlayer(id);
+            };
+            $('#playerModal').modal('show');
+        }
+
+        function updatePlayer(id) {
+            const updatedPlayer = {
+                nombre: document.getElementById("playerName").value,
+                fecha_nacimiento: document.getElementById("playerDOB").value,
+                dni: document.getElementById("playerDNI").value,
             };
 
-            $('#playerModal').modal('show');
+            db.collection("jugadores femeninos").doc(id).update(updatedPlayer).then(() => {
+                $('#playerModal').modal('hide');
+                renderPlayers();
+            }).catch((error) => console.error("Error updating player: ", error));
         }
 
         function deletePlayer(id) {
@@ -206,36 +264,24 @@
             }).catch((error) => console.error("Error deleting player: ", error));
         }
 
-        document.getElementById("editCoachForm").addEventListener("submit", (event) => {
+        document.getElementById("editCoachForm").addEventListener("submit", function (event) {
             event.preventDefault();
-            const coachName = document.getElementById("newCoachName").value;
-            const coachDOB = document.getElementById("newCoachDOB").value;
-            const coachDNI = document.getElementById("newCoachDNI").value;
-            const coachPhone = document.getElementById("newCoachPhone").value;
+            const coachData = {
+                nombre: document.getElementById("newCoachName").value,
+                fecha_nacimiento: document.getElementById("newCoachDOB").value,
+                dni: document.getElementById("newCoachDNI").value,
+                celular: document.getElementById("newCoachPhone").value,
+                equipo: selectedTeam,
+            };
 
-            db.collection("tecnicos").doc(selectedTeam).set({
-                nombre: coachName,
-                fecha_nacimiento: coachDOB,
-                dni: coachDNI,
-                telefono: coachPhone
-            }).then(() => {
+            db.collection("entrenadores").add(coachData).then(() => {
+                document.getElementById("editCoachForm").reset();
                 $('#editCoachModal').modal('hide');
                 loadCoachInfo();
-            }).catch((error) => console.error("Error saving coach info: ", error));
+            }).catch((error) => console.error("Error adding coach: ", error));
         });
-
-        function loadCoachInfo() {
-            db.collection("tecnicos").doc(selectedTeam).get().then((doc) => {
-                if (doc.exists) {
-                    const coach = doc.data();
-                    const coachInfoDiv = document.getElementById("coach-info");
-                    coachInfoDiv.innerHTML = `<h5>Técnico: ${coach.nombre}</h5><p>DNI: ${coach.dni}</p><p>Fecha de Nacimiento: ${coach.fecha_nacimiento}</p><p>Teléfono: ${coach.telefono}</p>`;
-                }
-            }).catch((error) => console.error("Error loading coach info: ", error));
-        }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
