@@ -96,7 +96,7 @@
     <!-- Botón flotante que lleva a index.html -->
     <a href="index.html" class="float-button">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-house-door-fill" viewBox="0 0 16 16">
-            <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z"/>
+            <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z" />
         </svg>
     </a>
 
@@ -113,7 +113,6 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">Las Arrias</h5>
-                      
                     </div>
                 </div>
             </div>
@@ -125,7 +124,6 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">Muni Quilino</h5>
-                        
                     </div>
                 </div>
             </div>
@@ -137,7 +135,6 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">San Francisco del Chañar</h5>
-                       
                     </div>
                 </div>
             </div>
@@ -149,24 +146,23 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">San Jose de la Dormida</h5>
-                       
                     </div>
                 </div>
             </div>
 
-            <!-- Card ejemplo 4 -->
+            <!-- Card ejemplo 5 -->
             <div class="col-md-3 mb-4" id="team-cuervos-masc">
                 <div class="card">
                     <a href="equipos/cuervos.html">
                         <img src="imagenes/cuervos rs y ld.jpg" alt="Picantes" class="card-img-top">
                     </a>
-                    <div class="card-body">Cuervos</h5>
-                       
+                    <div class="card-body">
+                        <h5 class="card-title">Cuervos</h5>
                     </div>
                 </div>
             </div>
             
-            <!-- Card ejemplo 4 -->
+            <!-- Card ejemplo 6 -->
             <div class="col-md-3 mb-4" id="team-vtulumba-masc">
                 <div class="card">
                     <a href="equipos/villadetulumba.html">
@@ -174,14 +170,11 @@
                     </a>
                     <div class="card-body">
                         <h5 class="card-title">Villa De Tulumba</h5>
-                        
                     </div>
                 </div>
             </div>
-             
-            
-           
         </div>
+    </section>
 
     <!-- Footer -->
     <footer class="bg-dark text-white text-center py-3 mt-5">
@@ -191,6 +184,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script> <!-- Agregar SDK de autenticación -->
 
     <!-- Configuración de Firebase -->
     <script>
@@ -201,36 +195,60 @@
             projectId: "liga-del-norte",
             storageBucket: "liga-del-norte.appspot.com",
             messagingSenderId: "655679074901",
-            appId: "1:655679074901:web:867a248306701963039adc",
-            measurementId: "G-CZ5P9YCEWK"
+            appId: "1:655679074901:web:faf177b71658b96b251ce4"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+    </script>
 
-        // Funciones para Masculino Libre
-        const equiposLibre = {};
-
-        function cargarPosicionesLibre() {
-            const posicionesBody = document.getElementById('posiciones-body-libre');
-            posicionesBody.innerHTML = '';
-
-            db.collection("partidos").where("categoria", "==", "libre").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const partido = doc.data();
-                    const equipoLocal = partido.equipoLocal;
-
-                    equiposLibre[equipoLocal] = { puntos: partido.puntos || 0 };
-                });
-
-                ordenarEquipos(posicionesBody, equiposLibre);
-            });
+    <script>
+        // Verificar autenticación
+        function isAuthenticated() {
+            return !!firebase.auth().currentUser;
         }
 
+        // Cargar posiciones de la liga
+        async function cargarPosiciones() {
+            const posicionesBodyLibre = document.getElementById("posiciones-body-libre");
+            const posicionesBodySub16 = document.getElementById("posiciones-body-sub16");
+
+            // Obtener datos de partidos de Firestore
+            const partidosRef = db.collection("partidos");
+            const snapshot = await partidosRef.get();
+
+            const equiposLibre = {};
+            const equiposSub16 = {};
+
+            snapshot.forEach(doc => {
+                const partido = doc.data();
+                if (partido.categoria === 'libre') {
+                    if (!equiposLibre[partido.equipoLocal]) {
+                        equiposLibre[partido.equipoLocal] = { puntos: 0 };
+                    }
+                    equiposLibre[partido.equipoLocal].puntos += partido.puntos || 0;
+                } else if (partido.categoria === 'sub16') {
+                    if (!equiposSub16[partido.equipoLocal]) {
+                        equiposSub16[partido.equipoLocal] = { puntos: 0 };
+                    }
+                    equiposSub16[partido.equipoLocal].puntos += partido.puntos || 0;
+                }
+            });
+
+            // Ordenar y mostrar equipos
+            ordenarEquipos(posicionesBodyLibre, equiposLibre);
+            ordenarEquipos(posicionesBodySub16, equiposSub16);
+        }
+
+        // Ordenar equipos
         function ordenarEquipos(posicionesBody, equipos) {
             const equiposOrdenados = Object.entries(equipos).sort((a, b) => b[1].puntos - a[1].puntos);
 
             equiposOrdenados.forEach(([equipo, data], index) => {
+                const actionButtons = isAuthenticated() 
+                    ? `<button class="btn btn-warning btn-sm" onclick="guardarCambios('${equipo}', 'libre')">Guardar</button>
+                       <button class="btn btn-danger btn-sm" onclick="eliminarEquipo('${equipo}', 'libre')">Eliminar</button>`
+                    : '';
+
                 posicionesBody.innerHTML += `
                     <tr id="${equipo}">
                         <td>${index + 1}</td>
@@ -238,130 +256,64 @@
                         <td>
                             <input type="number" class="form-control" value="${data.puntos}" onchange="actualizarPuntos('${equipo}', this.value, 'libre')">
                         </td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="guardarCambios('${equipo}', 'libre')">Guardar</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminarEquipo('${equipo}', 'libre')">Eliminar</button>
-                        </td>
+                        <td>${actionButtons}</td>
                     </tr>
                 `;
             });
         }
 
-        function actualizarPuntos(equipo, nuevosPuntos, categoria) {
-            equiposLibre[equipo].puntos = parseInt(nuevosPuntos);
+        // Actualizar puntos
+        function actualizarPuntos(equipo, puntos, categoria) {
+            // Lógica para actualizar puntos de un equipo
         }
 
-        function guardarCambios(equipo, categoria) {
-            const puntos = equiposLibre[equipo].puntos;
+        // Guardar cambios
+        async function guardarCambios(equipo, categoria) {
+            const puntos = document.querySelector(`#${equipo} input`).value;
+            const partidosRef = db.collection("partidos");
+            const partidoDoc = partidosRef.doc(equipo); // Suponiendo que el ID del documento es el nombre del equipo
 
-            db.collection("partidos").doc(equipo).set({
-                equipoLocal: equipo,
-                puntos: puntos,
-                categoria: categoria
-            }).then(() => {
-                cargarPosicionesLibre();
-            }).catch((error) => {
-                console.error("Error al guardar los cambios: ", error);
-            });
+            // Actualiza el documento
+            await partidoDoc.set({
+                categoria: categoria,
+                puntos: puntos
+            }, { merge: true });
+
+            alert('Cambios guardados');
+            cargarPosiciones(); // Recargar posiciones
         }
 
+        // Eliminar equipo
+        async function eliminarEquipo(equipo, categoria) {
+            const partidosRef = db.collection("partidos");
+            const partidoDoc = partidosRef.doc(equipo);
+
+            await partidoDoc.delete();
+            alert('Equipo eliminado');
+            cargarPosiciones(); // Recargar posiciones
+        }
+
+        // Agregar equipo
         function agregarEquipo(categoria) {
-            const nombreEquipo = prompt("Ingrese el nombre del nuevo equipo:");
-            if (nombreEquipo) {
-                db.collection("partidos").add({
-                    equipoLocal: nombreEquipo,
+            const equipoNombre = prompt("Ingrese el nombre del equipo:");
+            if (equipoNombre) {
+                const partidosRef = db.collection("partidos");
+                partidosRef.add({
                     categoria: categoria,
-                    puntos: 0
-                }).then(() => {
-                    if (categoria === 'libre') {
-                        cargarPosicionesLibre();
-                    } else {
-                        cargarPosicionesSub16();
-                    }
-                }).catch((error) => {
-                    console.error("Error al agregar el equipo: ", error);
+                    equipoLocal: equipoNombre,
+                    puntos: 0 // Puntos iniciales
                 });
+                alert('Equipo agregado');
+                cargarPosiciones(); // Recargar posiciones
             }
         }
 
-        function eliminarEquipo(equipo, categoria) {
-            const confirmacion = confirm(`¿Está seguro de que desea eliminar el equipo ${equipo}?`);
-            if (confirmacion) {
-                db.collection("partidos").doc(equipo).delete().then(() => {
-                    if (categoria === 'libre') {
-                        cargarPosicionesLibre();
-                    } else {
-                        cargarPosicionesSub16();
-                    }
-                }).catch((error) => {
-                    console.error("Error al eliminar el equipo: ", error);
-                });
-            }
-        }
-
-        // Funciones para Sub 16
-        const equiposSub16 = {};
-
-        function cargarPosicionesSub16() {
-            const posicionesBody = document.getElementById('posiciones-body-sub16');
-            posicionesBody.innerHTML = '';
-
-            db.collection("partidos").where("categoria", "==", "sub16").get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const partido = doc.data();
-                    const equipoLocal = partido.equipoLocal;
-
-                    equiposSub16[equipoLocal] = { puntos: partido.puntos || 0 };
-                });
-
-                ordenarEquiposSub16(posicionesBody, equiposSub16);
-            });
-        }
-
-        function ordenarEquiposSub16(posicionesBody, equipos) {
-            const equiposOrdenados = Object.entries(equipos).sort((a, b) => b[1].puntos - a[1].puntos);
-
-            equiposOrdenados.forEach(([equipo, data], index) => {
-                posicionesBody.innerHTML += `
-                    <tr id="${equipo}">
-                        <td>${index + 1}</td>
-                        <td>${equipo}</td>
-                        <td>
-                            <input type="number" class="form-control" value="${data.puntos}" onchange="actualizarPuntosSub16('${equipo}', this.value)">
-                        </td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="guardarCambiosSub16('${equipo}')">Guardar</button>
-                            <button class="btn btn-danger btn-sm" onclick="eliminarEquipo('${equipo}', 'sub16')">Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function actualizarPuntosSub16(equipo, nuevosPuntos) {
-            equiposSub16[equipo].puntos = parseInt(nuevosPuntos);
-        }
-
-        function guardarCambiosSub16(equipo) {
-            const puntos = equiposSub16[equipo].puntos;
-
-            db.collection("partidos").doc(equipo).set({
-                equipoLocal: equipo,
-                puntos: puntos,
-                categoria: 'sub16'
-            }).then(() => {
-                cargarPosicionesSub16();
-            }).catch((error) => {
-                console.error("Error al guardar los cambios: ", error);
-            });
-        }
-
-        // Cargar posiciones al inicio
+        // Llamar a cargar posiciones al cargar la página
         window.onload = () => {
-            cargarPosicionesLibre();
-            cargarPosicionesSub16();
+            cargarPosiciones();
         };
     </script>
+
 </body>
 
 </html>
