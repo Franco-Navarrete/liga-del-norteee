@@ -63,7 +63,7 @@
                 </tbody>
             </table>
         </div>
-        <button class="btn btn-success" onclick="agregarEquipo('libre')">Agregar Equipo</button>
+        <button id="btn-agregar-libre" class="btn btn-success" style="display:none;" onclick="agregarEquipo('libre')">Agregar Equipo</button>
     </main>
 
     <!-- Tabla de Posiciones Sub 16 -->
@@ -84,7 +84,7 @@
                 </tbody>
             </table>
         </div>
-        <button class="btn btn-success" onclick="agregarEquipo('sub16')">Agregar Equipo</button>
+        <button id="btn-agregar-sub16" class="btn btn-success" style="display:none;" onclick="agregarEquipo('sub16')">Agregar Equipo</button>
     </main>
 
     <!-- Botón flotante a index.html -->
@@ -124,6 +124,8 @@
         async function cargarPosiciones() {
             const posicionesBodyLibre = document.getElementById("posiciones-body-libre");
             const posicionesBodySub16 = document.getElementById("posiciones-body-sub16");
+            const btnAgregarLibre = document.getElementById("btn-agregar-libre");
+            const btnAgregarSub16 = document.getElementById("btn-agregar-sub16");
 
             const partidosRef = db.collection("partidos");
             const snapshot = await partidosRef.get();
@@ -143,6 +145,15 @@
 
             ordenarEquipos(posicionesBodyLibre, equiposLibre, 'libre');
             ordenarEquipos(posicionesBodySub16, equiposSub16, 'sub16');
+
+            // Mostrar los botones de agregar solo si el usuario está autenticado
+            if (isAuthenticated()) {
+                btnAgregarLibre.style.display = 'block';
+                btnAgregarSub16.style.display = 'block';
+            } else {
+                btnAgregarLibre.style.display = 'none';
+                btnAgregarSub16.style.display = 'none';
+            }
         }
 
         function ordenarEquipos(posicionesBody, equipos, categoria) {
