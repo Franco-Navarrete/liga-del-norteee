@@ -55,7 +55,7 @@
                         <th>Posición</th>
                         <th>Equipo</th>
                         <th>Puntos</th>
-                        <th id="header-acciones-libre">Acciones</th> <!-- ID para el encabezado -->
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="posiciones-body-libre">
@@ -76,7 +76,7 @@
                         <th>Posición</th>
                         <th>Equipo</th>
                         <th>Puntos</th>
-                        <th id="header-acciones-sub16">Acciones</th> <!-- ID para el encabezado -->
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="posiciones-body-sub16">
@@ -94,8 +94,10 @@
         </svg>
     </a>
     
-        <!-- Sección de Cards de los Equipos -->
-    <section class="container my-5">
+
+
+     <!-- Sección de Cards de los Equipos -->
+     <section class="container my-5">
         <h2 style="padding: 20px; border-radius:10px;" class="text-center bg-dark text-light">Equipos Participantes</h2>
         <div class="row text-center mt-4" id="equipo-cards">
             <!-- Cards de equipos se agregarán aquí -->
@@ -170,11 +172,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
-    </footer>
-
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
@@ -202,8 +199,6 @@
             const posicionesBodySub16 = document.getElementById("posiciones-body-sub16");
             const btnAgregarLibre = document.getElementById("btn-agregar-libre");
             const btnAgregarSub16 = document.getElementById("btn-agregar-sub16");
-            const headerAccionesLibre = document.getElementById("header-acciones-libre");
-            const headerAccionesSub16 = document.getElementById("header-acciones-sub16");
 
             const partidosRef = db.collection("partidos");
             const snapshot = await partidosRef.get();
@@ -228,13 +223,9 @@
             if (isAuthenticated()) {
                 btnAgregarLibre.style.display = 'block';
                 btnAgregarSub16.style.display = 'block';
-                headerAccionesLibre.style.display = 'table-cell'; // Mostrar el encabezado de acciones
-                headerAccionesSub16.style.display = 'table-cell'; // Mostrar el encabezado de acciones
             } else {
                 btnAgregarLibre.style.display = 'none';
                 btnAgregarSub16.style.display = 'none';
-                headerAccionesLibre.style.display = 'none'; // Ocultar el encabezado de acciones
-                headerAccionesSub16.style.display = 'none'; // Ocultar el encabezado de acciones
             }
         }
 
@@ -244,19 +235,17 @@
 
             equiposOrdenados.forEach(([equipo, data], index) => {
                 const actionButtons = isAuthenticated() 
-                    ? `<button class="btn btn-warning btn-sm" onclick="editarNombre('${equipo}')">Editar Nombre</button>
-                       <button class="btn btn-danger btn-sm" onclick="eliminarEquipo('${equipo}')">Eliminar</button>`
+                    ? `<button class="btn btn-warning btn-sm" onclick="guardarCambios('${equipo}', '${categoria}')">Guardar</button>
+                       <button class="btn btn-danger btn-sm" onclick="eliminarEquipo('${equipo}')">Eliminar</button>` 
                     : '';
-
-                const puntosInput = isAuthenticated()
-                    ? `<input type="number" class="form-control" value="${data.puntos}" onchange="actualizarPuntos('${equipo}', this.value)" min="0">`
-                    : `<span>${data.puntos}</span>`;
 
                 posicionesBody.innerHTML += `
                     <tr id="${equipo}">
                         <td>${index + 1}</td>
                         <td>${equipo}</td>
-                        <td>${puntosInput}</td>
+                        <td>
+                            <input type="number" class="form-control" value="${data.puntos}" onchange="actualizarPuntos('${equipo}', this.value)" min="0">
+                        </td>
                         <td>${actionButtons}</td>
                     </tr>
                 `;
@@ -275,53 +264,54 @@
                 return;
             }
 
-            const nombreNormalizado = equipo.replace(/\s+/g, '_').toLowerCase();
+            try {
+                const partidoDoc = db.collection("partidos").doc(equipo);
+                await partidoDoc.set({
+                    categoria: categoria,
+                    puntos: parseInt(puntos)
+                }, { merge: true });
 
-            await db.collection("partidos").doc(nombreNormalizado).set({
-                puntos: parseInt(puntos),
-                categoria: categoria
-            }, { merge: true });
-
-            cargarPosiciones();
-        }
-
-        async function eliminarEquipo(equipo) {
-            const nombreNormalizado = equipo.replace(/\s+/g, '_').toLowerCase();
-            await db.collection("partidos").doc(nombreNormalizado).delete();
-            cargarPosiciones();
-        }
-
-        function agregarEquipo(categoria) {
-            const equipo = prompt("Ingresa el nombre del nuevo equipo:");
-            if (equipo && equipo.trim() !== "") {
-                const nombreNormalizado = equipo.replace(/\s+/g, '_').toLowerCase();
-                db.collection("partidos").doc(nombreNormalizado).set({
-                    puntos: 0,
-                    categoria: categoria
-                });
+                alert('Cambios guardados');
                 cargarPosiciones();
+            } catch (error) {
+                console.error("Error al guardar los cambios: ", error);
+                alert('Error al guardar los cambios. Inténtalo de nuevo.');
             }
         }
 
-        function editarNombre(equipo) {
-            const nuevoNombre = prompt("Ingresa el nuevo nombre para el equipo:", equipo);
-            if (nuevoNombre && nuevoNombre.trim() !== "") {
-                const nombreNormalizado = nuevoNombre.replace(/\s+/g, '_').toLowerCase();
-                const equipoNormalizado = equipo.replace(/\s+/g, '_').toLowerCase();
+        async function eliminarEquipo(equipo) {
+            try {
+                await db.collection("partidos").doc(equipo).delete();
+                alert('Equipo eliminado');
+                cargarPosiciones();
+            } catch (error) {
+                console.error("Error al eliminar el equipo: ", error);
+                alert('Error al eliminar el equipo. Inténtalo de nuevo.');
+            }
+        }
 
-                db.collection("partidos").doc(equipoNormalizado).set({
-                    nombre: nombreNormalizado
-                }, { merge: true }).then(() => {
-                    cargarPosiciones();
-                }).catch((error) => {
-                    console.error("Error al actualizar el nombre:", error);
+        function agregarEquipo(categoria) {
+            const equipoNombre = prompt("Ingrese el nombre del equipo:");
+            if (equipoNombre) {
+                db.collection("partidos").doc(equipoNombre).set({
+                    categoria: categoria,
+                    puntos: 0
                 });
+                alert('Equipo agregado');
+                cargarPosiciones();
             }
         }
 
         firebase.auth().onAuthStateChanged(user => {
             cargarPosiciones();
         });
+
+        window.onload = cargarPosiciones;
     </script>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
