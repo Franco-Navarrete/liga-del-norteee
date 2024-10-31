@@ -93,7 +93,82 @@
             <path d="M6.5 10.995V14.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-3.505h3a.5.5 0 0 0 .5-.5V7.293a1 1 0 0 0-.293-.707l-5-5a1 1 0 0 0-1.414 0l-5 5A1 1 0 0 0 1 7.293V10.5a.5.5 0 0 0 .5.5h3z" />
         </svg>
     </a>
+       <!-- Sección de Cards de los Equipos -->
+       <section class="container my-5">
+        <h2 style="padding: 20px; border-radius:10px;" class="text-center bg-dark text-light">Equipos Participantes</h2>
+        <div class="row text-center mt-4" id="equipo-cards">
+            <!-- Cards de equipos se agregarán aquí -->
+            <!-- Card ejemplo 1 -->
+            <div class="col-md-3 mb-4" id="team-arrias-masc">
+                <div class="card">
+                    <a href="equipos/arrias.html">
+                        <img src="imagenes/arrias.jpg" alt="Equipo Arrias" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">Las Arrias</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Card ejemplo 2 -->
+            <div class="col-md-3 mb-4" id="team-mquilino-masc">
+                <div class="card">
+                    <a href="equipos/quilino.html">
+                        <img src="imagenes/logo municipalidad2.png" alt="Quilino" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">Muni Quilino</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Card ejemplo 3 -->
+            <div class="col-md-3 mb-4" id="team-sfchañar-masc">
+                <div class="card">
+                    <a href="equipos/chañarmasc.html">
+                        <img src="imagenes/chañar.jpg" alt="Equipo San Francisco del Chañar" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">San Francisco del Chañar</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- Card ejemplo 4 -->
+            <div class="col-md-3 mb-4" id="team-sjdeladormida-masc">
+                <div class="card">
+                    <a href="equipos/sanjosedeladormida.html">
+                        <img src="imagenes/la dormida.jpg" alt="San Jose de la Dormida" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">San Jose de la Dormida</h5>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Card ejemplo 5 -->
+            <div class="col-md-3 mb-4" id="team-cuervos-masc">
+                <div class="card">
+                    <a href="equipos/cuervos.html">
+                        <img src="imagenes/cuervos rs y ld.jpg" alt="Picantes" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">Cuervos</h5>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card ejemplo 6 -->
+            <div class="col-md-3 mb-4" id="team-vtulumba-masc">
+                <div class="card">
+                    <a href="equipos/villadetulumba.html">
+                        <img src="imagenes/tulumba.jpg" alt="Villa De Tulumba" class="card-img-top">
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">Villa De Tulumba</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <!-- Footer -->
     <footer class="bg-dark text-white text-center py-3 mt-5">
         <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
@@ -191,8 +266,11 @@
                 return;
             }
 
+            // Normalizar el nombre del equipo
+            const nombreNormalizado = equipo.replace(/\s+/g, '_').toLowerCase(); // Reemplaza espacios con guiones bajos y convierte a minúsculas
+
             try {
-                const partidoDoc = db.collection("partidos").doc(equipo);
+                const partidoDoc = db.collection("partidos").doc(nombreNormalizado);
                 await partidoDoc.set({
                     categoria: categoria,
                     puntos: parseInt(puntos)
@@ -208,7 +286,9 @@
 
         async function eliminarEquipo(equipo) {
             try {
-                await db.collection("partidos").doc(equipo).delete();
+                // Normalizar el nombre del equipo
+                const nombreNormalizado = equipo.replace(/\s+/g, '_').toLowerCase();
+                await db.collection("partidos").doc(nombreNormalizado).delete();
                 alert('Equipo eliminado');
                 cargarPosiciones();
             } catch (error) {
@@ -220,7 +300,9 @@
         function agregarEquipo(categoria) {
             const equipoNombre = prompt("Ingrese el nombre del equipo:");
             if (equipoNombre) {
-                db.collection("partidos").doc(equipoNombre).set({
+                // Normalizar el nombre del equipo
+                const nombreNormalizado = equipoNombre.replace(/\s+/g, '_').toLowerCase();
+                db.collection("partidos").doc(nombreNormalizado).set({
                     categoria: categoria,
                     puntos: 0
                 });
