@@ -36,30 +36,30 @@
             <button class="btn btn-primary btn-category" onclick="cargarResultados('resultados_femenino_sub16')">Femenino Sub 16</button>
         </div>
 
-        <form id="resultados-form" class="mt-4" style="display: none;">
-            <div class="row mb-3">
+        <form id="resultados-form" style="display: none;">
+            <div class="row mb-3" id="input-fields">
                 <div class="col">
                     <label for="equipo1" class="form-label">Local</label>
-                    <input type="text" class="form-control" id="equipo1" required>
+                    <input type="text" class="form-control" id="equipo1" required disabled>
                 </div>
                 <div class="col">
                     <label for="goles1" class="form-label">Puntos Equipo 1</label>
-                    <input type="number" class="form-control" id="goles1" required>
+                    <input type="number" class="form-control" id="goles1" required disabled>
                 </div>
                 <div class="col">
                     <label for="goles2" class="form-label">Puntos Equipo 2</label>
-                    <input type="number" class="form-control" id="goles2" required>
+                    <input type="number" class="form-control" id="goles2" required disabled>
                 </div>
                 <div class="col">
                     <label for="equipo2" class="form-label">Visitante</label>
-                    <input type="text" class="form-control" id="equipo2" required>
+                    <input type="text" class="form-control" id="equipo2" required disabled>
                 </div>
                 <div class="col-auto">
                     <label for="fecha" class="form-label">Fecha</label>
-                    <input type="date" class="form-control" id="fecha" required>
+                    <input type="date" class="form-control" id="fecha" required disabled>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success" id="cargarBtn">Cargar Resultados</button>
+            <button type="submit" class="btn btn-success" id="cargarBtn" style="display: none;">Cargar Resultados</button>
             <button type="button" class="btn btn-secondary" id="cancelarBtn" style="display: none;">Cancelar</button>
         </form>
         
@@ -102,19 +102,30 @@
         // Autenticación
         firebase.auth().onAuthStateChanged(user => {
             const isAuthenticated = !!user;
-            document.getElementById('cargarBtn').style.display = isAuthenticated ? 'inline-block' : 'none';
-            document.getElementById('resultados-form').style.display = isAuthenticated ? 'block' : 'none';
+            const form = document.getElementById('resultados-form');
+            const inputFields = document.getElementById('input-fields');
+            const cargarBtn = document.getElementById('cargarBtn');
+
+            // Controlar la visibilidad y el estado de los campos según la autenticación
+            if (isAuthenticated) {
+                document.getElementById('cargarBtn').style.display = 'inline-block'; // Mostrar el botón de cargar
+                form.style.display = 'block';
+                inputFields.style.display = 'block'; // Mostrar los campos de entrada
+                form.querySelectorAll('input').forEach(input => {
+                    input.disabled = false; // Habilitar todos los campos de entrada
+                });
+            } else {
+                document.getElementById('cargarBtn').style.display = 'none'; // Ocultar el botón de cargar
+                form.style.display = 'none'; // Ocultar el formulario
+                inputFields.style.display = 'none'; // Ocultar los campos de entrada
+                form.querySelectorAll('input').forEach(input => {
+                    input.disabled = true; // Deshabilitar todos los campos de entrada
+                });
+                document.getElementById('acciones-header').style.display = 'none'; // Ocultar encabezado de acciones
+            }
+
             const accionesHeader = document.getElementById('acciones-header');
             accionesHeader.style.display = isAuthenticated ? 'table-cell' : 'none';
-            document.querySelectorAll('input').forEach(input => {
-                input.disabled = !isAuthenticated; // Deshabilitar campos de entrada para no autenticados
-            });
-
-            // Ocultar las líneas de entrada para usuarios no autenticados
-            if (!isAuthenticated) {
-                document.getElementById('resultados-form').reset(); // Reiniciar el formulario
-                document.getElementById('resultados-form').style.display = 'none'; // Asegurarse de que el formulario esté oculto
-            }
         });
 
         // Agregar resultado a la base de datos
@@ -174,7 +185,6 @@
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 const row = document.createElement('tr');
-
                 row.innerHTML = `
                     <td>${data.equipo1}</td>
                     <td>${data.goles1}</td>
