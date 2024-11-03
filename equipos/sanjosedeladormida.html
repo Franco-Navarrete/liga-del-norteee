@@ -195,41 +195,74 @@
 
                     playersList.appendChild(li);
                 });
+            }).catch((error) => {
+                console.error("Error al obtener jugadores: ", error);
             });
         }
 
         function loadCoachInfo() {
             const coachInfoDiv = document.getElementById("coach-info");
-            coachInfoDiv.innerHTML = "<p>Cargando información del técnico...</p>";
             db.collection("tecnicos").doc(selectedTeam).get().then((doc) => {
                 if (doc.exists) {
                     const coach = doc.data();
-                    coachInfoDiv.innerHTML = `<p><strong>Técnico:</strong> ${coach.nombre}</p><p><strong>Fecha de nacimiento:</strong> ${coach.fecha_nacimiento}</p><p><strong>Celular:</strong> ${coach.celular}</p>`;
+                    coachInfoDiv.innerHTML = `
+                        <strong>Técnico:</strong> ${coach.nombre} <br>
+                        <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} <br>
+                        <strong>Teléfono:</strong> ${coach.telefono}
+                    `;
                 } else {
-                    coachInfoDiv.innerHTML = "<p>Información del técnico no disponible. Haga clic en 'Agregar/Editar Técnico' para agregar los datos.</p>";
+                    coachInfoDiv.innerHTML = "No se encontró información del técnico.";
                 }
+            }).catch((error) => {
+                console.error("Error al cargar información del técnico: ", error);
             });
         }
 
-        document.getElementById("editCoachForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const newCoachName = document.getElementById("newCoachName").value;
-            const newCoachDOB = document.getElementById("newCoachDOB").value;
-            const newCoachPhone = document.getElementById("newCoachPhone").value;
+        document.getElementById("playerForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const playerName = document.getElementById("playerName").value;
+            const playerDOB = document.getElementById("playerDOB").value;
+            const playerDNI = document.getElementById("playerDNI").value;
 
-            db.collection("tecnicos").doc(selectedTeam).set({
-                nombre: newCoachName,
-                fecha_nacimiento: newCoachDOB,
-                celular: newCoachPhone
+            db.collection("jugadores").add({
+                nombre: playerName,
+                fecha_nacimiento: playerDOB,
+                dni: playerDNI,
+                equipo: selectedTeam
             }).then(() => {
-                loadCoachInfo();
-                $('#editCoachModal').modal('hide');
+                $('#playerModal').modal('hide');
+                document.getElementById("playerForm").reset();
+                renderPlayers();
+            }).catch((error) => {
+                console.error("Error al agregar jugador: ", error);
             });
         });
+
+        document.getElementById("editCoachForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const coachName = document.getElementById("newCoachName").value;
+            const coachDOB = document.getElementById("newCoachDOB").value;
+            const coachPhone = document.getElementById("newCoachPhone").value;
+
+            db.collection("tecnicos").doc(selectedTeam).set({
+                nombre: coachName,
+                fecha_nacimiento: coachDOB,
+                telefono: coachPhone
+            }).then(() => {
+                $('#editCoachModal').modal('hide');
+                loadCoachInfo();
+            }).catch((error) => {
+                console.error("Error al guardar información del técnico: ", error);
+            });
+        });
+
+        function deletePlayer(playerId) {
+            db.collection("jugadores").doc(playerId).delete().then(() => {
+                renderPlayers();
+            }).catch((error) => {
+                console.error("Error al eliminar jugador: ", error);
+            });
+        }
     </script>
 </body>
-
-<footer>
-    <p>&copy; 2023 Liga Del Norte. Todos los derechos reservados.</p>
-</footer>
 </html>
