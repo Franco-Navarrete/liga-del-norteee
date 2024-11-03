@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +7,49 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8f9fa; }
-        .team-logo { width: 150px; height: 150px; object-fit: contain; border-radius: 50%; margin-bottom: 10px; }
-        .coach-info { background-color: #f7af05; color: white; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; align-items: flex-start; }
-        .player-list ul { list-style-type: none; padding: 0; }
-        .player-list li { background-color: #fff; padding: 10px; margin-bottom: 10px; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; }
-        .player-details { flex: 1; margin-left: 10px; }
-        footer { background-color: #343a40; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+        body {
+            background-color: #f8f9fa;
+        }
+        .team-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .coach-info {
+            background-color: #f7af05;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .player-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .player-list li {
+            background-color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .player-details {
+            flex: 1;
+            margin-left: 10px;
+        }
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
     </style>
 </head>
 
@@ -28,29 +63,25 @@
         <div class="row">
             <div class="col-md-4 text-center">
                 <img src="../imagenes/chañar.jpg" alt="Logo del equipo" class="team-logo">
-                <h2 id="teamName">San Francisco Del Chañar</h2>
-                <p><strong>Localidad:</strong> San Francisco Del Chañar, Córdoba</p>
+                <h2 id="teamName">San Francisco Del chañar</h2>
+                <p><strong>Localidad:</strong> San Francisco Del chañar, Córdoba</p>
             </div>
 
             <div class="col-md-8">
-                <div class="coach-info mb-3" id="coach-info"></div>
+                <div class="coach-info mb-3" id="coach-info">Cargando información del técnico...</div>
                 <button class="btn btn-primary mb-3" id="editCoachBtn" data-bs-toggle="modal" data-bs-target="#editCoachModal" style="display:none;">Agregar/Editar Técnico</button>
 
                 <ul class="nav nav-tabs mt-4" id="myTab" role="tablist">
-                    
-                    <li class="nav-item"><button class="nav-link" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 1</button></li>
-                   
+                    <li class="nav-item"><button class="nav-link active" id="team2-tab" data-bs-toggle="tab" data-bs-target="#team2">Libre 1</button></li>
                 </ul>
 
                 <button class="btn btn-primary mt-3" id="addPlayerBtn" data-bs-toggle="modal" data-bs-target="#playerModal" style="display:none;">Agregar Jugador</button>
 
                 <div class="tab-content mt-3" id="myTabContent">
-                 
-                    <div class="tab-pane fade player-list" id="team2" role="tabpanel">
+                    <div class="tab-pane fade show active player-list" id="team2" role="tabpanel">
                         <h5>Libre 1</h5>
-                        <ul id="playersList2"></ul>
+                        <ul id="playersList">Cargando jugadores...</ul>
                     </div>
-                  
                 </div>
             </div>
         </div>
@@ -66,9 +97,18 @@
                 </div>
                 <div class="modal-body">
                     <form id="playerForm">
-                        <div class="mb-3"><label for="playerName" class="form-label">Nombre del Jugador</label><input type="text" class="form-control" id="playerName" required></div>
-                        <div class="mb-3"><label for="playerDOB" class="form-label">Fecha de Nacimiento</label><input type="date" class="form-control" id="playerDOB" required></div>
-                        <div class="mb-3"><label for="playerDNI" class="form-label">DNI</label><input type="text" class="form-control" id="playerDNI" required></div>
+                        <div class="mb-3">
+                            <label for="playerName" class="form-label">Nombre del Jugador</label>
+                            <input type="text" class="form-control" id="playerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="playerDOB" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="playerDOB" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="playerDNI" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="playerDNI" required>
+                        </div>
                         <button type="submit" class="btn btn-primary">Agregar</button>
                     </form>
                 </div>
@@ -95,10 +135,6 @@
                             <input type="date" class="form-control" id="newCoachDOB" required>
                         </div>
                         <div class="mb-3">
-                            <label for="newCoachDNI" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="newCoachDNI" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="newCoachPhone" class="form-label">Número de Celular</label>
                             <input type="text" class="form-control" id="newCoachPhone" required>
                         </div>
@@ -112,6 +148,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const firebaseConfig = {
@@ -127,7 +165,6 @@
         const db = firebase.firestore();
         const selectedTeam = "san_francisco_del_chañar_fem";
 
-        // Verificar si el usuario ha iniciado sesión
         let isAuthenticated = false;
 
         firebase.auth().onAuthStateChanged((user) => {
@@ -153,93 +190,46 @@
                     li.innerHTML = `<div class="player-details"><strong>${player.nombre}</strong> - ${player.fecha_nacimiento}</div>`;
 
                     if (isAuthenticated) {
-                        li.innerHTML += `<div>
-                            <button class="btn btn-warning btn-sm" onclick="editPlayer('${doc.id}', this)" data-player='${JSON.stringify(player)}'>Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>
-                        </div>`;
+                        li.innerHTML += `<button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>`;
                     }
 
                     playersList.appendChild(li);
                 });
-            }).catch((error) => console.error("Error al cargar los jugadores: ", error));
+            });
         }
 
         function loadCoachInfo() {
+            const coachInfoDiv = document.getElementById("coach-info");
+            coachInfoDiv.innerHTML = "<p>Cargando información del técnico...</p>";
             db.collection("tecnicos").doc(selectedTeam).get().then((doc) => {
                 if (doc.exists) {
                     const coach = doc.data();
-                    if (isAuthenticated) {
-                        const coachDisplay = `<p><strong>${coach.nombre}</strong> - <strong>DNI:</strong> ${coach.dni} - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
-                        document.getElementById("coach-info").innerHTML = coachDisplay;
-                    } else {
-                        const coachDisplay = `<p><strong>${coach.nombre}</strong> - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
-                        document.getElementById("coach-info").innerHTML = coachDisplay;
-                    }
+                    coachInfoDiv.innerHTML = `<p><strong>Técnico:</strong> ${coach.nombre}</p><p><strong>Fecha de nacimiento:</strong> ${coach.fecha_nacimiento}</p><p><strong>Celular:</strong> ${coach.celular}</p>`;
                 } else {
-                    document.getElementById("coach-info").innerHTML = `<p>No hay información del técnico disponible.</p>`;
+                    coachInfoDiv.innerHTML = "<p>Información del técnico no disponible. Haga clic en 'Agregar/Editar Técnico' para agregar los datos.</p>";
                 }
             });
         }
 
-        document.getElementById("playerForm").addEventListener("submit", (e) => {
+        document.getElementById("editCoachForm").addEventListener("submit", function (e) {
             e.preventDefault();
-            const playerName = document.getElementById("playerName").value;
-            const playerDOB = document.getElementById("playerDOB").value;
-            const playerDNI = document.getElementById("playerDNI").value;
-
-            db.collection("jugadores").add({
-                nombre: playerName, fecha_nacimiento: playerDOB, dni: playerDNI, equipo: selectedTeam
-            }).then(() => {
-                alert("Jugador agregado");
-                renderPlayers();
-                document.getElementById("playerForm").reset();
-            }).catch((error) => alert("Error al agregar jugador: " + error.message));
-        });
-
-        document.getElementById("editCoachForm").addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const coachName = document.getElementById("newCoachName").value;
-            const coachDOB = document.getElementById("newCoachDOB").value;
-            const coachDNI = document.getElementById("newCoachDNI").value;
-            const coachPhone = document.getElementById("newCoachPhone").value;
+            const newCoachName = document.getElementById("newCoachName").value;
+            const newCoachDOB = document.getElementById("newCoachDOB").value;
+            const newCoachPhone = document.getElementById("newCoachPhone").value;
 
             db.collection("tecnicos").doc(selectedTeam).set({
-                nombre: coachName, fecha_nacimiento: coachDOB, dni: coachDNI, celular: coachPhone
+                nombre: newCoachName,
+                fecha_nacimiento: newCoachDOB,
+                celular: newCoachPhone
             }).then(() => {
-                alert("Datos del técnico guardados");
                 loadCoachInfo();
-                document.getElementById("editCoachForm").reset();
                 $('#editCoachModal').modal('hide');
-            }).catch((error) => alert("Error al guardar datos del técnico: " + error.message));
+            });
         });
-
-        function editPlayer(id, btn) {
-            const player = JSON.parse(btn.getAttribute("data-player"));
-            document.getElementById("playerName").value = player.nombre;
-            document.getElementById("playerDOB").value = player.fecha_nacimiento;
-            document.getElementById("playerDNI").value = player.dni;
-
-            db.collection("jugadores").doc(id).set({
-                nombre: document.getElementById("playerName").value,
-                fecha_nacimiento: document.getElementById("playerDOB").value,
-                dni: document.getElementById("playerDNI").value,
-                equipo: selectedTeam
-            }).then(() => {
-                alert("Jugador actualizado");
-                renderPlayers();
-            }).catch((error) => alert("Error al editar jugador: " + error.message));
-        }
-
-        function deletePlayer(id) {
-            db.collection("jugadores").doc(id).delete().then(() => {
-                alert("Jugador eliminado");
-                renderPlayers();
-            }).catch((error) => alert("Error al eliminar jugador: " + error.message));
-        }
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
+<footer>
+    <p>&copy; 2023 Liga Del Norte. Todos los derechos reservados.</p>
+</footer>
 </html>

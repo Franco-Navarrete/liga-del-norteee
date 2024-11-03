@@ -133,7 +133,7 @@
             if (user) {
                 isAuthenticated = true;
                 document.getElementById("editCoachBtn").style.display = 'block';
-                document.getElementById("addPlayerBtn").style.display = 'block';
+               
             } else {
                 isAuthenticated = false;
             }
@@ -153,7 +153,7 @@
 
                     if (isAuthenticated) {
                         li.innerHTML += `<div>
-                            <button class="btn btn-warning btn-sm" onclick="editPlayer('${doc.id}', this)" data-player='${JSON.stringify(player)}'>Editar</button>
+                            
                             <button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>
                         </div>`;
                     }
