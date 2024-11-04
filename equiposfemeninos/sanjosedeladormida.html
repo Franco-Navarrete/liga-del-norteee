@@ -168,7 +168,7 @@
                 if (doc.exists) {
                     const coach = doc.data();
                     if (isAuthenticated) {
-                        const coachDisplay = `<p><strong>${coach.nombre}</strong><strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
+                        const coachDisplay = `<p><strong>${coach.nombre}</strong> - <strong>DNI:</strong> ${coach.dni} - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
                         document.getElementById("coach-info").innerHTML = coachDisplay;
                     } else {
                         const coachDisplay = `<p><strong>${coach.nombre}</strong> - <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} - <strong>Celular:</strong> ${coach.celular}</p>`;
