@@ -160,59 +160,94 @@
         }
 
         function renderPlayers() {
+            console.log("Cargando jugadores...");
             db.collection("jugadores").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
-                const playersList = document.getElementById("playersList2"); // Cambia este id si es necesario
-                playersList.innerHTML = "";
+                const playersList = document.getElementById("playersList2");
+                playersList.innerHTML = ""; // Limpia la lista antes de renderizar
+                let index = 1; // Inicializa un contador
 
                 querySnapshot.forEach((doc) => {
                     const player = doc.data();
                     const li = document.createElement("li");
-                    li.innerHTML = `<div class="player-details"><strong>${player.nombre}</strong> - ${player.fecha_nacimiento}</div>`;
+                    li.className = "list-group-item d-flex justify-content-between align-items-center";
+                    li.innerHTML = `
+                        <div class="player-details">
+                            <strong>${index++}. ${player.nombre}</strong> - DNI: ${player.dni} - Fecha de Nacimiento: ${player.fechaNacimiento}
+                        </div>
+                    `; // Incluye el índice en el nombre del jugador
 
                     if (isAuthenticated) {
-                        // Mostrar el DNI si el usuario está autenticado
-                        li.innerHTML += `<div><strong>DNI:</strong> ${player.dni}</div>`;
-                        li.innerHTML += `<div>
-                            <button class="btn btn-warning btn-sm" onclick="editPlayer('${doc.id}', this)" data-player='${JSON.stringify(player)}'>Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>
-                        </div>`;
+                        const deleteBtn = document.createElement("button");
+                        deleteBtn.className = "btn btn-danger btn-sm";
+                        deleteBtn.innerHTML = "Eliminar";
+                        deleteBtn.onclick = () => deletePlayer(doc.id);
+                        li.appendChild(deleteBtn);
                     }
-
                     playersList.appendChild(li);
                 });
-            }).catch((error) => console.error("Error al cargar los jugadores: ", error));
+            }).catch((error) => {
+                console.error("Error al renderizar jugadores:", error);
+            });
         }
 
-        document.getElementById("playerForm").addEventListener("submit", function (e) {
-            e.preventDefault();
+        document.getElementById("playerForm").addEventListener("submit", (event) => {
+            event.preventDefault();
             const playerName = document.getElementById("playerName").value;
             const playerDOB = document.getElementById("playerDOB").value;
             const playerDNI = document.getElementById("playerDNI").value;
 
             db.collection("jugadores").add({
                 nombre: playerName,
-                fecha_nacimiento: playerDOB,
+                fechaNacimiento: playerDOB,
                 dni: playerDNI,
                 equipo: selectedTeam
             }).then(() => {
-                $('#playerModal').modal('hide');
+                console.log("Jugador agregado correctamente");
                 document.getElementById("playerForm").reset();
-                renderPlayers();
-            }).catch((error) => console.error("Error al agregar jugador: ", error));
+                renderPlayers(); // Actualiza la lista de jugadores
+                const playerModal = bootstrap.Modal.getInstance(document.getElementById('playerModal'));
+                playerModal.hide();
+            }).catch((error) => {
+                console.error("Error al agregar jugador:", error);
+            });
         });
-
-        // Funciones para editar y eliminar jugadores (definir según tu lógica)
-        function editPlayer(playerId, button) {
-            // Lógica para editar el jugador
-            console.log("Editar jugador con ID:", playerId);
-        }
 
         function deletePlayer(playerId) {
             db.collection("jugadores").doc(playerId).delete().then(() => {
-                renderPlayers();
-            }).catch((error) => console.error("Error al eliminar jugador: ", error));
+                console.log("Jugador eliminado correctamente");
+                renderPlayers(); // Actualiza la lista de jugadores
+            }).catch((error) => {
+                console.error("Error al eliminar jugador:", error);
+            });
         }
+
+        document.getElementById("editCoachForm").addEventListener("submit", (event) => {
+            event.preventDefault();
+            const newCoachName = document.getElementById("newCoachName").value;
+            const newCoachDOB = document.getElementById("newCoachDOB").value;
+            const newCoachDNI = document.getElementById("newCoachDNI").value;
+            const newCoachPhone = document.getElementById("newCoachPhone").value;
+
+            db.collection("tecnicos").doc(selectedTeam).set({
+                nombre: newCoachName,
+                fecha_nacimiento: newCoachDOB,
+                dni: newCoachDNI,
+                celular: newCoachPhone
+            }).then(() => {
+                console.log("Datos del técnico actualizados correctamente");
+                loadCoachInfo(); // Actualiza la información del técnico
+                const editCoachModal = bootstrap.Modal.getInstance(document.getElementById('editCoachModal'));
+                editCoachModal.hide();
+            }).catch((error) => {
+                console.error("Error al actualizar datos del técnico:", error);
+            });
+        });
     </script>
+    <footer>
+        <p>&copy; 2024 Liga Del Norte. Todos los derechos reservados.</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>
