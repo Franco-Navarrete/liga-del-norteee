@@ -86,14 +86,8 @@
                             <label for="newCoachName" class="form-label">Nombre del Técnico</label>
                             <input type="text" class="form-control" id="newCoachName" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="newCoachDOB" class="form-label">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="newCoachDOB" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="newCoachDNI" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="newCoachDNI" required>
-                        </div>
+                        
+                        
                         <div class="mb-3">
                             <label for="newCoachPhone" class="form-label">Número de Celular</label>
                             <input type="text" class="form-control" id="newCoachPhone" required>
@@ -164,7 +158,7 @@
             db.collection("tecnicos").doc(selectedTeam).get().then((doc) => {
                 if (doc.exists) {
                     const coach = doc.data();
-                    document.getElementById("coach-info").innerHTML = `<strong>Técnico:</strong> ${coach.nombre} <br> <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento} <br> <strong>DNI:</strong> ${coach.dni} <br> <strong>Teléfono:</strong> ${coach.celular}`;
+                    document.getElementById("coach-info").innerHTML = `<strong>Técnico:</strong> ${coach.nombre}  <strong>Teléfono:</strong> ${coach.celular}`;
                 } else {
                     document.getElementById("coach-info").innerHTML = "No hay información de técnico disponible.";
                 }
@@ -259,13 +253,13 @@
             e.preventDefault();
             const newCoachName = document.getElementById("newCoachName").value;
             const newCoachDOB = document.getElementById("newCoachDOB").value;
-            const newCoachDNI = document.getElementById("newCoachDNI").value;
+            
             const newCoachPhone = document.getElementById("newCoachPhone").value;
 
             db.collection("tecnicos").doc(selectedTeam).set({
                 nombre: newCoachName,
                 fecha_nacimiento: newCoachDOB,
-                dni: newCoachDNI,
+                
                 celular: newCoachPhone
             }).then(() => {
                 alert("Datos del técnico actualizados");
