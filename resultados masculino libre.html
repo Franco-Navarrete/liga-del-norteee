@@ -6,11 +6,11 @@
     <title>Cargar Resultados</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-       body {
+        body {
             background-image: url('imagenes/logoliga.png');
             background-size: cover;
             background-attachment: fixed;
-            color: #ffffff; /* Cambiar color de texto en general */
+            color: #ffffff;
         }
         .container {
             margin-top: 50px;
@@ -23,7 +23,7 @@
         }
         .btn-category {
             margin-right: 10px;
-            margin-bottom: 10px; /* Agregar margen inferior para móviles */
+            margin-bottom: 10px;
         }
         .month-box {
             border: 1px solid #ffffff;
@@ -42,11 +42,11 @@
         .table {
             color: #ffffff;
             width: 100%;
-            table-layout: fixed; /* Ajuste para que las columnas se adapten */
+            table-layout: fixed;
         }
         th, td {
             color: #ffffff;
-            word-wrap: break-word; /* Ajustar texto en celdas */
+            word-wrap: break-word;
         }
         th {
             background-color: #00000046;
@@ -68,16 +68,19 @@
             .month-title {
                 font-size: 16px;
             }
+            .d-flex {
+                flex-wrap: wrap;
+                gap: 10px; /* Espacio entre botones */
+            }
             .btn-category {
-                display: block;
-                width: 100%; /* Botones en ancho completo para móviles */
+                flex: 1 1 100%; /* Botones ocupan el 100% del ancho en móviles */
             }
             .table {
-                font-size: 14px; /* Texto más pequeño en la tabla para móviles */
+                font-size: 14px;
             }
             th, td {
-                font-size: 14px; /* Ajuste de texto en tabla */
-                padding: 8px; /* Espacio reducido en celdas */
+                font-size: 14px;
+                padding: 8px;
             }
         }
         
