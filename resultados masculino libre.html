@@ -6,47 +6,81 @@
     <title>Cargar Resultados</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
+       body {
             background-image: url('imagenes/logoliga.png');
             background-size: cover;
             background-attachment: fixed;
+            color: #ffffff; /* Cambiar color de texto en general */
         }
         .container {
             margin-top: 50px;
             background-color: rgb(41, 41, 41);
-            color: #ffffff; /* Cambiar color de texto en el cuadro */
+            color: #ffffff;
             padding: 30px;
             border-radius: 10px;
+            width: 100%;
+            max-width: 800px;
         }
         .btn-category {
             margin-right: 10px;
+            margin-bottom: 10px; /* Agregar margen inferior para móviles */
         }
         .month-box {
             border: 1px solid #ffffff;
             padding: 10px;
             margin-bottom: 20px;
             border-radius: 8px;
-            background-color: #00000015; /* Cambiar color de fondo del cuadro */
-            color: #ffffff; /* Cambiar color de texto en el cuadro */
+            background-color: #00000015;
+            color: #ffffff;
         }
         .month-title {
             font-weight: bold;
             font-size: 18px;
             margin-bottom: 10px;
-            color: #ffffff; /* Cambiar color del título del mes */
+            color: #ffffff;
         }
         .table {
-            color: #ffffff; /* Cambiar color del texto en la tabla */
+            color: #ffffff;
+            width: 100%;
+            table-layout: fixed; /* Ajuste para que las columnas se adapten */
         }
         th, td {
-            color: #ffffff; /* Cambiar color de las letras de la tabla */
+            color: #ffffff;
+            word-wrap: break-word; /* Ajustar texto en celdas */
         }
         th {
-            background-color: #00000046; /* Cambiar color de fondo de las cabeceras */
+            background-color: #00000046;
         }
         .btn-warning, .btn-danger {
             color: white;
         }
+
+        /* Ajustes para dispositivos móviles */
+        @media (max-width: 768px) {
+            body {
+                background-size: cover;
+                background-attachment: scroll;
+            }
+            .container {
+                margin-top: 20px;
+                padding: 20px;
+            }
+            .month-title {
+                font-size: 16px;
+            }
+            .btn-category {
+                display: block;
+                width: 100%; /* Botones en ancho completo para móviles */
+            }
+            .table {
+                font-size: 14px; /* Texto más pequeño en la tabla para móviles */
+            }
+            th, td {
+                font-size: 14px; /* Ajuste de texto en tabla */
+                padding: 8px; /* Espacio reducido en celdas */
+            }
+        }
+        
     </style>
 </head>
 <body>
