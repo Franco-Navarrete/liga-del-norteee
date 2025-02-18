@@ -15,12 +15,10 @@
     </header>
 
     <main class="container my-4">
-        <!-- Botón para agregar partidos (visible solo si el usuario está logueado) -->
         <div id="adminActions" class="mb-4 d-none">
             <button class="btn btn-success" id="addGameBtn">Agregar Partido</button>
         </div>
 
-        <!-- Tabla de calendario -->
         <section>
             <h2 class="text-center mb-4">Calendario de Partidos</h2>
             <div class="table-responsive">
@@ -32,19 +30,15 @@
                             <th>Logo Local</th>
                             <th>Equipo Visitante</th>
                             <th>Logo Visitante</th>
-                            <!-- Opciones para editar/eliminar (visible solo si el usuario está logueado) -->
                             <th id="adminOptionsHeader" class="d-none">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody id="calendarioBody">
-                        <!-- Aquí se llenará dinámicamente el calendario -->
-                    </tbody>
+                    <tbody id="calendarioBody"></tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <!-- Modal para Agregar/Editar Partido (visible solo si el usuario está logueado) -->
     <div class="modal fade" id="gameModal" tabindex="-1" aria-labelledby="gameModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -64,7 +58,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="logoLocal" class="form-label">Logo Local (URL)</label>
-                            <input type="text" class="form-control" id="logoLocal" required>
+                            <input type="url" class="form-control" id="logoLocal" required>
                         </div>
                         <div class="mb-3">
                             <label for="equipoVisitante" class="form-label">Equipo Visitante</label>
@@ -72,7 +66,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="logoVisitante" class="form-label">Logo Visitante (URL)</label>
-                            <input type="text" class="form-control" id="logoVisitante" required>
+                            <input type="url" class="form-control" id="logoVisitante" required>
                         </div>
                     </form>
                 </div>
@@ -84,15 +78,12 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Firebase JS SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
 
     <script type="module">
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
             authDomain: "liga-del-norte.firebaseapp.com",
@@ -103,15 +94,13 @@
             measurementId: "G-CZ5P9YCEWK"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Función para cargar el calendario desde Firestore
         const cargarCalendario = (user) => {
             const calendarioBody = document.getElementById('calendarioBody');
-            calendarioBody.innerHTML = ''; // Limpiar el contenido existente
+            calendarioBody.innerHTML = '';
 
             db.collection("calendario").get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -124,8 +113,6 @@
                             <td>${data.equipo_visitante}</td>
                             <td><img src="${data.logo_visitante}" alt="Logo Visitante" width="60"></td>
                     `;
-
-                    // Si el usuario está logueado, mostrar opciones de editar y eliminar
                     if (user) {
                         row += `
                             <td>
@@ -142,65 +129,12 @@
             });
         };
 
-        // Verificar si el usuario está autenticado al cargar la página
         auth.onAuthStateChanged((user) => {
             if (user) {
-                // El usuario está autenticado, mostrar el contenido de admin y cargar el calendario
                 document.getElementById('adminActions').classList.remove('d-none');
                 document.getElementById('adminOptionsHeader').classList.remove('d-none');
-                cargarCalendario(user);
-            } else {
-                // El usuario no está autenticado, cargar el calendario sin opciones de edición
-                cargarCalendario(null);
             }
-        });
-
-        // Funciones para editar y eliminar partidos
-        const editGame = (id) => {
-            // Lógica para editar el partido con el id correspondiente
-            alert('Editar partido con ID: ' + id);
-        };
-
-        const deleteGame = (id) => {
-            if (confirm('¿Seguro que deseas eliminar este partido?')) {
-                db.collection("calendario").doc(id).delete().then(() => {
-                    alert('Partido eliminado');
-                    window.location.reload();
-                }).catch((error) => {
-                    console.error("Error eliminando el partido: ", error);
-                });
-            }
-        };
-
-        // Agregar partido
-        document.getElementById('addGameBtn').addEventListener('click', () => {
-            // Limpiar el formulario y mostrar el modal para agregar partido
-            document.getElementById('gameForm').reset();
-            const gameModal = new bootstrap.Modal(document.getElementById('gameModal'));
-            gameModal.show();
-        });
-
-        // Guardar partido
-        document.getElementById('saveGameBtn').addEventListener('click', () => {
-            const fecha = document.getElementById('fecha').value;
-            const equipoLocal = document.getElementById('equipoLocal').value;
-            const logoLocal = document.getElementById('logoLocal').value;
-            const equipoVisitante = document.getElementById('equipoVisitante').value;
-            const logoVisitante = document.getElementById('logoVisitante').value;
-
-            // Agregar nuevo partido a Firestore
-            db.collection("calendario").add({
-                fecha: fecha,
-                equipo_local: equipoLocal,
-                logo_local: logoLocal,
-                equipo_visitante: equipoVisitante,
-                logo_visitante: logoVisitante
-            }).then(() => {
-                alert('Partido agregado exitosamente');
-                window.location.reload();
-            }).catch((error) => {
-                console.error("Error agregando el partido: ", error);
-            });
+            cargarCalendario(user);
         });
     </script>
 </body>
