@@ -14,7 +14,7 @@
         }
         .container {
             margin-top: 50px;
-            background-color: rgb(41, 41, 41);
+            background-color: rgba(41, 41, 41, 0.9);
             color: #ffffff;
             padding: 30px;
             border-radius: 10px;
@@ -30,7 +30,7 @@
             padding: 10px;
             margin-bottom: 20px;
             border-radius: 8px;
-            background-color: #00000015;
+            background-color: rgba(0, 0, 0, 0.15);
             color: #ffffff;
         }
         .month-title {
@@ -46,10 +46,10 @@
         }
         th, td {
             color: #ffffff;
-            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         th {
-            background-color: #00000046;
+            background-color: rgba(0, 0, 0, 0.27);
         }
         .btn-warning, .btn-danger {
             color: white;
@@ -70,10 +70,11 @@
             }
             .d-flex {
                 flex-wrap: wrap;
-                gap: 10px; /* Espacio entre botones */
+                gap: 10px;
             }
             .btn-category {
-                flex: 1 1 100%; /* Botones ocupan el 100% del ancho en móviles */
+                flex: 1 1 100%;
+                max-width: 100%;
             }
             .table {
                 font-size: 14px;
@@ -83,12 +84,11 @@
                 padding: 8px;
             }
         }
-        
     </style>
 </head>
 <body>
     <header class="bg-warning text-white text-center py-4">
-        <img src="imagenes/logoliga.png" width="100px" alt="">
+        <img src="imagenes/logoliga.png" width="100px" alt="Logo de la Liga">
         <h1 style="color:rgb(0, 0, 0)">Resultados</h1>
     </header>
 
@@ -108,11 +108,11 @@
                 </div>
                 <div class="col">
                     <label for="goles1" class="form-label">Puntos Local</label>
-                    <input type="number" class="form-control" id="goles1" required>
+                    <input type="number" class="form-control" id="goles1" min="0" required>
                 </div>
                 <div class="col">
                     <label for="goles2" class="form-label">Puntos Visitante</label>
-                    <input type="number" class="form-control" id="goles2" required>
+                    <input type="number" class="form-control" id="goles2" min="0" required>
                 </div>
                 <div class="col">
                     <label for="equipo2" class="form-label">Visitante</label>
@@ -156,81 +156,94 @@
         firebase.auth().onAuthStateChanged(user => {
             isAuthenticated = !!user;
             const form = document.getElementById('resultados-form');
-            form.style.display = isAuthenticated ? 'block' : 'none';  // Muestra el formulario solo si está autenticado
-            cargarResultados(currentCategory);  // Cargar resultados de la categoría actual
+            form.style.display = isAuthenticated ? 'block' : 'none';
+            cargarResultados(currentCategory);
         });
 
-        // Cargar y mostrar resultados por mes
         async function cargarResultados(categoria) {
             currentCategory = categoria;
             const resultadosContainer = document.getElementById('resultados-container');
             resultadosContainer.innerHTML = '';
 
-            // Ordenar los resultados por fecha ascendente
-            const snapshot = await db.collection(categoria).orderBy('fecha', 'asc').get();
-            let monthMap = {};
+            try {
+                const snapshot = await db.collection(categoria).orderBy('fecha', 'asc').get();
+                let monthMap = {};
 
-            snapshot.forEach((doc) => {
-                const data = doc.data();
-                const fecha = new Date(data.fecha);
-                const monthYear = fecha.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const fecha = new Date(data.fecha);
+                    const monthYear = fecha.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
 
-                if (!monthMap[monthYear]) {
-                    monthMap[monthYear] = [];
-                }
-                monthMap[monthYear].push({ id: doc.id, ...data });
-            });
+                    if (!monthMap[monthYear]) {
+                        monthMap[monthYear] = [];
+                    }
+                    monthMap[monthYear].push({ id: doc.id, ...data });
+                });
 
-            // Obtener las claves de los meses en un arreglo e invertir el orden para mostrar primero el último mes
-            const months = Object.keys(monthMap).reverse();
-            
-            months.forEach((monthYear, index) => {
-                const monthBox = document.createElement('div');
-                monthBox.classList.add('month-box');
-                
-                // Mostrar el mes con el número de fecha (Ej. Fecha n° 6)
-                const monthTitle = document.createElement('div');
-                monthTitle.classList.add('month-title');
-                monthTitle.textContent = `Fecha n° ${6 - index} (${monthYear})`;
-                monthBox.appendChild(monthTitle);
+                const months = Object.keys(monthMap).reverse();
 
-                const table = document.createElement('table');
-                table.classList.add('table', 'table-bordered');
-                table.innerHTML = ` 
-                    <thead>
-                        <tr>
-                            <th>Local</th>
-                            <th>Puntos Local</th>
-                            <th>Puntos Visitante</th>
-                            <th>Visitante</th>
-                            <th>Fecha</th>
-                            ${isAuthenticated ? '<th>Acciones</th>' : ''}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${monthMap[monthYear].map(result => `
-                            <tr>
-                                <td>${result.equipo1}</td>
-                                <td>${result.goles1}</td>
-                                <td>${result.goles2}</td>
-                                <td>${result.equipo2}</td>
-                                <td>${result.fecha}</td>
-                                ${isAuthenticated ? `
-                                    <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editarResultado('${result.id}', '${categoria}')">Editar</button>
-                                        <button class="btn btn-danger btn-sm" onclick="eliminarResultado('${result.id}', '${categoria}')">Eliminar</button>
-                                    </td>
-                                ` : ''}
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                `;
-                monthBox.appendChild(table);
-                resultadosContainer.appendChild(monthBox);
-            });
+                months.forEach((monthYear, index) => {
+                    const monthBox = document.createElement('div');
+                    monthBox.classList.add('month-box');
+
+                    const monthTitle = document.createElement('div');
+                    monthTitle.classList.add('month-title');
+                    monthTitle.textContent = `Fecha n° ${6 - index} (${monthYear})`;
+                    monthBox.appendChild(monthTitle);
+
+                    const table = document.createElement('table');
+                    table.classList.add('table', 'table-bordered');
+
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    ['Local', 'Puntos Local', 'Puntos Visitante', 'Visitante', 'Fecha'].forEach(text => {
+                        const th = document.createElement('th');
+                        th.textContent = text;
+                        headerRow.appendChild(th);
+                    });
+                    if (isAuthenticated) {
+                        const th = document.createElement('th');
+                        th.textContent = 'Acciones';
+                        headerRow.appendChild(th);
+                    }
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    monthMap[monthYear].forEach(result => {
+                        const row = document.createElement('tr');
+                        [result.equipo1, result.goles1, result.goles2, result.equipo2, new Date(result.fecha).toLocaleDateString()].forEach(text => {
+                            const td = document.createElement('td');
+                            td.textContent = text;
+                            row.appendChild(td);
+                        });
+                        if (isAuthenticated) {
+                            const td = document.createElement('td');
+                            const editButton = document.createElement('button');
+                            editButton.classList.add('btn', 'btn-warning', 'btn-sm');
+                            editButton.textContent = 'Editar';
+                            editButton.addEventListener('click', () => editarResultado(result.id, categoria));
+                            td.appendChild(editButton);
+
+                            const deleteButton = document.createElement('button');
+                            deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                            deleteButton.textContent = 'Eliminar';
+                            deleteButton.addEventListener('click', () => eliminarResultado(result.id, categoria));
+                            td.appendChild(deleteButton);
+
+                            row.appendChild(td);
+                        }
+                        tbody.appendChild(row);
+                    });
+                    table.appendChild(tbody);
+                    monthBox.appendChild(table);
+                    resultadosContainer.appendChild(monthBox);
+                });
+            } catch (error) {
+                console.error("Error al cargar los resultados: ", error);
+            }
         }
 
-        // Agregar o actualizar resultado
         document.getElementById('resultados-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const equipo1 = document.getElementById('equipo1').value;
@@ -239,15 +252,18 @@
             const equipo2 = document.getElementById('equipo2').value;
             const fecha = document.getElementById('fecha').value;
 
-            if (editingId) {
-                await db.collection(currentCategory).doc(editingId).update({ equipo1, goles1, goles2, equipo2, fecha });
-                editingId = null;
-            } else {
-                await db.collection(currentCategory).add({ equipo1, goles1, goles2, equipo2, fecha });
+            try {
+                if (editingId) {
+                    await db.collection(currentCategory).doc(editingId).update({ equipo1, goles1, goles2, equipo2, fecha });
+                    editingId = null;
+                } else {
+                    await db.collection(currentCategory).add({ equipo1, goles1, goles2, equipo2, fecha });
+                }
+                document.getElementById('resultados-form').reset();
+                cargarResultados(currentCategory);
+            } catch (error) {
+                console.error("Error al guardar el resultado: ", error);
             }
-
-            document.getElementById('resultados-form').reset();
-            cargarResultados(currentCategory);
         });
 
         document.getElementById('cancelarBtn').addEventListener('click', () => {
@@ -255,13 +271,15 @@
             document.getElementById('resultados-form').reset();
         });
 
-        // Eliminar resultado
         async function eliminarResultado(id, categoria) {
-            await db.collection(categoria).doc(id).delete();
-            cargarResultados(categoria);
+            try {
+                await db.collection(categoria).doc(id).delete();
+                cargarResultados(categoria);
+            } catch (error) {
+                console.error("Error al eliminar el resultado: ", error);
+            }
         }
 
-        // Editar resultado
         function editarResultado(id, categoria) {
             editingId = id;
             db.collection(categoria).doc(id).get().then(doc => {
@@ -272,6 +290,8 @@
                 document.getElementById('equipo2').value = data.equipo2;
                 document.getElementById('fecha').value = data.fecha;
                 document.getElementById('resultados-form').style.display = 'block';
+            }).catch(error => {
+                console.error("Error al cargar el resultado para editar: ", error);
             });
         }
     </script>
