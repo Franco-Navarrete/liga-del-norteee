@@ -38,12 +38,12 @@
         </tbody>
       </table>
     </section>
-    <button class="btn btn-primary" id="agregar-partido-button" data-bs-toggle="modal" data-bs-target="#partidoModal">
+    <button class="btn btn-primary hidden" id="agregar-partido-button" data-bs-toggle="modal" data-bs-target="#partidoModal">
       Agregar Partido
     </button>
   </main>
 
-  <!-- Modal único para agregar/editar partidos -->
+  <!-- Modal para agregar/editar partidos -->
   <div class="modal fade" id="partidoModal" tabindex="-1" aria-labelledby="partidoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -77,7 +77,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cerrar-modal">Cerrar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-primary" id="guardar-partido">Guardar</button>
         </div>
       </div>
@@ -86,28 +86,24 @@
 
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
   
   <script>
-    // Configuración de Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSyAfz7R57U5LRi7or-3U5SD0Do2He_avfdE",
+      apiKey: "API_KEY",
       authDomain: "liga-del-norte.firebaseapp.com",
       projectId: "liga-del-norte",
       storageBucket: "liga-del-norte.appspot.com",
       messagingSenderId: "655679074901",
-      appId: "1:655679074901:web:867a248306701963039adc",
-      measurementId: "G-CZ5P9YCEWK"
+      appId: "APP_ID"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Función para cargar partidos
     function cargarCalendario() {
       const calendarioBody = document.getElementById('calendario-body');
-      calendarioBody.innerHTML = ''; // Limpiar contenido
-      db.collection("partidos-sub16-fem").get().then((querySnapshot) => {
+      calendarioBody.innerHTML = '';
+      db.collection("partidos-sub16-fem").orderBy("fecha").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           const partido = doc.data();
           let fila = `
@@ -117,9 +113,9 @@
               <td>${partido.estadio}</td>
               <td>${partido.equipoLocal}</td>
               <td>${partido.equipoVisitante}</td>
-              <td>
-                <button class="btn btn-sm btn-warning" onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.hora}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
-                <button class="btn btn-sm btn-danger" onclick="eliminarPartido('${doc.id}')">Eliminar</button>
+              <td class="hidden">
+                <button class="btn btn-warning btn-sm" onclick="editarPartido('${doc.id}', '${partido.fecha}', '${partido.hora}', '${partido.estadio}', '${partido.equipoLocal}', '${partido.equipoVisitante}')">Editar</button>
+                <button class="btn btn-danger btn-sm" onclick="eliminarPartido('${doc.id}')">Eliminar</button>
               </td>
             </tr>
           `;
@@ -128,77 +124,8 @@
       });
     }
 
-    // Función para editar partido
-    function editarPartido(id, fecha, hora, estadio, equipoLocal, equipoVisitante) {
-      document.getElementById('partidoId').value = id;
-      document.getElementById('fecha').value = fecha;
-      document.getElementById('hora').value = hora;
-      document.getElementById('estadio').value = estadio;
-      document.getElementById('equipoLocal').value = equipoLocal;
-      document.getElementById('equipoVisitante').value = equipoVisitante;
-      const modal = new bootstrap.Modal(document.getElementById('partidoModal'));
-      modal.show();
-    }
-
-    // Función para guardar o actualizar el partido
-    document.getElementById('guardar-partido').addEventListener('click', function () {
-      const partidoId = document.getElementById('partidoId').value;
-      const fecha = document.getElementById('fecha').value;
-      const hora = document.getElementById('hora').value;
-      const estadio = document.getElementById('estadio').value;
-      const equipoLocal = document.getElementById('equipoLocal').value;
-      const equipoVisitante = document.getElementById('equipoVisitante').value;
-
-      const partidoData = { fecha, hora, estadio, equipoLocal, equipoVisitante };
-
-      if (partidoId) {
-        // Actualizar partido
-        db.collection("partidos-sub16-fem").doc(partidoId).update(partidoData).then(() => {
-          alert('Partido actualizado correctamente');
-          cargarCalendario();
-          // Limpiar formulario y ocultar modal
-          limpiarFormulario();
-          const modal = bootstrap.Modal.getInstance(document.getElementById('partidoModal'));
-          modal.hide();
-        });
-      } else {
-        // Agregar nuevo partido
-        db.collection("partidos-sub16-fem").add(partidoData).then(() => {
-          alert('Partido agregado correctamente');
-          cargarCalendario();
-          // Limpiar formulario y ocultar modal
-          limpiarFormulario();
-          const modal = bootstrap.Modal.getInstance(document.getElementById('partidoModal'));
-          modal.hide();
-        });
-      }
-    });
-
-    // Función para limpiar el formulario
-    function limpiarFormulario() {
-      document.getElementById('partidoId').value = '';
-      document.getElementById('fecha').value = '';
-      document.getElementById('hora').value = '';
-      document.getElementById('estadio').value = '';
-      document.getElementById('equipoLocal').value = '';
-      document.getElementById('equipoVisitante').value = '';
-    }
-
-    // Función para eliminar partido
-    function eliminarPartido(id) {
-      if (confirm('¿Estás seguro de que quieres eliminar este partido?')) {
-        db.collection("partidos-sub16-fem").doc(id).delete().then(() => {
-          alert('Partido eliminado correctamente');
-          cargarCalendario();
-        });
-      }
-    }
-
-    // Cargar los partidos cuando la página se cargue
     window.onload = cargarCalendario;
   </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

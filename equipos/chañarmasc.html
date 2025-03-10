@@ -50,6 +50,12 @@
             margin-left: 10px;
         }
 
+        .player-actions {
+            display: flex;
+            justify-content: space-between;
+            width: 120px;
+        }
+
         footer {
             background-color: #343a40;
             color: white;
@@ -152,6 +158,35 @@
         </div>
     </div>
 
+    <!-- Modal para editar jugador -->
+    <div class="modal fade" id="editPlayerModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Jugador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPlayerForm">
+                        <div class="mb-3">
+                            <label for="editPlayerName" class="form-label">Nombre del Jugador</label>
+                            <input type="text" class="form-control" id="editPlayerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPlayerDOB" class="form-label">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="editPlayerDOB" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editPlayerDNI" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="editPlayerDNI" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
@@ -182,6 +217,8 @@
                 document.getElementById("addPlayerBtn").style.display = 'block';
             } else {
                 isAuthenticated = false;
+                document.getElementById("editCoachBtn").style.display = 'none';
+                document.getElementById("addPlayerBtn").style.display = 'none';
             }
             renderPlayers();
             loadCoachInfo();
@@ -197,105 +234,84 @@
                     const li = document.createElement("li");
                     li.innerHTML = `<div class="player-details"><strong>${player.nombre}</strong> - ${player.fecha_nacimiento}</div>`;
 
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.classList.add('player-actions');
+
                     if (isAuthenticated) {
-                        li.innerHTML += `<button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>`;
+                        actionsDiv.innerHTML += `<button class="btn btn-warning btn-sm" onclick="editPlayer('${doc.id}')">Editar</button>`;
+                        actionsDiv.innerHTML += `<button class="btn btn-danger btn-sm" onclick="deletePlayer('${doc.id}')">Eliminar</button>`;
                     }
 
+                    li.appendChild(actionsDiv);
                     playersList.appendChild(li);
                 });
-
-                if (playersList.innerHTML === "") {
-                    playersList.innerHTML = "No hay jugadores disponibles.";
-                }
+            }).catch((error) => {
+                console.error("Error getting documents: ", error);
             });
         }
 
+        // Función para cargar la información del técnico
         function loadCoachInfo() {
             db.collection("tecnicos").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
-                const coachInfoDiv = document.getElementById("coach-info");
-                coachInfoDiv.innerHTML = "";
-
-                querySnapshot.forEach((doc) => {
-                    const coach = doc.data();
-                    coachInfoDiv.innerHTML = `<strong>Técnico: ${coach.nombre}</strong><br>Celular: ${coach.celular}`;
-                });
-
-                if (coachInfoDiv.innerHTML === "") {
-                    coachInfoDiv.innerHTML = "No hay información de técnico disponible.";
+                const coachInfo = document.getElementById("coach-info");
+                if (querySnapshot.empty) {
+                    coachInfo.innerHTML = "No hay técnico asignado.";
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const coach = doc.data();
+                        coachInfo.innerHTML = `
+                            <strong>Nombre:</strong> ${coach.nombre}<br>
+                            <strong>Fecha de Nacimiento:</strong> ${coach.fecha_nacimiento}<br>
+                            <strong>Celular:</strong> ${coach.celular}
+                        `;
+                    });
                 }
+            }).catch((error) => {
+                console.error("Error getting coach info: ", error);
             });
         }
 
-        // Agregar jugador
-        document.getElementById("playerForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const playerName = document.getElementById("playerName").value;
-            const playerDOB = document.getElementById("playerDOB").value;
-            const playerDNI = document.getElementById("playerDNI").value;
-
-            db.collection("jugadores").add({
-                nombre: playerName,
-                fecha_nacimiento: playerDOB,
-                dni: playerDNI,
-                equipo: selectedTeam
-            }).then(() => {
-                document.getElementById("playerForm").reset();
-                $('#playerModal').modal('hide');
-                renderPlayers();
-            }).catch((error) => {
-                console.error("Error adding player: ", error);
-            });
-        });
-
-        // Agregar/editar técnico
-        document.getElementById("editCoachForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            const newCoachName = document.getElementById("newCoachName").value;
-            const newCoachDOB = document.getElementById("newCoachDOB").value;
-            const newCoachPhone = document.getElementById("newCoachPhone").value;
-
-            db.collection("tecnicos").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
-                if (querySnapshot.empty) {
-                    db.collection("tecnicos").add({
-                        nombre: newCoachName,
-                        fecha_nacimiento: newCoachDOB,
-                        celular: newCoachPhone,
-                        equipo: selectedTeam
+        // Función para editar jugador
+        function editPlayer(playerId) {
+            console.log(`Editar jugador con ID: ${playerId}`);
+            db.collection("jugadores").doc(playerId).get().then((doc) => {
+                const player = doc.data();
+                document.getElementById('editPlayerName').value = player.nombre;
+                document.getElementById('editPlayerDOB').value = player.fecha_nacimiento;
+                document.getElementById('editPlayerDNI').value = player.dni;
+                $('#editPlayerModal').modal('show');
+                
+                document.getElementById('editPlayerForm').onsubmit = function(event) {
+                    event.preventDefault();
+                    const updatedName = document.getElementById('editPlayerName').value;
+                    const updatedDOB = document.getElementById('editPlayerDOB').value;
+                    const updatedDNI = document.getElementById('editPlayerDNI').value;
+                    
+                    doc.ref.update({
+                        nombre: updatedName,
+                        fecha_nacimiento: updatedDOB,
+                        dni: updatedDNI
                     }).then(() => {
-                        $('#editCoachModal').modal('hide');
-                        loadCoachInfo();
+                        $('#editPlayerModal').modal('hide');
+                        renderPlayers();
                     }).catch((error) => {
-                        console.error("Error adding coach: ", error);
+                        console.error("Error updating player: ", error);
                     });
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        db.collection("tecnicos").doc(doc.id).update({
-                            nombre: newCoachName,
-                            fecha_nacimiento: newCoachDOB,
-                            celular: newCoachPhone
-                        }).then(() => {
-                            $('#editCoachModal').modal('hide');
-                            loadCoachInfo();
-                        }).catch((error) => {
-                            console.error("Error updating coach: ", error);
-                        });
-                    });
-                }
+                };
+            }).catch((error) => {
+                console.error("Error getting player data: ", error);
             });
-        });
+        }
 
         // Eliminar jugador
         function deletePlayer(playerId) {
             db.collection("jugadores").doc(playerId).delete().then(() => {
                 renderPlayers();
             }).catch((error) => {
-                console.error("Error deleting player: ", error);
+                console.error("Error removing player: ", error);
             });
         }
     </script>
-    <footer>
-        <p>© 2024 Liga Del Norte. Todos los derechos reservados.</p>
-    </footer>
 </body>
 
 </html>

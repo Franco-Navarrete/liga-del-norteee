@@ -141,7 +141,6 @@
                             <label for="newCoachDOB" class="form-label">Fecha de Nacimiento</label>
                             <input type="date" class="form-control" id="newCoachDOB" required>
                         </div>
-                       
                         <div class="mb-3">
                             <label for="newCoachPhone" class="form-label">Número de Celular</label>
                             <input type="text" class="form-control" id="newCoachPhone" required>
@@ -184,8 +183,64 @@
             } else {
                 isAuthenticated = false;
             }
-            renderPlayers();
             loadCoachInfo();
+            renderPlayers();
+        });
+
+        function loadCoachInfo() {
+            db.collection("tecnicos").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
+                const coachInfo = document.getElementById("coach-info");
+                if (querySnapshot.empty) {
+                    coachInfo.innerHTML = "No se ha asignado un técnico aún.";
+                    if (isAuthenticated) {
+                        document.getElementById("editCoachBtn").style.display = 'block';
+                    }
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const coach = doc.data();
+                    coachInfo.innerHTML = `<strong>Técnico:</strong> ${coach.nombre} <br> <br> <strong>Celular:</strong> ${coach.telefono}`;
+                    if (isAuthenticated) {
+                        document.getElementById("editCoachBtn").style.display = 'block';
+                    }
+                });
+            });
+        }
+
+        document.getElementById('editCoachForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('newCoachName').value;
+            const dob = document.getElementById('newCoachDOB').value;
+            const phone = document.getElementById('newCoachPhone').value;
+
+            // Verificar si el técnico ya existe
+            db.collection("tecnicos").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                    // Agregar un nuevo técnico si no existe
+                    db.collection("tecnicos").add({
+                        equipo: selectedTeam,
+                        nombre: name,
+                        fecha_nacimiento: dob,
+                        telefono: phone
+                    }).then(() => {
+                        loadCoachInfo();
+                        $('#editCoachModal').modal('hide');
+                    });
+                } else {
+                    // Actualizar el técnico existente
+                    querySnapshot.forEach((doc) => {
+                        db.collection("tecnicos").doc(doc.id).update({
+                            nombre: name,
+                            fecha_nacimiento: dob,
+                            telefono: phone
+                        }).then(() => {
+                            loadCoachInfo();
+                            $('#editCoachModal').modal('hide');
+                        });
+                    });
+                }
+            });
         });
 
         function renderPlayers() {
@@ -207,76 +262,12 @@
             });
         }
 
-        function loadCoachInfo() {
-            db.collection("tecnicos").where("equipo", "==", selectedTeam).get().then((querySnapshot) => {
-                const coachInfo = document.getElementById("coach-info");
-                if (querySnapshot.empty) {
-                    coachInfo.innerHTML = "No se ha asignado un técnico aún.";
-                    if (isAuthenticated) {
-                        document.getElementById("editCoachBtn").style.display = 'block';
-                    }
-                    return;
-                }
-
-                querySnapshot.forEach((doc) => {
-                    const coach = doc.data();
-                    coachInfo.innerHTML = `<strong>Técnico:</strong> ${coach.nombre} <br>  <br> <strong>Celular:</strong> ${coach.telefono}`;
-                    if (isAuthenticated) {
-                        document.getElementById("editCoachBtn").style.display = 'block';
-                    }
-                });
-            });
-        }
-
-        document.getElementById("playerForm").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const playerName = document.getElementById("playerName").value;
-            const playerDOB = document.getElementById("playerDOB").value;
-            const playerDNI = document.getElementById("playerDNI").value;
-
-            db.collection("jugadores").add({
-                nombre: playerName,
-                fecha_nacimiento: playerDOB,
-                dni: playerDNI,
-                equipo: selectedTeam
-            }).then(() => {
-                document.getElementById("playerForm").reset();
-                $('#playerModal').modal('hide');
-                renderPlayers();
-            }).catch((error) => {
-                console.error("Error agregando jugador: ", error);
-            });
-        });
-
-        document.getElementById("editCoachForm").addEventListener("submit", (event) => {
-            event.preventDefault();
-            const newCoachName = document.getElementById("newCoachName").value;
-            const newCoachDOB = document.getElementById("newCoachDOB").value;
-            const newCoachDNI = document.getElementById("newCoachDNI").value;
-            const newCoachPhone = document.getElementById("newCoachPhone").value;
-
-            db.collection("tecnicos").doc(selectedTeam).set({
-                nombre: newCoachName,
-                fecha_nacimiento: newCoachDOB,
-                dni: newCoachDNI,
-                telefono: newCoachPhone,
-                equipo: selectedTeam
-            }).then(() => {
-                document.getElementById("editCoachForm").reset();
-                $('#editCoachModal').modal('hide');
-                loadCoachInfo();
-            }).catch((error) => {
-                console.error("Error agregando técnico: ", error);
-            });
-        });
-
         function deletePlayer(playerId) {
             db.collection("jugadores").doc(playerId).delete().then(() => {
                 renderPlayers();
-            }).catch((error) => {
-                console.error("Error eliminando jugador: ", error);
             });
         }
+
     </script>
 </body>
 
